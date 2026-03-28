@@ -145,19 +145,19 @@
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 			{#each [
 				{
-					icon: '&#x2728;',
+					icon: '\u{2728}',
 					title: 'AI Invoice Generation',
 					description: 'Describe a transaction in plain language. Claude AI generates a professional invoice instantly.',
 					color: 'emerald'
 				},
 				{
-					icon: '&#x1F4F1;',
+					icon: '\u{1F4F1}',
 					title: 'M-Pesa Integration',
 					description: 'STK Push payment links, B2C disbursements, and real-time payment confirmations.',
 					color: 'blue'
 				},
 				{
-					icon: '&#x23F0;',
+					icon: '\u{23F0}',
 					title: 'Smart Reminders',
 					description: 'AI determines optimal timing and drafts personalised SMS reminders via Ratiba.',
 					color: 'amber'
@@ -167,12 +167,9 @@
 					class="gradient-bg rounded-[20px] border border-zinc-800 bg-zinc-900/30 p-6 transition-all hover:border-zinc-700"
 				>
 					<div
-						class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-2xl"
-						class:bg-emerald-500/10={feature.color === 'emerald'}
-						class:bg-blue-500/10={feature.color === 'blue'}
-						class:bg-amber-500/10={feature.color === 'amber'}
+						class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-2xl {feature.color === 'emerald' ? 'bg-emerald-900' : feature.color === 'blue' ? 'bg-blue-900' : 'bg-amber-900'}"
 					>
-						{@html feature.icon}
+						{feature.icon}
 					</div>
 					<h3 class="mb-2 text-lg font-semibold">{feature.title}</h3>
 					<p class="text-sm leading-relaxed text-zinc-400">{feature.description}</p>

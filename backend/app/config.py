@@ -31,6 +31,7 @@ class Settings(BaseSettings):
 
     # Claude AI
     ANTHROPIC_API_KEY: str = ""
+    CLAUDE_MODEL: str = "claude-haiku-4-5-20251001"  # cheapest model
 
     # Africa's Talking
     AT_API_KEY: str = ""

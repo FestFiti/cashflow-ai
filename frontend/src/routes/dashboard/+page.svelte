@@ -102,17 +102,11 @@
 
 			<!-- Overdue Card -->
 			<div
-				class="animate-fade-in-up animation-delay-200 rounded-[20px] border p-6 lg:col-span-4"
-				class:border-amber-500/20={data.overdue_count > 0}
-				class:bg-amber-500/5={data.overdue_count > 0}
-				class:gradient-bg-amber={data.overdue_count > 0}
-				class:border-zinc-800={data.overdue_count === 0}
-				class:bg-zinc-900/30={data.overdue_count === 0}
-				class:gradient-bg={data.overdue_count === 0}
+				class="animate-fade-in-up animation-delay-200 rounded-[20px] border p-6 lg:col-span-4 {data.overdue_count > 0 ? 'border-amber-800 bg-amber-950 gradient-bg-amber' : 'border-zinc-800 bg-zinc-900 gradient-bg'}"
 			>
 				<div class="mb-1 flex items-center gap-2">
-					<div class="h-2.5 w-2.5 rounded-full" class:bg-amber-400={data.overdue_count > 0} class:bg-zinc-500={data.overdue_count === 0}></div>
-					<span class="text-xs font-medium uppercase tracking-widest" class:text-amber-500={data.overdue_count > 0} class:text-zinc-500={data.overdue_count === 0}>Overdue</span>
+					<div class="h-2.5 w-2.5 rounded-full {data.overdue_count > 0 ? 'bg-amber-400' : 'bg-zinc-500'}"></div>
+					<span class="text-xs font-medium uppercase tracking-widest {data.overdue_count > 0 ? 'text-amber-500' : 'text-zinc-500'}">Overdue</span>
 				</div>
 				<p class="mt-3 text-3xl font-black tracking-tight">{data.overdue_count}</p>
 				<p class="mt-1 text-sm text-zinc-500">invoices past due date</p>
@@ -176,7 +170,7 @@
 						class="flex items-center gap-3 rounded-xl border border-zinc-800 p-3 transition-colors hover:border-blue-500/30 hover:bg-blue-500/5"
 					>
 						<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10">
-							<span class="text-blue-400">&#x1F4CB;</span>
+							<span class="text-blue-400">{'\u{1F4CB}'}</span>
 						</div>
 						<div>
 							<p class="text-sm font-medium">All Invoices</p>
@@ -188,7 +182,7 @@
 						class="flex items-center gap-3 rounded-xl border border-zinc-800 p-3 transition-colors hover:border-zinc-700 hover:bg-zinc-800/50"
 					>
 						<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-800">
-							<span class="text-zinc-400">&#x1F4CA;</span>
+							<span class="text-zinc-400">{'\u{1F4CA}'}</span>
 						</div>
 						<div>
 							<p class="text-sm font-medium">Reports</p>

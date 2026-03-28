@@ -6,15 +6,15 @@ An AI-powered cash flow management platform that helps SMEs automate their entir
 
 ```
 ┌─────────────────┐     ┌──────────────────┐     ┌──────────────────────┐
-│  SvelteKit UI   │────▶│   FastAPI API     │────▶│  External Services   │
-│  (port 9999)    │◀────│   (port 8888)     │◀────│  M-Pesa / Ratiba /   │
-│                 │     │                   │     │  Claude AI           │
+│  SvelteKit UI   │────▶│   FastAPI API    │────▶│  External Services   │
+│  (port 9999)    │◀────│   (port 8888)    │◀────│  M-Pesa / Ratiba /   │
+│                 │     │                  │     │  Claude AI           │
 └─────────────────┘     └──────────────────┘     └──────────────────────┘
-                              │
-                        ┌─────┴─────┐
-                        │ PostgreSQL │
-                        │  + Redis   │
-                        └───────────┘
+                                  │
+                            ┌─────┴──────┐
+                            │ PostgreSQL │
+                            │  + Redis   │
+                            └────────────┘
 ```
 
 ## Quick Start (Docker)

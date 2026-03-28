@@ -34,11 +34,11 @@
 
 	function categoryIcon(cat: string): string {
 		switch (cat) {
-			case 'payment': return '&#x1F4B0;';
-			case 'reminder': return '&#x23F0;';
-			case 'alert': return '&#x26A0;&#xFE0F;';
-			case 'ai': return '&#x2728;';
-			default: return '&#x1F514;';
+			case 'payment': return '\u{1F4B0}';
+			case 'reminder': return '\u{23F0}';
+			case 'alert': return '\u{26A0}';
+			case 'ai': return '\u{2728}';
+			default: return '\u{1F514}';
 		}
 	}
 
@@ -95,10 +95,9 @@
 					{#each $notifications as n}
 						<button
 							onclick={() => handleClick(n)}
-							class="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-zinc-800/50"
-							class:bg-emerald-500/5={!n.is_read}
+							class="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-zinc-800 {!n.is_read ? 'bg-emerald-950' : ''}"
 						>
-							<span class="mt-0.5 text-sm">{@html categoryIcon(n.category)}</span>
+							<span class="mt-0.5 text-sm">{categoryIcon(n.category)}</span>
 							<div class="min-w-0 flex-1">
 								<p class="text-sm font-medium" class:text-white={!n.is_read} class:text-zinc-400={n.is_read}>
 									{n.title}

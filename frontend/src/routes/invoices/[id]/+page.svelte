@@ -58,21 +58,13 @@
 						<p class="text-sm text-zinc-500">{invoice.client_email}</p>
 					{/if}
 				</div>
-				<span
-					class="rounded-full border px-3 py-1 text-sm font-medium capitalize"
-					class:bg-emerald-500/10={invoice.status === 'paid'}
-					class:text-emerald-400={invoice.status === 'paid'}
-					class:border-emerald-500/20={invoice.status === 'paid'}
-					class:bg-blue-500/10={invoice.status === 'sent'}
-					class:text-blue-400={invoice.status === 'sent'}
-					class:border-blue-500/20={invoice.status === 'sent'}
-					class:bg-red-500/10={invoice.status === 'overdue'}
-					class:text-red-400={invoice.status === 'overdue'}
-					class:border-red-500/20={invoice.status === 'overdue'}
-					class:bg-zinc-500/10={invoice.status === 'draft'}
-					class:text-zinc-400={invoice.status === 'draft'}
-					class:border-zinc-500/20={invoice.status === 'draft'}
-				>
+				{@const statusClasses = {
+					paid: 'bg-emerald-950 text-emerald-400 border-emerald-800',
+					sent: 'bg-blue-950 text-blue-400 border-blue-800',
+					overdue: 'bg-red-950 text-red-400 border-red-800',
+					draft: 'bg-zinc-800 text-zinc-400 border-zinc-700'
+				}}
+				<span class="rounded-full border px-3 py-1 text-sm font-medium capitalize {statusClasses[invoice.status] || statusClasses.draft}">
 					{invoice.status}
 				</span>
 			</div>
