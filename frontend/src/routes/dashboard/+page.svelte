@@ -13,19 +13,17 @@
 
 	let data = $state<DashboardData | null>(null);
 	let loading = $state(true);
+	let visible = $state(false);
 
 	onMount(async () => {
-		if (!$auth.token) {
-			goto('/login');
-			return;
-		}
+		if (!$auth.token) { goto('/login'); return; }
 		try {
-			data = await api<DashboardData>('/dashboard/summary', { token: $auth.token });
+			data = await api<DashboardData>('/dashboard/summary');
 		} catch {
-			// API not available yet - show demo data
 			data = { total_receivables: 0, total_paid: 0, overdue_count: 0, total_invoices: 0 };
 		} finally {
 			loading = false;
+			setTimeout(() => (visible = true), 50);
 		}
 	});
 
@@ -38,107 +36,133 @@
 
 <svelte:head>
 	<title>Dashboard — CashFlow AI</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 </svelte:head>
 
-<div class="mx-auto max-w-7xl px-4 py-8 md:px-8">
-	<div class="mb-8 flex items-center justify-between">
+<div class="mx-auto max-w-7xl px-4 py-8 md:px-8" style="font-family: 'DM Sans', sans-serif;">
+	<!-- Header -->
+	<div class="mb-8 flex items-end justify-between">
 		<div>
-			<h1 class="text-2xl font-bold tracking-tight md:text-3xl">Dashboard</h1>
-			<p class="mt-1 text-sm text-zinc-500">Welcome back, {$auth.name}</p>
+			<p class="mb-1 text-[12px] font-medium uppercase tracking-[0.15em] text-white/25">Overview</p>
+			<h1 class="font-['Instrument_Serif'] text-3xl tracking-tight text-white md:text-4xl">
+				Welcome back, <span class="italic text-emerald-400">{$auth.name}</span>
+			</h1>
 		</div>
 		<a
 			href="/invoices/new"
-			class="gradient-bg-emerald inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-emerald-500"
+			class="group hidden items-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 text-[13px] font-semibold text-zinc-950 transition-all hover:bg-emerald-400 sm:inline-flex"
 		>
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-				<path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
 			</svg>
 			New Invoice
 		</a>
 	</div>
 
 	{#if loading}
-		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+		<!-- Skeleton -->
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
 			{#each Array(4) as _}
-				<div class="animate-pulse rounded-[20px] border border-zinc-800 bg-zinc-900/30 p-6">
-					<div class="mb-3 h-3 w-24 rounded bg-zinc-800"></div>
-					<div class="h-8 w-32 rounded bg-zinc-800"></div>
+				<div class="animate-pulse rounded-2xl border border-white/[0.04] bg-white/[0.02] p-6">
+					<div class="mb-3 h-3 w-20 rounded bg-white/[0.04]"></div>
+					<div class="h-8 w-28 rounded bg-white/[0.04]"></div>
 				</div>
 			{/each}
 		</div>
 	{:else if data}
 		<!-- Stats Grid -->
-		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-12">
-			<!-- Receivables Card -->
-			<div
-				class="gradient-bg-emerald animate-fade-in-up rounded-[20px] border border-emerald-500/20 bg-emerald-500/5 p-6 lg:col-span-4"
-			>
-				<div class="mb-1 flex items-center gap-2">
-					<div class="h-2.5 w-2.5 rounded-full bg-emerald-400"></div>
-					<span class="text-xs font-medium uppercase tracking-widest text-emerald-500">Receivables</span>
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+			<!-- Receivables -->
+			<div class="rounded-2xl border border-emerald-500/10 bg-emerald-500/[0.03] p-6 transition-all duration-500 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+				<div class="mb-4 flex items-center justify-between">
+					<span class="text-[11px] font-medium uppercase tracking-[0.12em] text-emerald-500/70">Receivables</span>
+					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+						</svg>
+					</div>
 				</div>
-				<p class="mt-3 text-3xl font-black tracking-tight">{formatKES(data.total_receivables)}</p>
-				<p class="mt-1 text-sm text-zinc-500">{data.total_invoices} total invoices</p>
-				<div class="mt-4 h-1.5 overflow-hidden rounded-full bg-zinc-800">
-					<div
-						class="h-full rounded-full bg-emerald-500 transition-all duration-1000"
-						style="width: {recoveryRate}%"
-					></div>
+				<p class="text-2xl font-bold tracking-tight text-white">{formatKES(data.total_receivables)}</p>
+				<div class="mt-3 flex items-center gap-2">
+					<div class="h-1 flex-1 rounded-full bg-white/[0.04]">
+						<div class="h-full rounded-full bg-emerald-500/50 transition-all duration-1000" style="width: {recoveryRate}%"></div>
+					</div>
+					<span class="text-[11px] text-white/25">{recoveryRate}%</span>
 				</div>
-				<p class="mt-2 text-xs text-zinc-500">{recoveryRate}% collected</p>
 			</div>
 
-			<!-- Paid Card -->
-			<div
-				class="gradient-bg animate-fade-in-up animation-delay-100 rounded-[20px] border border-zinc-800 bg-zinc-900/30 p-6 lg:col-span-4"
-			>
-				<div class="mb-1 flex items-center gap-2">
-					<div class="h-2.5 w-2.5 rounded-full bg-blue-400"></div>
-					<span class="text-xs font-medium uppercase tracking-widest text-zinc-500">Total Collected</span>
+			<!-- Collected -->
+			<div class="rounded-2xl border border-white/[0.04] bg-white/[0.02] p-6 transition-all duration-500 delay-75 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+				<div class="mb-4 flex items-center justify-between">
+					<span class="text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">Collected</span>
+					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.03]">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+						</svg>
+					</div>
 				</div>
-				<p class="mt-3 text-3xl font-black tracking-tight">{formatKES(data.total_paid)}</p>
-				<p class="mt-1 text-sm text-zinc-500">via M-Pesa</p>
+				<p class="text-2xl font-bold tracking-tight text-white">{formatKES(data.total_paid)}</p>
+				<p class="mt-2 text-[11px] text-white/20">via M-Pesa</p>
 			</div>
 
-			<!-- Overdue Card -->
-			<div
-				class="animate-fade-in-up animation-delay-200 rounded-[20px] border p-6 lg:col-span-4 {data.overdue_count > 0 ? 'border-amber-800 bg-amber-950 gradient-bg-amber' : 'border-zinc-800 bg-zinc-900 gradient-bg'}"
-			>
-				<div class="mb-1 flex items-center gap-2">
-					<div class="h-2.5 w-2.5 rounded-full {data.overdue_count > 0 ? 'bg-amber-400' : 'bg-zinc-500'}"></div>
-					<span class="text-xs font-medium uppercase tracking-widest {data.overdue_count > 0 ? 'text-amber-500' : 'text-zinc-500'}">Overdue</span>
+			<!-- Invoices -->
+			<div class="rounded-2xl border border-white/[0.04] bg-white/[0.02] p-6 transition-all duration-500 delay-150 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+				<div class="mb-4 flex items-center justify-between">
+					<span class="text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">Invoices</span>
+					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.03]">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+						</svg>
+					</div>
 				</div>
-				<p class="mt-3 text-3xl font-black tracking-tight">{data.overdue_count}</p>
-				<p class="mt-1 text-sm text-zinc-500">invoices past due date</p>
+				<p class="text-2xl font-bold tracking-tight text-white">{data.total_invoices}</p>
+				<p class="mt-2 text-[11px] text-white/20">total created</p>
+			</div>
+
+			<!-- Overdue -->
+			<div class="rounded-2xl border p-6 transition-all duration-500 delay-200 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'} {data.overdue_count > 0 ? 'border-amber-500/10 bg-amber-500/[0.03]' : 'border-white/[0.04] bg-white/[0.02]'}">
+				<div class="mb-4 flex items-center justify-between">
+					<span class="text-[11px] font-medium uppercase tracking-[0.12em] {data.overdue_count > 0 ? 'text-amber-500/70' : 'text-white/25'}">Overdue</span>
+					<div class="flex h-8 w-8 items-center justify-center rounded-lg {data.overdue_count > 0 ? 'bg-amber-500/10' : 'bg-white/[0.03]'}">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 {data.overdue_count > 0 ? 'text-amber-400' : 'text-white/30'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+						</svg>
+					</div>
+				</div>
+				<p class="text-2xl font-bold tracking-tight text-white">{data.overdue_count}</p>
+				<p class="mt-2 text-[11px] text-white/20">past due date</p>
 			</div>
 		</div>
 
-		<!-- Recovery Rate & Quick Actions -->
-		<div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
-			<!-- Recovery Chart -->
-			<div
-				class="animate-fade-in-up animation-delay-300 gradient-bg rounded-[20px] border border-zinc-800 bg-zinc-900/30 p-6 lg:col-span-8"
-			>
-				<h3 class="mb-6 text-sm font-semibold uppercase tracking-widest text-zinc-500">
-					Collection Overview
-				</h3>
+		<!-- Bottom Row -->
+		<div class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-12">
+			<!-- Recovery Rate -->
+			<div class="rounded-2xl border border-white/[0.04] bg-white/[0.02] p-6 lg:col-span-8 transition-all duration-500 delay-300 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+				<div class="mb-6 flex items-center justify-between">
+					<span class="text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">Collection Overview</span>
+					<span class="text-[11px] text-white/15">Last 30 days</span>
+				</div>
+
 				<div class="flex items-end gap-8">
 					<div>
-						<p class="text-6xl font-black tracking-tighter text-emerald-400">{recoveryRate}%</p>
-						<p class="mt-1 text-sm text-zinc-500">Recovery Rate</p>
+						<p class="font-['Instrument_Serif'] text-5xl italic tracking-tight text-emerald-400 md:text-6xl">{recoveryRate}%</p>
+						<p class="mt-1 text-[12px] text-white/25">Recovery Rate</p>
 					</div>
-					<div class="flex flex-1 items-end gap-3">
+
+					<div class="flex flex-1 items-end gap-2 pb-1">
 						{#each [
-							{ label: 'Total', value: data.total_invoices, max: Math.max(data.total_invoices, 1), color: 'bg-zinc-600' },
-							{ label: 'Paid', value: data.total_paid > 0 ? Math.round((data.total_paid / Math.max(data.total_receivables + data.total_paid, 1)) * data.total_invoices) : 0, max: Math.max(data.total_invoices, 1), color: 'bg-emerald-500' },
-							{ label: 'Overdue', value: data.overdue_count, max: Math.max(data.total_invoices, 1), color: 'bg-amber-500' }
+							{ label: 'Total', value: data.total_invoices, color: 'bg-white/[0.06]' },
+							{ label: 'Paid', value: data.total_paid > 0 ? Math.round((data.total_paid / Math.max(data.total_receivables + data.total_paid, 1)) * data.total_invoices) : 0, color: 'bg-emerald-500/40' },
+							{ label: 'Overdue', value: data.overdue_count, color: 'bg-amber-500/40' }
 						] as bar, i}
 							<div class="flex flex-1 flex-col items-center gap-2">
 								<div
-									class="w-full rounded-t-lg {bar.color} transition-all duration-1000"
-									style="height: {Math.max((bar.value / bar.max) * 120, 8)}px; animation-delay: {0.3 + i * 0.1}s"
+									class="w-full rounded-lg {bar.color} transition-all duration-1000"
+									style="height: {Math.max((bar.value / Math.max(data.total_invoices, 1)) * 100, 6)}px"
 								></div>
-								<span class="text-xs text-zinc-500">{bar.label}</span>
+								<span class="text-[10px] text-white/20">{bar.label}</span>
 							</div>
 						{/each}
 					</div>
@@ -146,49 +170,48 @@
 			</div>
 
 			<!-- Quick Actions -->
-			<div
-				class="animate-fade-in-up animation-delay-400 gradient-bg rounded-[20px] border border-zinc-800 bg-zinc-900/30 p-6 lg:col-span-4"
-			>
-				<h3 class="mb-4 text-sm font-semibold uppercase tracking-widest text-zinc-500">
-					Quick Actions
-				</h3>
-				<div class="space-y-3">
-					<a
-						href="/invoices/new"
-						class="flex items-center gap-3 rounded-xl border border-zinc-800 p-3 transition-colors hover:border-emerald-500/30 hover:bg-emerald-500/5"
-					>
-						<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10">
-							<span class="text-emerald-400">+</span>
-						</div>
-						<div>
-							<p class="text-sm font-medium">New Invoice</p>
-							<p class="text-xs text-zinc-500">Create with AI or manually</p>
-						</div>
-					</a>
-					<a
-						href="/invoices"
-						class="flex items-center gap-3 rounded-xl border border-zinc-800 p-3 transition-colors hover:border-blue-500/30 hover:bg-blue-500/5"
-					>
-						<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-						</div>
-						<div>
-							<p class="text-sm font-medium">All Invoices</p>
-							<p class="text-xs text-zinc-500">View and manage</p>
-						</div>
-					</a>
-					<a
-						href="/reports"
-						class="flex items-center gap-3 rounded-xl border border-zinc-800 p-3 transition-colors hover:border-zinc-700 hover:bg-zinc-800/50"
-					>
-						<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-800">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" /></svg>
-						</div>
-						<div>
-							<p class="text-sm font-medium">Reports</p>
-							<p class="text-xs text-zinc-500">Cash flow analytics</p>
-						</div>
-					</a>
+			<div class="rounded-2xl border border-white/[0.04] bg-white/[0.02] p-6 lg:col-span-4 transition-all duration-500 delay-400 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+				<span class="mb-4 block text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">Quick Actions</span>
+
+				<div class="space-y-2">
+					{#each [
+						{
+							href: '/invoices/new',
+							label: 'New Invoice',
+							sub: 'Create with AI or manually',
+							icon: 'M12 4.5v15m7.5-7.5h-15',
+							accent: 'emerald'
+						},
+						{
+							href: '/invoices',
+							label: 'All Invoices',
+							sub: 'View and manage',
+							icon: 'M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z',
+							accent: 'white'
+						},
+						{
+							href: '/reports',
+							label: 'Reports',
+							sub: 'Cash flow analytics',
+							icon: 'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z',
+							accent: 'white'
+						}
+					] as action}
+						<a
+							href={action.href}
+							class="group flex items-center gap-3 rounded-xl border border-white/[0.04] p-3 transition-all hover:border-white/[0.08] hover:bg-white/[0.02]"
+						>
+							<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg {action.accent === 'emerald' ? 'bg-emerald-500/10' : 'bg-white/[0.03]'}">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 {action.accent === 'emerald' ? 'text-emerald-400' : 'text-white/30'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+									<path stroke-linecap="round" stroke-linejoin="round" d={action.icon} />
+								</svg>
+							</div>
+							<div>
+								<p class="text-[13px] font-medium text-white/80">{action.label}</p>
+								<p class="text-[11px] text-white/20">{action.sub}</p>
+							</div>
+						</a>
+					{/each}
 				</div>
 			</div>
 		</div>

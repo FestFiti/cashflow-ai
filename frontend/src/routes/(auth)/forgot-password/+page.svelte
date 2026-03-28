@@ -48,6 +48,10 @@
 			<HeroBlobLight />
 		{/if}
 		<div class="pointer-events-none absolute inset-0 opacity-[0.02]" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 24px 24px;"></div>
+		<!-- Horizontal gradient fade from form into blob -->
+		<div class="pointer-events-none absolute inset-y-0 right-0 w-32 {isDark ? 'bg-gradient-to-l from-zinc-950 to-transparent' : 'bg-gradient-to-l from-white to-transparent'}"></div>
+		<!-- Vertical gradient fade at bottom -->
+		<div class="pointer-events-none absolute left-0 -bottom-0 right-0 h-44 {isDark ? 'bg-gradient-to-t from-zinc-950 to-transparent' : 'bg-gradient-to-t from-white to-transparent'}"></div>
 	</div>
 
 	<!-- Right: Form -->

@@ -20,5 +20,18 @@ theme.subscribe((value) => {
 });
 
 export function toggleTheme() {
-	theme.update((t) => (t === 'dark' ? 'light' : 'dark'));
+	if (!browser) return;
+
+	// Enable transitions before the swap
+	document.documentElement.classList.add('theme-transitioning');
+
+	// Swap theme on next frame so the transition class is applied first
+	requestAnimationFrame(() => {
+		theme.update((t) => (t === 'dark' ? 'light' : 'dark'));
+
+		// Remove transition class after animations complete
+		setTimeout(() => {
+			document.documentElement.classList.remove('theme-transitioning');
+		}, 550);
+	});
 }
