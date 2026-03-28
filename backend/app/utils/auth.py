@@ -28,6 +28,26 @@ def create_access_token(business_id: str) -> str:
     )
 
 
+def create_reset_token(email: str) -> str:
+    expire = datetime.now(timezone.utc) + timedelta(minutes=30)
+    return jwt.encode(
+        {"sub": email, "purpose": "password_reset", "exp": expire},
+        settings.JWT_SECRET,
+        algorithm=settings.JWT_ALGORITHM,
+    )
+
+
+def decode_reset_token(token: str) -> str | None:
+    """Decode a password reset token and return the email, or None if invalid."""
+    try:
+        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM])
+        if payload.get("purpose") != "password_reset":
+            return None
+        return payload.get("sub")
+    except JWTError:
+        return None
+
+
 def _decode_token(token: str) -> str | None:
     """Decode a JWT and return the business_id, or None if invalid."""
     try:

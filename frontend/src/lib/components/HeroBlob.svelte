@@ -16,53 +16,42 @@
 		renderer.setSize(container.clientWidth, container.clientHeight);
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		renderer.toneMapping = THREE.ACESFilmicToneMapping;
-		renderer.toneMappingExposure = 2.0;
+		renderer.toneMappingExposure = 1.2;
 		container.appendChild(renderer.domElement);
 
-		// ── LIGHTS ──
-		// Rich warm ambient — nothing is pure black
-		scene.add(new THREE.AmbientLight(0xffeedd, 1.5));
+		// ── LIGHTS — dim, broad, natural ──
+		scene.add(new THREE.AmbientLight(0xffeedd, 0.6));
 
-		// Hemisphere — warm sky, cool ground = natural gradient across surface
-		const hemi = new THREE.HemisphereLight(0xffd699, 0x1a2a5e, 2.2);
-		scene.add(hemi);
+		// Hemisphere — warm top, cool bottom
+		scene.add(new THREE.HemisphereLight(0xffd699, 0x0a1030, 1.0));
 
-		// Key — placed FAR away + very high intensity = wide soft falloff
-		// This is the main highlight — far distance makes it spread across the surface
-		const key = new THREE.PointLight(0xfff5e6, 18000, 100, 1.8);
-		key.position.set(3, 16, 22);
+		// Key — far away, moderate intensity
+		const key = new THREE.PointLight(0xfff0d6, 4000, 80, 2.0);
+		key.position.set(4, 18, 24);
 		scene.add(key);
 
-		// Warm fill — broad golden wash from left
-		const fill = new THREE.PointLight(0xffaa33, 5000, 60, 1.8);
-		fill.position.set(-14, 5, 12);
+		// Warm fill left
+		const fill = new THREE.PointLight(0xffaa33, 1500, 50, 2.0);
+		fill.position.set(-16, 5, 14);
 		scene.add(fill);
 
-		// Back-rim — directional for wide even edge light
-		const rimLight = new THREE.DirectionalLight(0xccddee, 4.0);
-		rimLight.position.set(0, 6, -10);
+		// Rim — soft edge definition
+		const rimLight = new THREE.DirectionalLight(0x99aabb, 1.5);
+		rimLight.position.set(0, 5, -12);
 		scene.add(rimLight);
 
-		// Bottom blue — broad uplight
-		const bottomBlue = new THREE.PointLight(0x2244cc, 3000, 60, 1.8);
-		bottomBlue.position.set(3, -16, 8);
+		// Bottom blue — subtle depth
+		const bottomBlue = new THREE.PointLight(0x1a2266, 800, 50, 2.0);
+		bottomBlue.position.set(3, -18, 8);
 		scene.add(bottomBlue);
 
-		// Cyan right rim — far away for broad highlight
-		const cyanRim = new THREE.PointLight(0x44ccff, 1200, 50, 1.8);
-		cyanRim.position.set(16, 2, 8);
-		scene.add(cyanRim);
-
 		// ── MATERIAL ──
-		// roughness 0.28 = broad, soft, realistic specular spread
-		// No clearcoat — it adds a sharp secondary highlight on top
 		const mat = new THREE.MeshPhysicalMaterial({
-			color: 0x141414,
+			color: 0x111111,
 			metalness: 1.0,
-			roughness: 0.28,
+			roughness: 0.35,
 			clearcoat: 0.0,
-			reflectivity: 0.85,
-			envMapIntensity: 0.3,
+			reflectivity: 0.8,
 		});
 
 		// ── GEOMETRY ──
@@ -91,16 +80,15 @@
 		};
 		window.addEventListener('mousemove', onMove, { passive: true });
 
-		// ── Animation ──
 		let t = 0;
 		let raf: number;
 
 		function tick() {
 			raf = requestAnimationFrame(tick);
-			t += 0.0016;
+			t += 0.0012;
 
-			smoothX += (cursorX - smoothX) * 0.03;
-			smoothY += (cursorY - smoothY) * 0.03;
+			smoothX += (cursorX - smoothX) * 0.025;
+			smoothY += (cursorY - smoothY) * 0.025;
 
 			const arr = posAttr.array as Float32Array;
 
@@ -109,15 +97,23 @@
 				const ry = restY[i];
 				const rz = restZ[i];
 
-				// Very low frequency = massive smooth rolling hills and deep valleys
-				const n = noise3D(
-					rx * 0.06 + t,
-					ry * 0.06 + t * 0.45,
-					rz * 0.06
+				// Layer 1: medium frequency — creates the visible bumps and valleys
+				// freq 0.18 on r=5.5 means ~6-8 bumps around the circumference
+				const n1 = noise3D(
+					rx * 0.18 + t * 0.8,
+					ry * 0.18 + t * 0.5,
+					rz * 0.18 + t * 0.3
 				);
 
-				// amplitude 0.30 = deep valleys, tall peaks — very visible deformation
-				const d = 1.0 + n * 0.30;
+				// Layer 2: lower frequency — large-scale shape warping
+				const n2 = noise3D(
+					rx * 0.07 + t * 1.5,
+					ry * 0.07 + t,
+					rz * 0.07
+				);
+
+				// n1 creates the bumps (0.20 amplitude), n2 shifts the whole form (0.12)
+				const d = 1.0 + n1 * 0.20 + n2 * 0.12;
 
 				const i3 = i * 3;
 				arr[i3]     = rx * d;
@@ -128,14 +124,13 @@
 			posAttr.needsUpdate = true;
 			geo.computeVertexNormals();
 
-			blob.rotation.y = -t * 0.4 + smoothX * 0.3;
-			blob.rotation.x = smoothY * 0.15;
-			blob.rotation.z = Math.sin(t * 1.2) * 0.03;
-			blob.position.y = -5.8 + Math.sin(t * 1.4) * 0.15;
+			blob.rotation.y = -t * 0.5 + smoothX * 0.25;
+			blob.rotation.x = smoothY * 0.12;
+			blob.rotation.z = Math.sin(t * 1.0) * 0.02;
+			blob.position.y = -5.8 + Math.sin(t * 1.2) * 0.12;
 
-			// Cursor shifts key light for dynamic highlight movement
-			key.position.x = 3 + smoothX * 4;
-			key.position.y = 16 + smoothY * 3;
+			key.position.x = 4 + smoothX * 3;
+			key.position.y = 18 + smoothY * 2;
 
 			renderer.render(scene, camera);
 		}

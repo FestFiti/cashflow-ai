@@ -1,3 +1,7 @@
+import { get } from 'svelte/store';
+import { browser } from '$app/environment';
+import { auth, logout } from '$lib/stores/auth';
+
 const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8888';
 
 interface FetchOptions extends RequestInit {
@@ -7,13 +11,16 @@ interface FetchOptions extends RequestInit {
 export async function api<T>(path: string, options: FetchOptions = {}): Promise<T> {
 	const { token, ...fetchOptions } = options;
 
+	// Auto-inject token from store if not explicitly provided
+	const authToken = token ?? (browser ? get(auth).token : null);
+
 	const headers: Record<string, string> = {
 		'Content-Type': 'application/json',
 		...(options.headers as Record<string, string>)
 	};
 
-	if (token) {
-		headers['Authorization'] = `Bearer ${token}`;
+	if (authToken) {
+		headers['Authorization'] = `Bearer ${authToken}`;
 	}
 
 	const res = await fetch(`${API_URL}${path}`, {
@@ -22,6 +29,13 @@ export async function api<T>(path: string, options: FetchOptions = {}): Promise<
 	});
 
 	if (!res.ok) {
+		// Auto-logout on 401 (expired/invalid token)
+		if (res.status === 401 && browser) {
+			logout();
+			window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`;
+			throw new Error('Session expired. Please sign in again.');
+		}
+
 		const error = await res.json().catch(() => ({ detail: 'Request failed' }));
 		throw new Error(error.detail || `HTTP ${res.status}`);
 	}

@@ -58,7 +58,7 @@
 <!-- HERO -->
 <section class="relative min-h-screen overflow-hidden" style="background: radial-gradient(ellipse at 55% 50%, #1a1a2e 0%, #0a0a0f 60%, #050508 100%);">
 	<!-- Gradient glow behind blob -->
-	<div class="pointer-events-none absolute opacity-40 inset-0">
+	<div class="pointer-events-none absolute opacity-10 inset-0">
 		<div class="absolute left-1/2 top-[55%] h-[600px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30" style="background: radial-gradient(ellipse, rgba(255,180,50,0.25) 0%, rgba(100,60,10,0.1) 40%, transparent 70%);"></div>
 		<div class="absolute left-[60%] top-[65%] h-[400px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20" style="background: radial-gradient(ellipse, rgba(30,60,200,0.3) 0%, transparent 60%);"></div>
 	</div>
@@ -76,7 +76,7 @@
 		<div
 			class="mb-10 transition-all duration-700 {heroVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}"
 		>
-			<div class="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-1.5 backdrop-blur-sm">
+			<div class="inline-flex items-center gap-2 rounded-none border-y border-white/[0.08] bg-white/[0.01] px-4 py-1.5 backdrop-blur-sm">
 				<span class="relative flex h-1.5 w-1.5">
 					<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
 					<span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
@@ -130,7 +130,7 @@
 
 		<!-- Floating glass cards -->
 		<div
-			class="mt-20 hidden w-full max-w-3xl md:block transition-all duration-1000 delay-700 {heroVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}"
+			class="mt-20 hidden w-full max-w-3xl transition-all duration-1000 delay-700 {heroVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}"
 		>
 			<div class="relative">
 				<!-- Left card -->
@@ -166,8 +166,8 @@
 	<!-- Scroll indicator -->
 	<div class="absolute bottom-8 left-1/2 -translate-x-1/2 transition-all duration-1000 delay-1000 {heroVisible ? 'opacity-100' : 'opacity-0'}">
 		<div class="flex flex-col items-center gap-2">
-			<span class="text-[10px] font-medium uppercase tracking-[0.2em] text-white/20" style="font-family: 'DM Sans', sans-serif;">Scroll</span>
-			<div class="h-8 w-[1px] bg-gradient-to-b from-white/20 to-transparent"></div>
+			<span class="text-[10px] font-medium uppercase tracking-[0.2em] text-white/80" style="font-family: 'DM Sans', sans-serif;">Scroll</span>
+			<div class="h-8 w-[1px] bg-gradient-to-b from-white/70 to-transparent"></div>
 		</div>
 	</div>
 </section>
