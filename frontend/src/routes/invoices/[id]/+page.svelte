@@ -20,6 +20,13 @@
 	let invoice = $state<Invoice | null>(null);
 	let loading = $state(true);
 
+	const statusClasses: Record<string, string> = {
+		paid: 'bg-emerald-950 text-emerald-400 border-emerald-800',
+		sent: 'bg-blue-950 text-blue-400 border-blue-800',
+		overdue: 'bg-red-950 text-red-400 border-red-800',
+		draft: 'bg-zinc-800 text-zinc-400 border-zinc-700'
+	};
+
 	onMount(async () => {
 		if (!$auth.token) { goto('/login'); return; }
 		try {
@@ -58,12 +65,6 @@
 						<p class="text-sm text-zinc-500">{invoice.client_email}</p>
 					{/if}
 				</div>
-				{@const statusClasses = {
-					paid: 'bg-emerald-950 text-emerald-400 border-emerald-800',
-					sent: 'bg-blue-950 text-blue-400 border-blue-800',
-					overdue: 'bg-red-950 text-red-400 border-red-800',
-					draft: 'bg-zinc-800 text-zinc-400 border-zinc-700'
-				}}
 				<span class="rounded-full border px-3 py-1 text-sm font-medium capitalize {statusClasses[invoice.status] || statusClasses.draft}">
 					{invoice.status}
 				</span>

@@ -60,14 +60,16 @@
 </header>
 
 <!-- HERO -->
-<section class="relative min-h-screen overflow-hidden bg-zinc-950">
-	<!-- 3D Blob Background -->
+<section class="relative min-h-screen overflow-hidden" style="background: radial-gradient(ellipse at 55% 50%, #1a1a2e 0%, #0a0a0f 60%, #050508 100%);">
+	<!-- Gradient glow behind blob -->
+	<div class="pointer-events-none absolute inset-0">
+		<div class="absolute left-1/2 top-[55%] h-[600px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30" style="background: radial-gradient(ellipse, rgba(255,180,50,0.25) 0%, rgba(100,60,10,0.1) 40%, transparent 70%);"></div>
+		<div class="absolute left-[60%] top-[65%] h-[400px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20" style="background: radial-gradient(ellipse, rgba(30,60,200,0.3) 0%, transparent 60%);"></div>
+	</div>
+
+	<!-- 3D Blob -->
 	<div class="absolute inset-0 overflow-hidden">
-		<div class="absolute inset-0 translate-y-[10%]">
-			<HeroBlob />
-		</div>
-		<!-- Top gradient fade -->
-		<div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-zinc-950 to-transparent"></div>
+		<HeroBlob />
 	</div>
 
 	<!-- Dot grid texture -->
@@ -359,7 +361,7 @@
 
 <!-- CTA -->
 <section class="relative bg-zinc-950 py-28">
-	<div class="mx-auto max-w-3xl px-6 text-center">
+	<div class="mx-auto max-w-7xl px-6 text-center">
 		<div class="rounded-3xl border border-white/[0.04] bg-white/[0.02] px-8 py-16 md:px-16">
 			<h2 class="font-['Instrument_Serif'] text-4xl tracking-tight text-white md:text-5xl">
 				Ready to automate<br><span class="italic text-emerald-400">your cash flow?</span>
