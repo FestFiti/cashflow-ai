@@ -83,7 +83,7 @@
 				<p class="text-sm text-zinc-400">You can now sign in with your new password.</p>
 				<button
 					onclick={() => goto('/login')}
-					class="gradient-bg-emerald mt-2 w-full rounded-xl bg-emerald-600 py-2.5 text-sm font-semibold text-white transition-all hover:bg-emerald-500"
+					class="gradient-bg-emerald mt-2 w-full rounded-xl bg-emerald-700 py-2.5 text-sm font-semibold text-white transition-all hover:bg-emerald-600"
 				>
 					Go to Login
 				</button>
@@ -150,7 +150,7 @@
 				<button
 					type="submit"
 					disabled={loading || !passwordValid || !passwordsMatch || !token}
-					class="gradient-bg-emerald w-full rounded-xl bg-emerald-600 py-2.5 text-sm font-semibold text-white transition-all hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
+					class="gradient-bg-emerald w-full rounded-xl bg-emerald-700 py-2.5 text-sm font-semibold text-white transition-all hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					{loading ? 'Resetting...' : 'Reset Password'}
 				</button>

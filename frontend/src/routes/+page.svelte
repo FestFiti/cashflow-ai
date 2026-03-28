@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { auth } from '$lib/stores/auth';
+	import { theme, toggleTheme } from '$lib/stores/theme';
 	import HeroBlob from '$lib/components/HeroBlob.svelte';
 	import { onMount } from 'svelte';
 
@@ -23,6 +24,8 @@
 		if (el) observer.observe(el);
 		return () => observer.disconnect();
 	});
+
+	const isDark = $derived($theme === 'dark');
 </script>
 
 <svelte:head>
@@ -35,21 +38,36 @@
 <!-- LANDING NAV -->
 <header class="fixed top-0 left-0 right-0 z-50">
 	<div class="mx-auto max-w-7xl px-6 py-5">
-		<div class="flex items-center justify-between rounded-2xl border border-white/[0.06] bg-zinc-950/60 px-6 py-3 backdrop-blur-xl">
+		<div class="flex items-center justify-between rounded-2xl border px-6 py-3 backdrop-blur-xl transition-colors {isDark ? 'border-white/[0.06] bg-zinc-950/60' : 'border-zinc-200 bg-white/80'}">
 			<a href="/" class="flex items-center gap-2.5">
-				<img src="/logo-gold.png" alt="CashFlow AI" class="h-8 w-8" />
-				<span class="text-[15px] font-semibold tracking-tight text-white/90">CashFlow AI</span>
+				<img src={isDark ? '/logo-gold.png' : '/logo-dark.png'} alt="CashFlow AI" class="h-8 w-8" />
+				<span class="text-[15px] font-semibold tracking-tight {isDark ? 'text-white/90' : 'text-zinc-900'}">CashFlow AI</span>
 			</a>
 
 			<nav class="hidden items-center gap-7 md:flex">
-				<a href="#features" class="text-[13px] font-medium text-white/50 transition-colors hover:text-white/90">Features</a>
-				<a href="#how-it-works" class="text-[13px] font-medium text-white/50 transition-colors hover:text-white/90">How It Works</a>
-				<a href="#integrations" class="text-[13px] font-medium text-white/50 transition-colors hover:text-white/90">Integrations</a>
+				<a href="#features" class="text-[13px] font-medium transition-colors {isDark ? 'text-white/50 hover:text-white/90' : 'text-zinc-500 hover:text-zinc-900'}">Features</a>
+				<a href="#how-it-works" class="text-[13px] font-medium transition-colors {isDark ? 'text-white/50 hover:text-white/90' : 'text-zinc-500 hover:text-zinc-900'}">How It Works</a>
+				<a href="#integrations" class="text-[13px] font-medium transition-colors {isDark ? 'text-white/50 hover:text-white/90' : 'text-zinc-500 hover:text-zinc-900'}">Integrations</a>
 			</nav>
 
 			<div class="flex items-center gap-3">
-				<a href="/login" class="text-[13px] font-medium text-white/60 transition-colors hover:text-white">Login</a>
-				<a href="/register" class="rounded-lg bg-white px-4 py-1.5 text-[13px] font-semibold text-zinc-950 transition-all hover:bg-white/90">Sign Up</a>
+				<button
+					onclick={toggleTheme}
+					class="rounded-lg p-2 transition-colors {isDark ? 'text-white/40 hover:text-white/80 hover:bg-white/[0.06]' : 'text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100'}"
+					title="Toggle dark mode"
+				>
+					{#if isDark}
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+						</svg>
+					{:else}
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+						</svg>
+					{/if}
+				</button>
+				<a href="/login" class="text-[13px] font-medium transition-colors {isDark ? 'text-white/60 hover:text-white' : 'text-zinc-600 hover:text-zinc-900'}">Login</a>
+				<a href="/register" class="rounded-lg px-4 py-1.5 text-[13px] font-semibold transition-all {isDark ? 'bg-white text-zinc-950 hover:bg-white/90' : 'bg-zinc-900 text-white hover:bg-zinc-800'}">Sign Up</a>
 			</div>
 		</div>
 	</div>
@@ -98,7 +116,7 @@
 		</h1>
 
 		<p
-			class="mx-auto mt-6 max-w-md text-center text-[15px] leading-relaxed text-white/40 transition-all duration-1000 delay-300 {heroVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}"
+			class="mx-auto mt-6 max-w-md text-center text-[15px] leading-relaxed text-white/60 transition-all duration-1000 delay-300 {heroVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}"
 			style="font-family: 'DM Sans', sans-serif;"
 		>
 			Generate invoices with AI. Collect payments via M-Pesa.
@@ -111,7 +129,7 @@
 		>
 			<a
 				href={$auth.token ? '/dashboard' : '/register'}
-				class="group inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-7 py-3 text-[14px] font-semibold text-zinc-950 transition-all hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20"
+				class="group inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-7 py-3 text-[14px] font-semibold text-white transition-all hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/20"
 				style="font-family: 'DM Sans', sans-serif;"
 			>
 				Get Started
@@ -173,7 +191,7 @@
 </section>
 
 <!-- STATS -->
-<section class="relative border-y border-white/[0.04] bg-zinc-950">
+<section class="relative border-y transition-colors {isDark ? 'border-white/[0.04] bg-zinc-950' : 'border-zinc-200 bg-zinc-50'}">
 	<div class="mx-auto grid max-w-5xl grid-cols-2 gap-0 md:grid-cols-4">
 		{#each [
 			{ value: '10K+', label: 'Invoices Generated', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
@@ -182,27 +200,27 @@
 			{ value: '5K+', label: 'Active Businesses', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' }
 		] as stat, i}
 			<div
-				class="flex flex-col items-center border-r border-white/[0.04] py-10 last:border-r-0 transition-all duration-700 {statsVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}"
+				class="flex flex-col items-center py-10 last:border-r-0 transition-all duration-700 {isDark ? 'border-r border-white/[0.04]' : 'border-r border-zinc-200'} {statsVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}"
 				style="transition-delay: {i * 100}ms; font-family: 'DM Sans', sans-serif;"
 			>
 				<svg xmlns="http://www.w3.org/2000/svg" class="mb-3 h-5 w-5 text-emerald-500/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 					<path stroke-linecap="round" stroke-linejoin="round" d={stat.icon} />
 				</svg>
-				<p class="text-2xl font-bold tracking-tight text-white md:text-3xl">{stat.value}</p>
-				<p class="mt-1 text-[12px] text-white/30">{stat.label}</p>
+				<p class="text-2xl font-bold tracking-tight md:text-3xl {isDark ? 'text-white' : 'text-zinc-900'}">{stat.value}</p>
+				<p class="mt-1 text-[12px] {isDark ? 'text-white/30' : 'text-zinc-500'}">{stat.label}</p>
 			</div>
 		{/each}
 	</div>
 </section>
 
 <!-- FEATURES -->
-<section id="features" class="relative bg-zinc-950 py-28">
+<section id="features" class="relative py-28 transition-colors {isDark ? 'bg-zinc-950' : 'bg-white'}">
 	<div class="mx-auto max-w-6xl px-6">
 		<div
 			class="mb-16 transition-all duration-700 {featuresVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}"
 		>
 			<p class="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-emerald-500" style="font-family: 'DM Sans', sans-serif;">Features</p>
-			<h2 class="max-w-lg font-['Instrument_Serif'] text-4xl leading-tight tracking-tight text-white md:text-5xl">
+			<h2 class="max-w-lg font-['Instrument_Serif'] text-4xl leading-tight tracking-tight md:text-5xl {isDark ? 'text-white' : 'text-zinc-900'}">
 				Everything you need to <span class="italic text-emerald-400">get paid</span>
 			</h2>
 		</div>
@@ -247,16 +265,16 @@
 				}
 			] as feature, i}
 				<div
-					class="group rounded-2xl border border-white/[0.04] bg-white/[0.02] p-6 transition-all duration-500 hover:border-emerald-500/20 hover:bg-emerald-500/[0.03] {featuresVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}"
+					class="group rounded-2xl border p-6 transition-all duration-500 hover:border-emerald-500/20 {isDark ? 'border-white/[0.04] bg-white/[0.02] hover:bg-emerald-500/[0.03]' : 'border-zinc-200 bg-zinc-50 hover:bg-emerald-50'} {featuresVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}"
 					style="transition-delay: {200 + i * 80}ms; font-family: 'DM Sans', sans-serif;"
 				>
-					<div class="mb-5 flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.03] transition-colors group-hover:border-emerald-500/20 group-hover:bg-emerald-500/[0.06]">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white/40 transition-colors group-hover:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+					<div class="mb-5 flex h-10 w-10 items-center justify-center rounded-xl border transition-colors group-hover:border-emerald-500/20 {isDark ? 'border-white/[0.06] bg-white/[0.03] group-hover:bg-emerald-500/[0.06]' : 'border-zinc-200 bg-white group-hover:bg-emerald-50'}">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-colors group-hover:text-emerald-400 {isDark ? 'text-white/40' : 'text-zinc-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 							<path stroke-linecap="round" stroke-linejoin="round" d={feature.icon} />
 						</svg>
 					</div>
-					<h3 class="mb-2 text-[15px] font-semibold text-white/90">{feature.title}</h3>
-					<p class="text-[13px] leading-relaxed text-white/35">{feature.description}</p>
+					<h3 class="mb-2 text-[15px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">{feature.title}</h3>
+					<p class="text-[13px] leading-relaxed {isDark ? 'text-white/35' : 'text-zinc-500'}">{feature.description}</p>
 				</div>
 			{/each}
 		</div>
@@ -264,13 +282,13 @@
 </section>
 
 <!-- HOW IT WORKS -->
-<section id="how-it-works" class="relative bg-zinc-950 py-28">
-	<div class="absolute inset-0 opacity-[0.015]" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 32px 32px;"></div>
+<section id="how-it-works" class="relative py-28 transition-colors {isDark ? 'bg-zinc-950' : 'bg-zinc-50'}">
+	<div class="absolute inset-0 opacity-[0.015]" style="background-image: radial-gradient(circle, {isDark ? 'white' : '#71717a'} 1px, transparent 1px); background-size: 32px 32px;"></div>
 
 	<div class="relative mx-auto max-w-5xl px-6">
 		<div class="mb-16 text-center">
 			<p class="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-emerald-500" style="font-family: 'DM Sans', sans-serif;">Process</p>
-			<h2 class="font-['Instrument_Serif'] text-4xl tracking-tight text-white md:text-5xl">
+			<h2 class="font-['Instrument_Serif'] text-4xl tracking-tight md:text-5xl {isDark ? 'text-white' : 'text-zinc-900'}">
 				Three steps to <span class="italic text-emerald-400">automation</span>
 			</h2>
 		</div>
@@ -296,15 +314,15 @@
 					icon: 'M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z'
 				}
 			] as item, i}
-				<div class="relative border-r border-white/[0.04] p-8 last:border-r-0" style="font-family: 'DM Sans', sans-serif;">
-					<span class="absolute right-6 top-6 font-['Instrument_Serif'] text-6xl italic text-white/[0.03]">{item.step}</span>
+				<div class="relative border-r p-8 last:border-r-0 {isDark ? 'border-white/[0.04]' : 'border-zinc-200'}" style="font-family: 'DM Sans', sans-serif;">
+					<span class="absolute right-6 top-6 font-['Instrument_Serif'] text-6xl italic {isDark ? 'text-white/[0.03]' : 'text-zinc-900/[0.04]'}">{item.step}</span>
 					<div class="mb-5 flex h-10 w-10 items-center justify-center rounded-full border border-emerald-500/20 bg-emerald-500/[0.06]">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 							<path stroke-linecap="round" stroke-linejoin="round" d={item.icon} />
 						</svg>
 					</div>
-					<h3 class="mb-2 text-[15px] font-semibold text-white/90">{item.title}</h3>
-					<p class="text-[13px] leading-relaxed text-white/35">{item.desc}</p>
+					<h3 class="mb-2 text-[15px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">{item.title}</h3>
+					<p class="text-[13px] leading-relaxed {isDark ? 'text-white/35' : 'text-zinc-500'}">{item.desc}</p>
 				</div>
 			{/each}
 		</div>
@@ -312,11 +330,11 @@
 </section>
 
 <!-- INTEGRATIONS -->
-<section id="integrations" class="relative bg-zinc-950 py-28">
+<section id="integrations" class="relative py-28 transition-colors {isDark ? 'bg-zinc-950' : 'bg-white'}">
 	<div class="mx-auto max-w-5xl px-6">
 		<div class="mb-16 text-center">
 			<p class="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-emerald-500" style="font-family: 'DM Sans', sans-serif;">Integrations</p>
-			<h2 class="font-['Instrument_Serif'] text-4xl tracking-tight text-white md:text-5xl">
+			<h2 class="font-['Instrument_Serif'] text-4xl tracking-tight md:text-5xl {isDark ? 'text-white' : 'text-zinc-900'}">
 				Powered by <span class="italic text-emerald-400">trusted</span> APIs
 			</h2>
 		</div>
@@ -339,16 +357,16 @@
 					icon: 'M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z'
 				}
 			] as integration}
-				<div class="rounded-2xl border border-white/[0.04] bg-white/[0.02] p-6" style="font-family: 'DM Sans', sans-serif;">
+				<div class="rounded-2xl border p-6 transition-colors {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'}" style="font-family: 'DM Sans', sans-serif;">
 					<div class="mb-4 flex items-center gap-3">
 						<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10">
 							<svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 								<path stroke-linecap="round" stroke-linejoin="round" d={integration.icon} />
 							</svg>
 						</div>
-						<h3 class="text-[15px] font-semibold text-white/90">{integration.name}</h3>
+						<h3 class="text-[15px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">{integration.name}</h3>
 					</div>
-					<p class="text-[13px] leading-relaxed text-white/35">{integration.desc}</p>
+					<p class="text-[13px] leading-relaxed {isDark ? 'text-white/35' : 'text-zinc-500'}">{integration.desc}</p>
 				</div>
 			{/each}
 		</div>
@@ -356,19 +374,19 @@
 </section>
 
 <!-- CTA -->
-<section class="relative bg-zinc-950 py-28">
+<section class="relative py-28 transition-colors {isDark ? 'bg-zinc-950' : 'bg-zinc-50'}">
 	<div class="mx-auto max-w-7xl px-6 text-center">
-		<div class="rounded-3xl border border-white/[0.04] bg-white/[0.02] px-8 py-16 md:px-16">
-			<h2 class="font-['Instrument_Serif'] text-4xl tracking-tight text-white md:text-5xl">
+		<div class="rounded-3xl border px-8 py-16 md:px-16 transition-colors {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-white'}">
+			<h2 class="font-['Instrument_Serif'] text-4xl tracking-tight md:text-5xl {isDark ? 'text-white' : 'text-zinc-900'}">
 				Ready to automate<br><span class="italic text-emerald-400">your cash flow?</span>
 			</h2>
-			<p class="mx-auto mt-5 max-w-md text-[14px] leading-relaxed text-white/35" style="font-family: 'DM Sans', sans-serif;">
+			<p class="mx-auto mt-5 max-w-md text-[14px] leading-relaxed {isDark ? 'text-white/35' : 'text-zinc-500'}" style="font-family: 'DM Sans', sans-serif;">
 				Join thousands of African businesses using CashFlow AI to get paid faster and never chase a payment again.
 			</p>
 			<div class="mt-8 flex items-center justify-center gap-4">
 				<a
 					href="/register"
-					class="group inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-8 py-3.5 text-[14px] font-semibold text-zinc-950 transition-all hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20"
+					class="group inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-8 py-3.5 text-[14px] font-semibold text-white transition-all hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/20"
 					style="font-family: 'DM Sans', sans-serif;"
 				>
 					Start for Free
@@ -382,43 +400,43 @@
 </section>
 
 <!-- FOOTER -->
-<footer class="border-t border-white/[0.04] bg-zinc-950 py-12">
+<footer class="border-t py-12 transition-colors {isDark ? 'border-white/[0.04] bg-zinc-950' : 'border-zinc-200 bg-white'}">
 	<div class="mx-auto max-w-6xl px-6" style="font-family: 'DM Sans', sans-serif;">
 		<div class="grid grid-cols-1 gap-8 md:grid-cols-4">
 			<div>
 				<div class="mb-4 flex items-center gap-2.5">
-					<img src="/logo-gold.png" alt="CashFlow AI" class="h-8 w-8" />
-					<span class="text-[14px] font-semibold text-white/80">CashFlow AI</span>
+					<img src={isDark ? '/logo-gold.png' : '/logo-dark.png'} alt="CashFlow AI" class="h-8 w-8" />
+					<span class="text-[14px] font-semibold {isDark ? 'text-white/80' : 'text-zinc-800'}">CashFlow AI</span>
 				</div>
-				<p class="text-[13px] leading-relaxed text-white/25">
+				<p class="text-[13px] leading-relaxed {isDark ? 'text-white/25' : 'text-zinc-400'}">
 					Intelligent payment orchestration for African businesses.
 				</p>
 			</div>
 			<div>
-				<h4 class="mb-4 text-[11px] font-semibold uppercase tracking-[0.15em] text-white/25">Product</h4>
-				<ul class="space-y-2.5 text-[13px] text-white/40">
-					<li><a href="#features" class="transition-colors hover:text-white/80">Features</a></li>
-					<li><a href="#how-it-works" class="transition-colors hover:text-white/80">How It Works</a></li>
-					<li><a href="/register" class="transition-colors hover:text-white/80">Get Started</a></li>
+				<h4 class="mb-4 text-[11px] font-semibold uppercase tracking-[0.15em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Product</h4>
+				<ul class="space-y-2.5 text-[13px] {isDark ? 'text-white/40' : 'text-zinc-500'}">
+					<li><a href="#features" class="transition-colors {isDark ? 'hover:text-white/80' : 'hover:text-zinc-900'}">Features</a></li>
+					<li><a href="#how-it-works" class="transition-colors {isDark ? 'hover:text-white/80' : 'hover:text-zinc-900'}">How It Works</a></li>
+					<li><a href="/register" class="transition-colors {isDark ? 'hover:text-white/80' : 'hover:text-zinc-900'}">Get Started</a></li>
 				</ul>
 			</div>
 			<div>
-				<h4 class="mb-4 text-[11px] font-semibold uppercase tracking-[0.15em] text-white/25">Integrations</h4>
-				<ul class="space-y-2.5 text-[13px] text-white/40">
+				<h4 class="mb-4 text-[11px] font-semibold uppercase tracking-[0.15em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Integrations</h4>
+				<ul class="space-y-2.5 text-[13px] {isDark ? 'text-white/40' : 'text-zinc-500'}">
 					<li>M-Pesa Daraja</li>
 					<li>Ratiba</li>
 					<li>Claude AI</li>
 				</ul>
 			</div>
 			<div>
-				<h4 class="mb-4 text-[11px] font-semibold uppercase tracking-[0.15em] text-white/25">Support</h4>
-				<ul class="space-y-2.5 text-[13px] text-white/40">
-					<li><a href="/docs" class="transition-colors hover:text-white/80">Documentation</a></li>
-					<li><a href="/docs" class="transition-colors hover:text-white/80">API Reference</a></li>
+				<h4 class="mb-4 text-[11px] font-semibold uppercase tracking-[0.15em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Support</h4>
+				<ul class="space-y-2.5 text-[13px] {isDark ? 'text-white/40' : 'text-zinc-500'}">
+					<li><a href="/docs" class="transition-colors {isDark ? 'hover:text-white/80' : 'hover:text-zinc-900'}">Documentation</a></li>
+					<li><a href="/docs" class="transition-colors {isDark ? 'hover:text-white/80' : 'hover:text-zinc-900'}">API Reference</a></li>
 				</ul>
 			</div>
 		</div>
-		<div class="mt-10 border-t border-white/[0.04] pt-6 text-center text-[12px] text-white/15">
+		<div class="mt-10 border-t pt-6 text-center text-[12px] {isDark ? 'border-white/[0.04] text-white/15' : 'border-zinc-200 text-zinc-400'}">
 			2026 CashFlow AI. Built for African businesses.
 		</div>
 	</div>

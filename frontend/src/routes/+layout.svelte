@@ -6,6 +6,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { connectWs, disconnectWs, wsConnected } from '$lib/stores/ws';
 	import NotificationBell from '$lib/components/NotificationBell.svelte';
+	import { theme } from '$lib/stores/theme';
 
 	let { children } = $props();
 	let mobileMenuOpen = $state(false);
@@ -52,7 +53,7 @@
 	>
 		<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-8">
 			<a href="/dashboard" class="flex items-center gap-2">
-				<img src="/logo-dark.png" alt="CashFlow AI" class="h-8 w-8" />
+				<img src={$theme === 'dark' ? '/logo-gold.png' : '/logo-dark.png'} alt="CashFlow AI" class="h-8 w-8" />
 				<span class="text-lg font-bold tracking-tight">CashFlow AI</span>
 			</a>
 

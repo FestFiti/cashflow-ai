@@ -25,6 +25,10 @@
 		font-family: var(--font-sans);
 	}
 
+	html.light body {
+		@apply bg-white text-zinc-900;
+	}
+
 	::-webkit-scrollbar {
 		width: 5px;
 	}
@@ -37,6 +41,13 @@
 	}
 	::-webkit-scrollbar-thumb:hover {
 		background: #3f3f46;
+	}
+
+	html.light ::-webkit-scrollbar-thumb {
+		background: #d4d4d8;
+	}
+	html.light ::-webkit-scrollbar-thumb:hover {
+		background: #a1a1aa;
 	}
 }
 

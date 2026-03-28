@@ -53,6 +53,7 @@ services:
       - backend
     volumes:
       - ./frontend/src:/app/src
+      - ./frontend/static:/app/static
     command: npm run dev -- --host 0.0.0.0 --port 9999
 
 volumes:

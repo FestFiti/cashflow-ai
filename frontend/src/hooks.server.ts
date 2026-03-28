@@ -5,8 +5,12 @@ const PUBLIC_PATHS = ['/', '/login', '/register', '/forgot-password', '/reset-pa
 export const handle: Handle = async ({ event, resolve }) => {
 	const path = event.url.pathname;
 
-	// Allow public paths and static assets
-	if (PUBLIC_PATHS.some((p) => path === p || path.startsWith(p + '/')) || path.startsWith('/_app')) {
+	// Allow static assets (files with extensions), internal SvelteKit paths, and public routes
+	if (
+		path.includes('.') ||
+		path.startsWith('/_app') ||
+		PUBLIC_PATHS.some((p) => path === p || path.startsWith(p + '/'))
+	) {
 		return resolve(event);
 	}
 
