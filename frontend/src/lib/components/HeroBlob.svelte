@@ -16,62 +16,61 @@
 		renderer.setSize(container.clientWidth, container.clientHeight);
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		renderer.toneMapping = THREE.ACESFilmicToneMapping;
-		renderer.toneMappingExposure = 1.8;
+		renderer.toneMappingExposure = 2.0;
 		container.appendChild(renderer.domElement);
 
 		// ── LIGHTS ──
-		// Warm ambient fills the shadows
-		scene.add(new THREE.AmbientLight(0xfff0e0, 0.8));
+		// Rich warm ambient — nothing is pure black
+		scene.add(new THREE.AmbientLight(0xffeedd, 1.5));
 
-		// Key light — large warm white from above-front
-		const keyLight = new THREE.PointLight(0xffffff, 4500, 60);
-		keyLight.position.set(0, 8, 14);
-		scene.add(keyLight);
+		// Hemisphere — warm sky, cool ground = natural gradient across surface
+		const hemi = new THREE.HemisphereLight(0xffd699, 0x1a2a5e, 2.2);
+		scene.add(hemi);
 
-		// Gold — warm highlight from upper-left
-		const gold = new THREE.PointLight(0xffcc22, 800, 45);
-		gold.position.set(-3, 6, 7);
-		scene.add(gold);
+		// Key — placed FAR away + very high intensity = wide soft falloff
+		// This is the main highlight — far distance makes it spread across the surface
+		const key = new THREE.PointLight(0xfff5e6, 18000, 100, 1.8);
+		key.position.set(3, 16, 22);
+		scene.add(key);
 
-		// Orange fill — left side warmth
-		const orange = new THREE.PointLight(0xff8800, 200, 36);
-		orange.position.set(-7, 0.5, 5);
-		scene.add(orange);
+		// Warm fill — broad golden wash from left
+		const fill = new THREE.PointLight(0xffaa33, 5000, 60, 1.8);
+		fill.position.set(-14, 5, 12);
+		scene.add(fill);
 
-		// Deep blue — bottom creates depth
-		const blue = new THREE.PointLight(0x2244ff, 500, 48);
-		blue.position.set(3.5, -10, 2.5);
-		scene.add(blue);
+		// Back-rim — directional for wide even edge light
+		const rimLight = new THREE.DirectionalLight(0xccddee, 4.0);
+		rimLight.position.set(0, 6, -10);
+		scene.add(rimLight);
 
-		// Cyan — right equator iridescent rim
-		const cyan = new THREE.PointLight(0x00bbff, 100, 30);
-		cyan.position.set(8, 0, 4);
-		scene.add(cyan);
+		// Bottom blue — broad uplight
+		const bottomBlue = new THREE.PointLight(0x2244cc, 3000, 60, 1.8);
+		bottomBlue.position.set(3, -16, 8);
+		scene.add(bottomBlue);
 
-		// Back-rim — silver edge on silhouette
-		const rim = new THREE.DirectionalLight(0xaabbcc, 4.0);
-		rim.position.set(0, 4, -8);
-		scene.add(rim);
+		// Cyan right rim — far away for broad highlight
+		const cyanRim = new THREE.PointLight(0x44ccff, 1200, 50, 1.8);
+		cyanRim.position.set(16, 2, 8);
+		scene.add(cyanRim);
 
-		// ── MATERIAL — dark liquid chrome ──
+		// ── MATERIAL ──
+		// roughness 0.28 = broad, soft, realistic specular spread
+		// No clearcoat — it adds a sharp secondary highlight on top
 		const mat = new THREE.MeshPhysicalMaterial({
-			color: 0x080808,
+			color: 0x141414,
 			metalness: 1.0,
-			roughness: 0.04,
-			clearcoat: 1.0,
-			clearcoatRoughness: 0.03,
-			reflectivity: 1.0,
-			envMapIntensity: 0.4,
+			roughness: 0.28,
+			clearcoat: 0.0,
+			reflectivity: 0.85,
+			envMapIntensity: 0.3,
 		});
 
 		// ── GEOMETRY ──
-		// Subdivision 48 = ~27k verts (smooth enough, 4x faster than 100)
 		const geo = new THREE.IcosahedronGeometry(5.5, 48);
 		const blob = new THREE.Mesh(geo, mat);
 		blob.position.set(0.2, -5.8, 0);
 		scene.add(blob);
 
-		// Cache rest positions as flat Float32Array for speed
 		const posAttr = geo.getAttribute('position') as THREE.BufferAttribute;
 		const nV = posAttr.count;
 		const restX = new Float32Array(nV);
@@ -83,11 +82,9 @@
 			restZ[i] = posAttr.getZ(i);
 		}
 
-		// ── Cursor tracking ──
-		let cursorX = 0;
-		let cursorY = 0;
-		let smoothCursorX = 0;
-		let smoothCursorY = 0;
+		// ── Cursor ──
+		let cursorX = 0, cursorY = 0;
+		let smoothX = 0, smoothY = 0;
 		const onMove = (e: MouseEvent) => {
 			cursorX = (e.clientX / window.innerWidth - 0.5) * 2;
 			cursorY = (e.clientY / window.innerHeight - 0.5) * 2;
@@ -102,9 +99,8 @@
 			raf = requestAnimationFrame(tick);
 			t += 0.0016;
 
-			// Smooth cursor lerp
-			smoothCursorX += (cursorX - smoothCursorX) * 0.03;
-			smoothCursorY += (cursorY - smoothCursorY) * 0.03;
+			smoothX += (cursorX - smoothX) * 0.03;
+			smoothY += (cursorY - smoothY) * 0.03;
 
 			const arr = posAttr.array as Float32Array;
 
@@ -113,15 +109,15 @@
 				const ry = restY[i];
 				const rz = restZ[i];
 
-				// Single very low frequency noise — ultra smooth, big rolling bumps
-				const n1 = noise3D(
-					rx * 0.08 + t,
-					ry * 0.08 + t * 0.5,
-					rz * 0.08
+				// Very low frequency = massive smooth rolling hills and deep valleys
+				const n = noise3D(
+					rx * 0.06 + t,
+					ry * 0.06 + t * 0.45,
+					rz * 0.06
 				);
 
-				// Big, smooth deformation — amplitude 0.18 for visible rolling bumps
-				const d = 1.0 + n1 * 0.18;
+				// amplitude 0.30 = deep valleys, tall peaks — very visible deformation
+				const d = 1.0 + n * 0.30;
 
 				const i3 = i * 3;
 				arr[i3]     = rx * d;
@@ -132,23 +128,19 @@
 			posAttr.needsUpdate = true;
 			geo.computeVertexNormals();
 
-			// Cursor-reactive rotation (smooth, gentle)
-			blob.rotation.y = -t * 0.4 + smoothCursorX * 0.3;
-			blob.rotation.x = smoothCursorY * 0.15;
+			blob.rotation.y = -t * 0.4 + smoothX * 0.3;
+			blob.rotation.x = smoothY * 0.15;
 			blob.rotation.z = Math.sin(t * 1.2) * 0.03;
-
-			// Gentle float
 			blob.position.y = -5.8 + Math.sin(t * 1.4) * 0.15;
 
-			// Cursor shifts the gold light subtly
-			gold.position.x = -3 + smoothCursorX * 2;
-			gold.position.y = 6 + smoothCursorY * 1.5;
+			// Cursor shifts key light for dynamic highlight movement
+			key.position.x = 3 + smoothX * 4;
+			key.position.y = 16 + smoothY * 3;
 
 			renderer.render(scene, camera);
 		}
 		tick();
 
-		// ── Resize ──
 		const onResize = () => {
 			const w = container.clientWidth;
 			const h = container.clientHeight;

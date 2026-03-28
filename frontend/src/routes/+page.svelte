@@ -37,11 +37,7 @@
 	<div class="mx-auto max-w-7xl px-6 py-5">
 		<div class="flex items-center justify-between rounded-2xl border border-white/[0.06] bg-zinc-950/60 px-6 py-3 backdrop-blur-xl">
 			<a href="/" class="flex items-center gap-2.5">
-				<div class="flex h-7 w-7 items-center justify-center rounded-md bg-emerald-500">
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-zinc-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-					</svg>
-				</div>
+				<img src="/logo-gold.png" alt="CashFlow AI" class="h-8 w-8" />
 				<span class="text-[15px] font-semibold tracking-tight text-white/90">CashFlow AI</span>
 			</a>
 
@@ -62,7 +58,7 @@
 <!-- HERO -->
 <section class="relative min-h-screen overflow-hidden" style="background: radial-gradient(ellipse at 55% 50%, #1a1a2e 0%, #0a0a0f 60%, #050508 100%);">
 	<!-- Gradient glow behind blob -->
-	<div class="pointer-events-none absolute inset-0">
+	<div class="pointer-events-none absolute opacity-40 inset-0">
 		<div class="absolute left-1/2 top-[55%] h-[600px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30" style="background: radial-gradient(ellipse, rgba(255,180,50,0.25) 0%, rgba(100,60,10,0.1) 40%, transparent 70%);"></div>
 		<div class="absolute left-[60%] top-[65%] h-[400px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20" style="background: radial-gradient(ellipse, rgba(30,60,200,0.3) 0%, transparent 60%);"></div>
 	</div>
@@ -391,11 +387,7 @@
 		<div class="grid grid-cols-1 gap-8 md:grid-cols-4">
 			<div>
 				<div class="mb-4 flex items-center gap-2.5">
-					<div class="flex h-7 w-7 items-center justify-center rounded-md bg-emerald-500">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-zinc-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-						</svg>
-					</div>
+					<img src="/logo-gold.png" alt="CashFlow AI" class="h-8 w-8" />
 					<span class="text-[14px] font-semibold text-white/80">CashFlow AI</span>
 				</div>
 				<p class="text-[13px] leading-relaxed text-white/25">
