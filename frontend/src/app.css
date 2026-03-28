@@ -11,7 +11,8 @@
 	--color-emerald-700: #047857;
 	--color-emerald-800: #065f46;
 	--color-emerald-900: #064e3b;
-	--font-sans: 'Figtree', system-ui, -apple-system, sans-serif;
+	--color-emerald-950: #022c22;
+	--font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
 }
 
 @layer base {
@@ -20,19 +21,18 @@
 		font-family: var(--font-sans);
 	}
 
-	/* Custom scrollbar */
 	::-webkit-scrollbar {
-		width: 6px;
+		width: 5px;
 	}
 	::-webkit-scrollbar-track {
-		background: #18181b;
+		background: transparent;
 	}
 	::-webkit-scrollbar-thumb {
-		background: #3f3f46;
+		background: #27272a;
 		border-radius: 3px;
 	}
 	::-webkit-scrollbar-thumb:hover {
-		background: #52525b;
+		background: #3f3f46;
 	}
 }
 
@@ -42,8 +42,8 @@
 		45deg,
 		transparent,
 		transparent 4px,
-		rgba(255, 255, 255, 0.03) 4px,
-		rgba(255, 255, 255, 0.03) 8px
+		rgba(255, 255, 255, 0.02) 4px,
+		rgba(255, 255, 255, 0.02) 8px
 	);
 }
 
@@ -52,8 +52,8 @@
 		45deg,
 		transparent,
 		transparent 4px,
-		rgba(16, 185, 129, 0.08) 4px,
-		rgba(16, 185, 129, 0.08) 8px
+		rgba(16, 185, 129, 0.06) 4px,
+		rgba(16, 185, 129, 0.06) 8px
 	);
 }
 
@@ -62,8 +62,8 @@
 		45deg,
 		transparent,
 		transparent 4px,
-		rgba(59, 130, 246, 0.08) 4px,
-		rgba(59, 130, 246, 0.08) 8px
+		rgba(59, 130, 246, 0.06) 4px,
+		rgba(59, 130, 246, 0.06) 8px
 	);
 }
 
@@ -72,8 +72,8 @@
 		45deg,
 		transparent,
 		transparent 4px,
-		rgba(245, 158, 11, 0.08) 4px,
-		rgba(245, 158, 11, 0.08) 8px
+		rgba(245, 158, 11, 0.06) 4px,
+		rgba(245, 158, 11, 0.06) 8px
 	);
 }
 
@@ -89,17 +89,8 @@
 	}
 }
 
-@keyframes pulse-slow {
-	0%, 100% { opacity: 1; }
-	50% { opacity: 0.7; }
-}
-
 .animate-fade-in-up {
 	animation: fade-in-up 0.6s ease-out forwards;
-}
-
-.animate-pulse-slow {
-	animation: pulse-slow 2s ease-in-out infinite;
 }
 
 .animation-delay-100 { animation-delay: 0.1s; }

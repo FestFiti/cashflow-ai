@@ -32,13 +32,13 @@
 		open = false;
 	}
 
-	function categoryIcon(cat: string): string {
+	function categoryColor(cat: string): string {
 		switch (cat) {
-			case 'payment': return '\u{1F4B0}';
-			case 'reminder': return '\u{23F0}';
-			case 'alert': return '\u{26A0}';
-			case 'ai': return '\u{2728}';
-			default: return '\u{1F514}';
+			case 'payment': return 'text-emerald-400';
+			case 'reminder': return 'text-blue-400';
+			case 'alert': return 'text-amber-400';
+			case 'ai': return 'text-violet-400';
+			default: return 'text-zinc-400';
 		}
 	}
 
@@ -97,7 +97,11 @@
 							onclick={() => handleClick(n)}
 							class="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-zinc-800 {!n.is_read ? 'bg-emerald-950' : ''}"
 						>
-							<span class="mt-0.5 text-sm">{categoryIcon(n.category)}</span>
+							<span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 {categoryColor(n.category)}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+								</svg>
+							</span>
 							<div class="min-w-0 flex-1">
 								<p class="text-sm font-medium" class:text-white={!n.is_read} class:text-zinc-400={n.is_read}>
 									{n.title}

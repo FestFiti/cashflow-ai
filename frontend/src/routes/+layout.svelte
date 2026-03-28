@@ -30,15 +30,6 @@
 	}
 </script>
 
-<svelte:head>
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;900&display=swap"
-		rel="stylesheet"
-	/>
-</svelte:head>
-
 {#if showNav}
 	<header
 		class="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-xl"
@@ -106,50 +97,3 @@
 {/if}
 
 {@render children()}
-
-{#if isLanding}
-	<footer class="border-t border-zinc-800 bg-zinc-950">
-		<div class="mx-auto max-w-7xl px-4 py-12 md:px-8">
-			<div class="grid grid-cols-1 gap-8 md:grid-cols-4">
-				<div>
-					<div class="mb-4 flex items-center gap-2">
-						<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20">
-							<span class="text-lg font-bold text-emerald-400">C</span>
-						</div>
-						<span class="text-lg font-bold">CashFlow AI</span>
-					</div>
-					<p class="text-sm text-zinc-500">
-						Intelligent payment orchestration for African businesses.
-					</p>
-				</div>
-				<div>
-					<h4 class="mb-3 text-sm font-semibold uppercase tracking-widest text-zinc-500">Product</h4>
-					<ul class="space-y-2 text-sm text-zinc-400">
-						<li><a href="#features" class="hover:text-white">Features</a></li>
-						<li><a href="#how-it-works" class="hover:text-white">How It Works</a></li>
-						<li><a href="/register" class="hover:text-white">Get Started</a></li>
-					</ul>
-				</div>
-				<div>
-					<h4 class="mb-3 text-sm font-semibold uppercase tracking-widest text-zinc-500">Integrations</h4>
-					<ul class="space-y-2 text-sm text-zinc-400">
-						<li>M-Pesa Daraja</li>
-						<li>Ratiba</li>
-						<li>Claude AI</li>
-					</ul>
-				</div>
-				<div>
-					<h4 class="mb-3 text-sm font-semibold uppercase tracking-widest text-zinc-500">Support</h4>
-					<ul class="space-y-2 text-sm text-zinc-400">
-						<li><a href="#" class="hover:text-white">Documentation</a></li>
-						<li><a href="#" class="hover:text-white">API Reference</a></li>
-						<li><a href="#" class="hover:text-white">Contact</a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="mt-8 border-t border-zinc-800 pt-8 text-center text-sm text-zinc-600">
-				&copy; 2026 CashFlow AI. Built for African businesses.
-			</div>
-		</div>
-	</footer>
-{/if}
