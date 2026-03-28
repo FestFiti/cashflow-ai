@@ -4,6 +4,10 @@
 	import { api } from '$lib/api'
 	import { login } from '$lib/stores/auth'
 	import HeroBlob from '$lib/components/HeroBlob.svelte'
+	import HeroBlobLight from '$lib/components/HeroBlobLight.svelte'
+	import { theme } from '$lib/stores/theme'
+
+	const isDark = $derived($theme === 'dark')
 
 	let email = $state('')
 	let password = $state('')
@@ -49,15 +53,15 @@
 
 <div class="grid min-h-screen grid-cols-1 lg:grid-cols-2">
 	<!-- Left: Form -->
-	<div class="flex flex-col justify-center px-6 py-12 lg:px-16">
+	<div class="flex flex-col justify-center px-6 py-12 lg:px-16 {isDark ? '' : 'bg-white'}">
 		<div class="mx-auto w-full max-w-sm">
 			<a href="/" class="mb-10 inline-flex items-center gap-2.5">
-				<img src="/logo-gold.png" alt="CashFlow AI" class="h-9 w-9" />
-				<span class="text-lg font-semibold tracking-tight text-white/90">CashFlow AI</span>
+				<img src={isDark ? '/logo-gold.png' : '/logo-dark.png'} alt="CashFlow AI" class="h-9 w-9" />
+				<span class="text-lg font-semibold tracking-tight {isDark ? 'text-white/90' : 'text-zinc-900'}">CashFlow AI</span>
 			</a>
 
-			<h1 class="mb-2 font-['Instrument_Serif'] text-3xl text-white">Welcome back</h1>
-			<p class="mb-8 text-sm text-white/35" style="font-family: 'DM Sans', sans-serif;">
+			<h1 class="mb-2 font-['Instrument_Serif'] text-3xl {isDark ? 'text-white' : 'text-zinc-900'}">Welcome back</h1>
+			<p class="mb-8 text-sm {isDark ? 'text-white/35' : 'text-zinc-500'}" style="font-family: 'DM Sans', sans-serif;">
 				Sign in to manage your cash flow
 			</p>
 
@@ -71,21 +75,21 @@
 				{/if}
 
 				<div>
-					<label for="email" class="mb-1.5 block text-[13px] font-medium text-white/40">Email</label
+					<label for="email" class="mb-1.5 block text-[13px] font-medium {isDark ? 'text-white/40' : 'text-zinc-500'}">Email</label
 					>
 					<input
 						id="email"
 						type="email"
 						bind:value={email}
 						required
-						class="w-full rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3 text-[14px] text-white placeholder-white/20 outline-none transition-colors focus:border-emerald-500/50 focus:bg-white/[0.05]"
+						class="w-full rounded-xl border px-4 py-3 text-[14px] outline-none transition-colors focus:border-emerald-500/50 {isDark ? 'border-white/[0.06] bg-white/[0.03] text-white placeholder-white/20 focus:bg-white/[0.05]' : 'border-zinc-300 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white'}"
 						placeholder="you@business.com"
 					/>
 				</div>
 
 				<div>
 					<div class="mb-1.5 flex items-center justify-between">
-						<label for="password" class="text-[13px] font-medium text-white/40">Password</label>
+						<label for="password" class="text-[13px] font-medium {isDark ? 'text-white/40' : 'text-zinc-500'}">Password</label>
 						<a
 							href="/forgot-password"
 							class="text-[12px] text-emerald-400/70 hover:text-emerald-400">Forgot password?</a
@@ -97,13 +101,13 @@
 							type={showPassword ? 'text' : 'password'}
 							bind:value={password}
 							required
-							class="w-full rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3 pr-10 text-[14px] text-white placeholder-white/20 outline-none transition-colors focus:border-emerald-500/50 focus:bg-white/[0.05]"
+							class="w-full rounded-xl border px-4 py-3 pr-10 text-[14px] outline-none transition-colors focus:border-emerald-500/50 {isDark ? 'border-white/[0.06] bg-white/[0.03] text-white placeholder-white/20 focus:bg-white/[0.05]' : 'border-zinc-300 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white'}"
 							placeholder="Enter your password"
 						/>
 						<button
 							type="button"
 							onclick={() => (showPassword = !showPassword)}
-							class="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50"
+							class="absolute right-3 top-1/2 -translate-y-1/2 {isDark ? 'text-white/20 hover:text-white/50' : 'text-zinc-400 hover:text-zinc-600'}"
 						>
 							{#if showPassword}
 								<svg
@@ -153,7 +157,7 @@
 					{loading ? 'Signing in...' : 'Sign In'}
 				</button>
 
-				<p class="text-center text-[13px] text-white/30">
+				<p class="text-center text-[13px] {isDark ? 'text-white/30' : 'text-zinc-500'}">
 					Don't have an account?
 					<a href="/register" class="text-emerald-400/80 hover:text-emerald-400">Register</a>
 				</p>
@@ -164,18 +168,26 @@
 	<!-- Right: Blob -->
 	<div
 		class="relative hidden overflow-hidden lg:block"
-		style="background: radial-gradient(ellipse at 50% 50%, #1a1a2e 0%, #0a0a0f 60%, #050508 100%);"
+		style="background: {$theme === 'dark' ? 'radial-gradient(ellipse at 50% 50%, #1a1a2e 0%, #0a0a0f 60%, #050508 100%)' : 'radial-gradient(ellipse at 50% 50%, #f0fdf4 0%, #ecfdf5 40%, #ffffff 100%)'};"
 	>
 		<div class="pointer-events-none absolute inset-0">
 			<div
 				class="absolute left-1/2 top-1/2 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-25"
-				style="background: radial-gradient(ellipse, rgba(255,180,50,0.2) 0%, rgba(100,60,10,0.08) 40%, transparent 70%);"
+				style="background: radial-gradient(ellipse, {$theme === 'dark' ? 'rgba(255,180,50,0.2) 0%, rgba(100,60,10,0.08) 40%' : 'rgba(16,185,129,0.2) 0%, rgba(16,185,129,0.05) 40%'}, transparent 70%);"
 			></div>
 		</div>
-		<HeroBlob />
+		{#if $theme === 'dark'}
+			<HeroBlob />
+		{:else}
+			<HeroBlobLight />
+		{/if}
 		<div
 			class="pointer-events-none absolute inset-0 opacity-[0.02]"
 			style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 24px 24px;"
 		></div>
+		<!-- Horizontal gradient fade from form into blob -->
+		<div class="pointer-events-none absolute inset-y-0 left-0 w-32 {isDark ? 'bg-gradient-to-r from-zinc-950 to-transparent' : 'bg-gradient-to-r from-white to-transparent'}"></div>
+		<!-- Vertical gradient fade at bottom -->
+		<div class="pointer-events-none absolute left-0 -bottom-0 right-0 h-44 {isDark ? 'bg-gradient-to-t from-zinc-950 to-transparent' : 'bg-gradient-to-t from-white to-transparent'}"></div>
 	</div>
 </div>

@@ -3,6 +3,10 @@
 	import { api } from '$lib/api';
 	import { login } from '$lib/stores/auth';
 	import HeroBlob from '$lib/components/HeroBlob.svelte';
+	import HeroBlobLight from '$lib/components/HeroBlobLight.svelte';
+	import { theme } from '$lib/stores/theme';
+
+	const isDark = $derived($theme === 'dark');
 
 	let name = $state('');
 	let email = $state('');
@@ -71,24 +75,28 @@
 
 <div class="grid min-h-screen grid-cols-1 lg:grid-cols-2">
 	<!-- Left: Blob -->
-	<div class="relative hidden overflow-hidden lg:block" style="background: radial-gradient(ellipse at 50% 50%, #1a1a2e 0%, #0a0a0f 60%, #050508 100%);">
+	<div class="relative hidden overflow-hidden lg:block" style="background: {$theme === 'dark' ? 'radial-gradient(ellipse at 50% 50%, #1a1a2e 0%, #0a0a0f 60%, #050508 100%)' : 'radial-gradient(ellipse at 50% 50%, #f0fdf4 0%, #ecfdf5 40%, #ffffff 100%)'};">
 		<div class="pointer-events-none absolute inset-0">
-			<div class="absolute left-1/2 top-1/2 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-25" style="background: radial-gradient(ellipse, rgba(255,180,50,0.2) 0%, rgba(100,60,10,0.08) 40%, transparent 70%);"></div>
+			<div class="absolute left-1/2 top-1/2 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-25" style="background: radial-gradient(ellipse, {$theme === 'dark' ? 'rgba(255,180,50,0.2) 0%, rgba(100,60,10,0.08) 40%' : 'rgba(16,185,129,0.2) 0%, rgba(16,185,129,0.05) 40%'}, transparent 70%);"></div>
 		</div>
-		<HeroBlob />
+		{#if $theme === 'dark'}
+			<HeroBlob />
+		{:else}
+			<HeroBlobLight />
+		{/if}
 		<div class="pointer-events-none absolute inset-0 opacity-[0.02]" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 24px 24px;"></div>
 	</div>
 
 	<!-- Right: Form -->
-	<div class="flex flex-col justify-center px-6 py-10 lg:px-16">
+	<div class="flex flex-col justify-center px-6 py-10 lg:px-16 {isDark ? '' : 'bg-white'}">
 		<div class="mx-auto w-full max-w-sm">
 			<a href="/" class="mb-8 inline-flex items-center gap-2.5">
-				<img src="/logo-gold.png" alt="CashFlow AI" class="h-9 w-9" />
-				<span class="text-lg font-semibold tracking-tight text-white/90">CashFlow AI</span>
+				<img src={isDark ? '/logo-gold.png' : '/logo-dark.png'} alt="CashFlow AI" class="h-9 w-9" />
+				<span class="text-lg font-semibold tracking-tight {isDark ? 'text-white/90' : 'text-zinc-900'}">CashFlow AI</span>
 			</a>
 
-			<h1 class="mb-2 font-['Instrument_Serif'] text-3xl text-white">Create your account</h1>
-			<p class="mb-6 text-sm text-white/35" style="font-family: 'DM Sans', sans-serif;">
+			<h1 class="mb-2 font-['Instrument_Serif'] text-3xl {isDark ? 'text-white' : 'text-zinc-900'}">Create your account</h1>
+			<p class="mb-6 text-sm {isDark ? 'text-white/35' : 'text-zinc-500'}" style="font-family: 'DM Sans', sans-serif;">
 				Start automating your cash flow today
 			</p>
 
@@ -98,26 +106,26 @@
 				{/if}
 
 				<div>
-					<label for="name" class="mb-1.5 block text-[13px] font-medium text-white/40">Business Name</label>
-					<input id="name" type="text" bind:value={name} required class="w-full rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3 text-[14px] text-white placeholder-white/20 outline-none transition-colors focus:border-emerald-500/50 focus:bg-white/[0.05]" placeholder="Acme Solutions" />
+					<label for="name" class="mb-1.5 block text-[13px] font-medium {isDark ? 'text-white/40' : 'text-zinc-500'}">Business Name</label>
+					<input id="name" type="text" bind:value={name} required class="w-full rounded-xl border px-4 py-3 text-[14px] outline-none transition-colors focus:border-emerald-500/50 {isDark ? 'border-white/[0.06] bg-white/[0.03] text-white placeholder-white/20 focus:bg-white/[0.05]' : 'border-zinc-300 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white'}" placeholder="Acme Solutions" />
 				</div>
 
 				<div class="grid grid-cols-2 gap-3">
 					<div>
-						<label for="email" class="mb-1.5 block text-[13px] font-medium text-white/40">Email</label>
-						<input id="email" type="email" bind:value={email} required class="w-full rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3 text-[14px] text-white placeholder-white/20 outline-none transition-colors focus:border-emerald-500/50 focus:bg-white/[0.05]" placeholder="you@business.com" />
+						<label for="email" class="mb-1.5 block text-[13px] font-medium {isDark ? 'text-white/40' : 'text-zinc-500'}">Email</label>
+						<input id="email" type="email" bind:value={email} required class="w-full rounded-xl border px-4 py-3 text-[14px] outline-none transition-colors focus:border-emerald-500/50 {isDark ? 'border-white/[0.06] bg-white/[0.03] text-white placeholder-white/20 focus:bg-white/[0.05]' : 'border-zinc-300 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white'}" placeholder="you@business.com" />
 					</div>
 					<div>
-						<label for="phone" class="mb-1.5 block text-[13px] font-medium text-white/40">Phone (M-Pesa)</label>
-						<input id="phone" type="tel" bind:value={phone} required class="w-full rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3 text-[14px] text-white placeholder-white/20 outline-none transition-colors focus:border-emerald-500/50 focus:bg-white/[0.05]" placeholder="0712345678" />
+						<label for="phone" class="mb-1.5 block text-[13px] font-medium {isDark ? 'text-white/40' : 'text-zinc-500'}">Phone (M-Pesa)</label>
+						<input id="phone" type="tel" bind:value={phone} required class="w-full rounded-xl border px-4 py-3 text-[14px] outline-none transition-colors focus:border-emerald-500/50 {isDark ? 'border-white/[0.06] bg-white/[0.03] text-white placeholder-white/20 focus:bg-white/[0.05]' : 'border-zinc-300 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white'}" placeholder="0712345678" />
 					</div>
 				</div>
 
 				<div>
-					<label for="password" class="mb-1.5 block text-[13px] font-medium text-white/40">Password</label>
+					<label for="password" class="mb-1.5 block text-[13px] font-medium {isDark ? 'text-white/40' : 'text-zinc-500'}">Password</label>
 					<div class="relative">
-						<input id="password" type={showPassword ? 'text' : 'password'} bind:value={password} required class="w-full rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3 pr-10 text-[14px] text-white placeholder-white/20 outline-none transition-colors focus:border-emerald-500/50 focus:bg-white/[0.05]" placeholder="At least 8 characters" />
-						<button type="button" onclick={() => (showPassword = !showPassword)} class="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50">
+						<input id="password" type={showPassword ? 'text' : 'password'} bind:value={password} required class="w-full rounded-xl border px-4 py-3 pr-10 text-[14px] outline-none transition-colors focus:border-emerald-500/50 {isDark ? 'border-white/[0.06] bg-white/[0.03] text-white placeholder-white/20 focus:bg-white/[0.05]' : 'border-zinc-300 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white'}" placeholder="At least 8 characters" />
+						<button type="button" onclick={() => (showPassword = !showPassword)} class="absolute right-3 top-1/2 -translate-y-1/2 {isDark ? 'text-white/20 hover:text-white/50' : 'text-zinc-400 hover:text-zinc-600'}">
 							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 								{#if showPassword}
 									<path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
@@ -136,10 +144,10 @@
 							<div class="flex items-center gap-2">
 								<div class="flex flex-1 gap-1">
 									{#each Array(4) as _, i}
-										<div class="h-1 flex-1 rounded-full transition-colors {i < strength ? label.color : 'bg-white/[0.06]'}"></div>
+										<div class="h-1 flex-1 rounded-full transition-colors {i < strength ? label.color : isDark ? 'bg-white/[0.06]' : 'bg-zinc-200'}"></div>
 									{/each}
 								</div>
-								<span class="text-[11px] text-white/30">{label.text}</span>
+								<span class="text-[11px] {isDark ? 'text-white/30' : 'text-zinc-500'}">{label.text}</span>
 							</div>
 							<ul class="grid grid-cols-2 gap-x-2 gap-y-1">
 								{#each [
@@ -148,7 +156,7 @@
 									{ ok: passwordChecks.lowercase, text: 'Lowercase' },
 									{ ok: passwordChecks.number, text: 'Number' }
 								] as check}
-									<li class="flex items-center gap-1.5 text-[11px] {check.ok ? 'text-emerald-400/70' : 'text-white/15'}">
+									<li class="flex items-center gap-1.5 text-[11px] {check.ok ? 'text-emerald-400/70' : isDark ? 'text-white/15' : 'text-zinc-400'}">
 										<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 											{#if check.ok}
 												<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -165,8 +173,8 @@
 				</div>
 
 				<div>
-					<label for="confirmPassword" class="mb-1.5 block text-[13px] font-medium text-white/40">Confirm Password</label>
-					<input id="confirmPassword" type={showPassword ? 'text' : 'password'} bind:value={confirmPassword} required class="w-full rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3 text-[14px] text-white placeholder-white/20 outline-none transition-colors focus:border-emerald-500/50 focus:bg-white/[0.05] {confirmPassword.length > 0 && !passwordsMatch ? 'border-red-500/30' : ''}" placeholder="Repeat your password" />
+					<label for="confirmPassword" class="mb-1.5 block text-[13px] font-medium {isDark ? 'text-white/40' : 'text-zinc-500'}">Confirm Password</label>
+					<input id="confirmPassword" type={showPassword ? 'text' : 'password'} bind:value={confirmPassword} required class="w-full rounded-xl border px-4 py-3 text-[14px] outline-none transition-colors focus:border-emerald-500/50 {isDark ? 'border-white/[0.06] bg-white/[0.03] text-white placeholder-white/20 focus:bg-white/[0.05]' : 'border-zinc-300 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white'} {confirmPassword.length > 0 && !passwordsMatch ? 'border-red-500/30' : ''}" placeholder="Repeat your password" />
 					{#if confirmPassword.length > 0 && !passwordsMatch}
 						<p class="mt-1 text-[11px] text-red-400/70">Passwords do not match</p>
 					{/if}
@@ -176,7 +184,7 @@
 					{loading ? 'Creating account...' : 'Create Account'}
 				</button>
 
-				<p class="text-center text-[13px] text-white/30">
+				<p class="text-center text-[13px] {isDark ? 'text-white/30' : 'text-zinc-500'}">
 					Already have an account?
 					<a href="/login" class="text-emerald-400/80 hover:text-emerald-400">Sign in</a>
 				</p>

@@ -23,10 +23,25 @@
 	body {
 		@apply bg-zinc-950 text-white antialiased;
 		font-family: var(--font-sans);
+		transition: background-color 0.5s ease, color 0.5s ease;
 	}
 
 	html.light body {
 		@apply bg-white text-zinc-900;
+	}
+
+	/* Smooth theme transitions on all elements */
+	*,
+	*::before,
+	*::after {
+		transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+		transition-duration: 0.4s;
+		transition-timing-function: ease;
+	}
+
+	/* Don't transition layout/transform properties or animations */
+	a, button, input, [class*="hover:"] {
+		transition-duration: 0.15s;
 	}
 
 	::-webkit-scrollbar {
