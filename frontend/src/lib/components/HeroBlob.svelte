@@ -20,67 +20,79 @@
 		container.appendChild(renderer.domElement);
 
 		// ── LIGHTS ──
-		scene.add(new THREE.AmbientLight(0xffffff, 0.54));
+		// Warm ambient fills the shadows
+		scene.add(new THREE.AmbientLight(0xfff0e0, 0.8));
 
-		// Big white fill from front-center
-		const whiteFill = new THREE.PointLight(0xffffff, 6000, 60);
-		whiteFill.position.set(0, 8, 14);
-		scene.add(whiteFill);
+		// Key light — large warm white from above-front
+		const keyLight = new THREE.PointLight(0xffffff, 4500, 60);
+		keyLight.position.set(0, 8, 14);
+		scene.add(keyLight);
 
-		// Gold accent
-		const goldA = new THREE.PointLight(0xffcc22, 520, 45);
-		goldA.position.set(-2.5, 5.5, 6.5);
-		scene.add(goldA);
+		// Gold — warm highlight from upper-left
+		const gold = new THREE.PointLight(0xffcc22, 800, 45);
+		gold.position.set(-3, 6, 7);
+		scene.add(gold);
 
-		// Warm-orange fill
-		const goldB = new THREE.PointLight(0xff8800, 140, 36);
-		goldB.position.set(-6.5, 0.5, 5);
-		scene.add(goldB);
+		// Orange fill — left side warmth
+		const orange = new THREE.PointLight(0xff8800, 200, 36);
+		orange.position.set(-7, 0.5, 5);
+		scene.add(orange);
 
-		// Deep blue bottom-right
-		const blue = new THREE.PointLight(0x1133ff, 340, 48);
-		blue.position.set(3.5, -9.5, 2.5);
+		// Deep blue — bottom creates depth
+		const blue = new THREE.PointLight(0x2244ff, 500, 48);
+		blue.position.set(3.5, -10, 2.5);
 		scene.add(blue);
 
-		// Cyan rim hint
-		const cyan = new THREE.PointLight(0x00aaff, 60, 26);
-		cyan.position.set(7, 0, 3);
+		// Cyan — right equator iridescent rim
+		const cyan = new THREE.PointLight(0x00bbff, 100, 30);
+		cyan.position.set(8, 0, 4);
 		scene.add(cyan);
 
-		// Back-rim directional
-		const rim = new THREE.DirectionalLight(0x8899aa, 3.5);
-		rim.position.set(0, 4, -7);
+		// Back-rim — silver edge on silhouette
+		const rim = new THREE.DirectionalLight(0xaabbcc, 4.0);
+		rim.position.set(0, 4, -8);
 		scene.add(rim);
 
-		// Violet accent
-		const violet = new THREE.PointLight(0x6611bb, 55, 24);
-		violet.position.set(2.5, 3.5, -4.5);
-		scene.add(violet);
-
-		// ── MATERIAL — dark liquid mercury / black chrome ──
+		// ── MATERIAL — dark liquid chrome ──
 		const mat = new THREE.MeshPhysicalMaterial({
-			color: 0x060606,
+			color: 0x080808,
 			metalness: 1.0,
-			roughness: 0.055,
+			roughness: 0.04,
 			clearcoat: 1.0,
-			clearcoatRoughness: 0.04,
+			clearcoatRoughness: 0.03,
 			reflectivity: 1.0,
-			envMapIntensity: 0.35,
+			envMapIntensity: 0.4,
 		});
 
-		// ── GEOMETRY — large sphere, pushed down to show dome ──
-		const geo = new THREE.IcosahedronGeometry(5.5, 100);
+		// ── GEOMETRY ──
+		// Subdivision 48 = ~27k verts (smooth enough, 4x faster than 100)
+		const geo = new THREE.IcosahedronGeometry(5.5, 48);
 		const blob = new THREE.Mesh(geo, mat);
 		blob.position.set(0.2, -5.8, 0);
 		scene.add(blob);
 
-		// Store rest positions
-		const posAttr = geo.getAttribute('position');
+		// Cache rest positions as flat Float32Array for speed
+		const posAttr = geo.getAttribute('position') as THREE.BufferAttribute;
 		const nV = posAttr.count;
-		const rest: THREE.Vector3[] = [];
+		const restX = new Float32Array(nV);
+		const restY = new Float32Array(nV);
+		const restZ = new Float32Array(nV);
 		for (let i = 0; i < nV; i++) {
-			rest.push(new THREE.Vector3(posAttr.getX(i), posAttr.getY(i), posAttr.getZ(i)));
+			restX[i] = posAttr.getX(i);
+			restY[i] = posAttr.getY(i);
+			restZ[i] = posAttr.getZ(i);
 		}
+
+		// ── Cursor tracking ──
+		let cursorX = 0;
+		let cursorY = 0;
+		let smoothCursorX = 0;
+		let smoothCursorY = 0;
+		const onMove = (e: MouseEvent) => {
+			cursorX = (e.clientX / window.innerWidth - 0.5) * 2;
+			cursorY = (e.clientY / window.innerHeight - 0.5) * 2;
+		};
+		window.addEventListener('mousemove', onMove, { passive: true });
 
 		// ── Animation ──
 		let t = 0;
@@ -88,38 +100,49 @@
 
 		function tick() {
 			raf = requestAnimationFrame(tick);
-			t += 0.0018;
+			t += 0.0016;
 
-			const pos = geo.getAttribute('position');
+			// Smooth cursor lerp
+			smoothCursorX += (cursorX - smoothCursorX) * 0.03;
+			smoothCursorY += (cursorY - smoothCursorY) * 0.03;
+
+			const arr = posAttr.array as Float32Array;
 
 			for (let i = 0; i < nV; i++) {
-				const v = rest[i];
+				const rx = restX[i];
+				const ry = restY[i];
+				const rz = restZ[i];
 
-				// Low-frequency swell — silky smooth surface
+				// Single very low frequency noise — ultra smooth, big rolling bumps
 				const n1 = noise3D(
-					v.x * 0.14 + t,
-					v.y * 0.14 + t * 0.65,
-					v.z * 0.14
+					rx * 0.08 + t,
+					ry * 0.08 + t * 0.5,
+					rz * 0.08
 				);
 
-				// Very faint second octave — barely perceptible texture
-				const n2 = noise3D(
-					v.x * 0.30 + t * 1.2,
-					v.y * 0.30,
-					v.z * 0.30 + t * 0.8
-				);
+				// Big, smooth deformation — amplitude 0.18 for visible rolling bumps
+				const d = 1.0 + n1 * 0.18;
 
-				// Tiny amplitude = smooth liquid look
-				const d = 1.0 + n1 * 0.09 + n2 * 0.025;
-				pos.setXYZ(i, v.x * d, v.y * d, v.z * d);
+				const i3 = i * 3;
+				arr[i3]     = rx * d;
+				arr[i3 + 1] = ry * d;
+				arr[i3 + 2] = rz * d;
 			}
 
-			pos.needsUpdate = true;
+			posAttr.needsUpdate = true;
 			geo.computeVertexNormals();
 
-			blob.rotation.y -= 0.0007;
-			blob.rotation.z += 0.00022;
-			blob.position.y = -5.8 + Math.sin(t * 1.4) * 0.18;
+			// Cursor-reactive rotation (smooth, gentle)
+			blob.rotation.y = -t * 0.4 + smoothCursorX * 0.3;
+			blob.rotation.x = smoothCursorY * 0.15;
+			blob.rotation.z = Math.sin(t * 1.2) * 0.03;
+
+			// Gentle float
+			blob.position.y = -5.8 + Math.sin(t * 1.4) * 0.15;
+
+			// Cursor shifts the gold light subtly
+			gold.position.x = -3 + smoothCursorX * 2;
+			gold.position.y = 6 + smoothCursorY * 1.5;
 
 			renderer.render(scene, camera);
 		}
@@ -137,6 +160,7 @@
 
 		return () => {
 			cancelAnimationFrame(raf);
+			window.removeEventListener('mousemove', onMove);
 			window.removeEventListener('resize', onResize);
 			renderer.dispose();
 			geo.dispose();
