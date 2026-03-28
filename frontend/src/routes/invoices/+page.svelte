@@ -17,6 +17,7 @@
 
 	let invoices = $state<Invoice[]>([]);
 	let loading = $state(true);
+	let visible = $state(false);
 
 	onMount(async () => {
 		if (!$auth.token) { goto('/login'); return; }
@@ -26,80 +27,141 @@
 			invoices = [];
 		} finally {
 			loading = false;
+			setTimeout(() => (visible = true), 50);
 		}
 	});
 
 	function statusColor(status: string) {
 		switch (status) {
-			case 'paid': return 'bg-emerald-950 text-emerald-400 border-emerald-800';
-			case 'sent': return 'bg-blue-950 text-blue-400 border-blue-800';
-			case 'overdue': return 'bg-red-950 text-red-400 border-red-800';
-			default: return 'bg-zinc-800 text-zinc-400 border-zinc-700';
+			case 'paid': return 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400';
+			case 'sent': return 'border-blue-500/20 bg-blue-500/10 text-blue-400';
+			case 'overdue': return 'border-amber-500/20 bg-amber-500/10 text-amber-400';
+			default: return 'border-white/[0.08] bg-white/[0.03] text-white/40';
+		}
+	}
+
+	function statusIcon(status: string) {
+		switch (status) {
+			case 'paid': return 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z';
+			case 'sent': return 'M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5';
+			case 'overdue': return 'M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z';
+			default: return 'M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z';
 		}
 	}
 </script>
 
 <svelte:head>
 	<title>Invoices — CashFlow AI</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 </svelte:head>
 
-<div class="mx-auto max-w-7xl px-4 py-8 md:px-8">
-	<div class="mb-8 flex items-center justify-between">
-		<h1 class="text-2xl font-bold tracking-tight">Invoices</h1>
+<div class="mx-auto max-w-7xl px-4 py-8 md:px-8" style="font-family: 'DM Sans', sans-serif;">
+	<!-- Header -->
+	<div class="mb-8 flex items-end justify-between">
+		<div>
+			<p class="mb-1 text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">Billing</p>
+			<h1 class="font-['Instrument_Serif'] text-3xl tracking-tight text-white md:text-4xl">
+				<span class="italic text-emerald-400">Invoices</span>
+			</h1>
+		</div>
 		<a
 			href="/invoices/new"
-			class="gradient-bg-emerald inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-emerald-500"
+			class="group inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 text-[13px] font-semibold text-zinc-950 transition-all hover:bg-emerald-400"
 		>
-			<span>+</span> New Invoice
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+			</svg>
+			New Invoice
 		</a>
 	</div>
 
 	{#if loading}
-		<div class="space-y-4">
-			{#each Array(3) as _}
-				<div class="animate-pulse rounded-[20px] border border-zinc-800 bg-zinc-900/30 p-5">
+		<!-- Skeleton -->
+		<div class="space-y-3">
+			{#each Array(4) as _}
+				<div class="animate-pulse rounded-2xl border border-white/[0.04] bg-white/[0.02] p-5">
 					<div class="flex items-center justify-between">
-						<div class="h-4 w-32 rounded bg-zinc-800"></div>
-						<div class="h-4 w-20 rounded bg-zinc-800"></div>
+						<div class="flex items-center gap-4">
+							<div class="h-10 w-10 rounded-lg bg-white/[0.04]"></div>
+							<div>
+								<div class="mb-2 h-3.5 w-32 rounded bg-white/[0.04]"></div>
+								<div class="h-3 w-48 rounded bg-white/[0.04]"></div>
+							</div>
+						</div>
+						<div class="text-right">
+							<div class="mb-2 h-3.5 w-24 rounded bg-white/[0.04]"></div>
+							<div class="h-3 w-16 rounded bg-white/[0.04]"></div>
+						</div>
 					</div>
 				</div>
 			{/each}
 		</div>
 	{:else if invoices.length === 0}
-		<div class="gradient-bg rounded-[20px] border border-zinc-800 bg-zinc-900/30 p-12 text-center">
-			<svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
-			<h3 class="mt-4 text-lg font-semibold">No invoices yet</h3>
-			<p class="mt-2 text-sm text-zinc-500">Create your first invoice to get started</p>
+		<!-- Empty State -->
+		<div class="rounded-2xl border border-white/[0.04] bg-white/[0.02] p-12 text-center transition-all duration-500 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+			<div class="mx-auto flex h-14 w-14 items-center justify-center rounded-lg bg-white/[0.03]">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+				</svg>
+			</div>
+			<h3 class="mt-5 font-['Instrument_Serif'] text-xl text-white">No invoices yet</h3>
+			<p class="mt-2 text-[13px] text-white/20">Create your first invoice to start tracking payments</p>
 			<a
 				href="/invoices/new"
-				class="mt-6 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-emerald-500"
+				class="mt-6 inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-2.5 text-[13px] font-semibold text-zinc-950 transition-all hover:bg-emerald-400"
 			>
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+				</svg>
 				Create Invoice
 			</a>
 		</div>
 	{:else}
-		<div class="space-y-3">
+		<!-- Invoice List -->
+		<div class="rounded-2xl border border-white/[0.04] bg-white/[0.02] transition-all duration-500 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+			<!-- Table Header -->
+			<div class="hidden border-b border-white/[0.04] px-5 py-3 md:grid md:grid-cols-12 md:gap-4">
+				<span class="col-span-5 text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">Client</span>
+				<span class="col-span-3 text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">Amount</span>
+				<span class="col-span-2 text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">Due Date</span>
+				<span class="col-span-2 text-right text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">Status</span>
+			</div>
+
 			{#each invoices as invoice, i}
 				<a
 					href="/invoices/{invoice.id}"
-					class="animate-fade-in-up gradient-bg flex items-center justify-between rounded-[20px] border border-zinc-800 bg-zinc-900/30 p-5 transition-all hover:border-zinc-700"
-					style="animation-delay: {i * 0.05}s"
+					class="group flex flex-col gap-3 border-b border-white/[0.04] px-5 py-4 transition-all hover:bg-white/[0.02] md:grid md:grid-cols-12 md:items-center md:gap-4 last:border-b-0"
+					style="transition-delay: {i * 40}ms;"
 				>
-					<div class="flex items-center gap-4">
-						<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-800 text-sm font-bold text-zinc-400">
+					<!-- Client -->
+					<div class="col-span-5 flex items-center gap-3">
+						<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.03] text-[13px] font-semibold text-white/30">
 							{invoice.client_name.charAt(0)}
 						</div>
-						<div>
-							<p class="font-semibold">{invoice.client_name}</p>
-							<p class="text-sm text-zinc-500">{invoice.description}</p>
+						<div class="min-w-0">
+							<p class="truncate text-[13px] font-medium text-white/80">{invoice.client_name}</p>
+							<p class="truncate text-[12px] text-white/20">{invoice.description}</p>
 						</div>
 					</div>
-					<div class="flex items-center gap-4">
-						<div class="text-right">
-							<p class="font-semibold">{formatKES(invoice.amount)}</p>
-							<p class="text-xs text-zinc-500">Due {new Date(invoice.due_date).toLocaleDateString()}</p>
-						</div>
-						<span class="rounded-full border px-2.5 py-0.5 text-xs font-medium capitalize {statusColor(invoice.status)}">
+
+					<!-- Amount -->
+					<div class="col-span-3">
+						<p class="text-[13px] font-semibold text-white">{formatKES(invoice.amount)}</p>
+					</div>
+
+					<!-- Due Date -->
+					<div class="col-span-2">
+						<p class="text-[12px] text-white/25">{new Date(invoice.due_date).toLocaleDateString()}</p>
+					</div>
+
+					<!-- Status -->
+					<div class="col-span-2 flex justify-end">
+						<span class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium capitalize {statusColor(invoice.status)}">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+								<path stroke-linecap="round" stroke-linejoin="round" d={statusIcon(invoice.status)} />
+							</svg>
 							{invoice.status}
 						</span>
 					</div>
