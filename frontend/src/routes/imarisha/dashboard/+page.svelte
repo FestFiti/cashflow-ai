@@ -7,6 +7,7 @@
 	import { onMount } from 'svelte';
 
 	const isDark = $derived($theme === 'dark');
+	const ic = $derived(isDark ? 'rgba(255,255,255,0.3)' : 'rgba(113,113,122,1)');
 
 	interface ImarishaData {
 		expected_inflow: number;
@@ -211,7 +212,6 @@
 				<!-- Quick Actions -->
 				<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6 transition-all duration-500 delay-400 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
 					<span class="mb-4 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Quick Actions</span>
-					{@const ic = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(113,113,122,1)'}
 					<div class="space-y-2">
 						<a href="/imarisha/contributions" class="flex w-full items-center gap-3 rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} p-3 transition-all {isDark ? 'hover:border-white/[0.08]' : 'hover:border-zinc-300'} {isDark ? 'hover:bg-white/[0.02]' : 'hover:bg-zinc-50'}">
 							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 18 18" fill="none">
