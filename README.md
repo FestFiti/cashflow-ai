@@ -144,19 +144,19 @@ CashFlow AI is designed specifically for the African market to solve the fundame
    - Ensured compliance with data protection regulations
    - Conducted security audits and vulnerability assessments
 
-3. **Steve Tom** - AI/ML Engineer
+3. **Osborne Nyakaru** - AI/ML Engineer
    - Co-developed AI-powered invoice generation system
    - Implemented anomaly detection for payment patterns
    - Created machine learning models for cash flow prediction
    - Optimized AI response times and accuracy
 
-4. **Osborne Nyakaru** - Software Engineer
+4. **Stanley Onyango** - Software Engineer
    - Led backend development with FastAPI and PostgreSQL
    - Implemented M-Pesa Daraja API integration
    - Designed database architecture and API endpoints
    - Created payment processing and reconciliation systems
 
-5. **Stanley Onyango** - Software Developer
+5. **Steve Tom** - Software Developer
    - Led frontend development with SvelteKit and TypeScript
    - Implemented responsive design and user interface
    - Created real-time dashboard with WebSocket integration
