@@ -2,7 +2,9 @@ import { get } from 'svelte/store';
 import { browser } from '$app/environment';
 import { auth, logout } from '$lib/stores/auth';
 
-const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8888';
+// In production (same domain), use relative URLs so nginx handles routing.
+// In local dev, set VITE_API_URL=http://localhost:8888 in frontend/.env
+const API_URL = import.meta.env.VITE_API_URL ?? '';
 
 interface FetchOptions extends RequestInit {
 	token?: string;

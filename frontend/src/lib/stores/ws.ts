@@ -12,10 +12,13 @@ export const lastEvent = writable<WSEvent | null>(null);
 let ws: WebSocket | null = null;
 let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 
-const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8888';
-
 function getWsUrl(): string {
-	return API_URL.replace(/^http/, 'ws');
+	// In production, derive WS URL from current page origin (same domain, nginx proxies /ws)
+	if (typeof window !== 'undefined') {
+		const proto = window.location.protocol === 'https:' ? 'wss' : 'ws';
+		return `${proto}://${window.location.host}`;
+	}
+	return import.meta.env.VITE_API_URL?.replace(/^http/, 'ws') ?? 'ws://localhost:8888';
 }
 
 export function connectWs() {

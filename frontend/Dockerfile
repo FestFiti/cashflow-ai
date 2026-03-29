@@ -3,8 +3,6 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm install
 COPY . .
-ARG PUBLIC_API_URL=https://flowai.cash
-ENV PUBLIC_API_URL=$PUBLIC_API_URL
 RUN npm run build
 
 FROM node:22-alpine
