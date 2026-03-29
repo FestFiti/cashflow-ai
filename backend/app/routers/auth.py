@@ -24,6 +24,42 @@ from app.utils.auth import (
 router = APIRouter()
 
 
+@router.post("/quick-login", response_model=TokenResponse)
+async def quick_login(db: AsyncSession = Depends(get_db)):
+    """Quick login with default credentials for demo purposes"""
+    email = "test@example.com"
+    password = "pass123"
+    
+    # Check if user exists, create if not
+    result = await db.execute(select(Business).where(Business.email == email))
+    business = result.scalar_one_or_none()
+    
+    if not business:
+        # Create default user
+        business = Business(
+            name="Allen Groceries",
+            email=email,
+            phone="0711888821",
+            password_hash=hash_password(password),
+            mpesa_shortcode="174379"
+        )
+        db.add(business)
+        await db.commit()
+        await db.refresh(business)
+    
+    # Verify password and create token
+    if verify_password(password, business.password_hash):
+        token = create_access_token(str(business.id))
+        return TokenResponse(
+            access_token=token,
+            business_id=str(business.id),
+            name=business.name,
+            email=business.email,
+        )
+    
+    raise HTTPException(status_code=401, detail="Default user creation failed")
+
+
 @router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
 async def register(req: RegisterRequest, db: AsyncSession = Depends(get_db)):
     existing = await db.execute(select(Business).where(Business.email == req.email))

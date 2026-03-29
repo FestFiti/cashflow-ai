@@ -109,23 +109,23 @@
 		</div>
 
 		<!-- Heading -->
-		<h1
+		<h2
 			class="text-center transition-all duration-1000 delay-150 {heroVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}"
 		>
-			<span class="block font-['Instrument_Serif'] text-[clamp(2.5rem,7vw,5.5rem)] leading-[1.05] tracking-[-0.02em] {isDark ? 'text-white' : 'text-zinc-900'}">
-				Automate Your
+			<span class="font-['Instrument_Serif'] text-4xl leading-tight md:text-5xl {isDark ? 'text-white' : 'text-zinc-900'}">
+				Everything you need to <span class="italic text-emerald-400">manage your</span>
 			</span>
 			<span class="block font-['Instrument_Serif'] text-[clamp(2.5rem,7vw,5.5rem)] italic leading-[1.05] tracking-[-0.02em] {isDark ? 'text-emerald-400' : 'text-emerald-600'}">
 				Cash Flow
 			</span>
-		</h1>
+		</h2>
 
 		<p
-			class="mx-auto mt-6 max-w-md text-center text-[15px] leading-relaxed transition-all duration-1000 delay-300 {isDark ? 'text-white/60' : 'text-zinc-500'} {heroVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}"
+			class="mx-auto mt-6 max-w-md text-center text-[15px] leading-relaxed transition-all duration-1000 delay-300 {heroVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}"
 			style="font-family: 'DM Sans', sans-serif;"
 		>
-			Generate invoices with AI. Collect payments via M-Pesa.
-			Track every shilling in real time. Built for African businesses.
+			An Intelligent tool built to Request payments, collect via M-Pesa, 
+			and track every shilling in real time. Built for African Business.
 		</p>
 
 		<!-- CTA -->
@@ -198,19 +198,17 @@
 	<div class="absolute left-0 -bottom-0 right-0 h-44 bg-gradient-to-t {isDark ? 'from-zinc-950 to-transparent' : 'from-zinc-50 to-transparent'}"></div>
 
 </section>
-
-<!-- STATS -->
 <section class="relative border-y transition-colors {isDark ? 'border-white/[0.04] bg-zinc-950' : 'border-zinc-200 bg-zinc-50'}">
 	<div class="mx-auto grid max-w-5xl grid-cols-2 gap-0 md:grid-cols-4">
 		{#each [
-			{ value: '10K+', label: 'Invoices Generated', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-			{ value: 'KES 50M', label: 'Payments Processed', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+			{ value: '10K+', label: 'Payment Requests Created', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+			{ value: 'KES 50M', label: 'Money Processed', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
 			{ value: '95%', label: 'Collection Rate', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
 			{ value: '5K+', label: 'Active Businesses', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' }
 		] as stat, i}
 			<div
-				class="flex flex-col items-center py-10 last:border-r-0 transition-all duration-700 {isDark ? 'border-r border-white/[0.04]' : 'border-r border-zinc-200'} {statsVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}"
-				style="transition-delay: {i * 100}ms; font-family: 'DM Sans', sans-serif;"
+				class="flex flex-col items-center py-10 last:border-r-0 transition-all duration-700 delay-{i * 100}ms {isDark ? 'border-r border-white/[0.04]' : 'border-r border-zinc-200'} {statsVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}"
+				style="font-family: 'DM Sans', sans-serif;"
 			>
 				<svg xmlns="http://www.w3.org/2000/svg" class="mb-3 h-5 w-5 text-emerald-500/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 					<path stroke-linecap="round" stroke-linejoin="round" d={stat.icon} />
@@ -230,7 +228,7 @@
 		>
 			<p class="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-emerald-500" style="font-family: 'DM Sans', sans-serif;">Features</p>
 			<h2 class="max-w-lg font-['Instrument_Serif'] text-4xl leading-tight tracking-tight md:text-5xl {isDark ? 'text-white' : 'text-zinc-900'}">
-				Everything you need to <span class="italic text-emerald-400">get paid</span>
+				Everything you need to <span class="italic text-emerald-400">manage your cash flow</span>
 			</h2>
 		</div>
 
@@ -306,20 +304,20 @@
 			{#each [
 				{
 					step: '01',
-					title: 'Create an Invoice',
-					desc: 'Type naturally or let AI generate it. An M-Pesa payment link is attached automatically.',
+					title: 'Request or Send Money',
+					desc: 'Create a payment request, send money, or generate an invoice, all from one place.',
 					icon: 'M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z'
 				},
 				{
 					step: '02',
-					title: 'Send & Schedule',
-					desc: 'Invoice goes to your client. Ratiba schedules AI-drafted reminders at optimal intervals.',
+					title: 'Track & Automate',
+					desc: 'Monitor payments in real time and let AI handle reminders, follow-ups, and scheduling.',
 					icon: 'M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5'
 				},
 				{
 					step: '03',
-					title: 'Get Paid',
-					desc: 'Client pays via M-Pesa STK Push. Status updates live on your dashboard in real time.',
+					title: 'Collect & Control',
+					desc: 'Receive payments via M-Pesa, manage outflows, and get full visibility into your cash flow.',
 					icon: 'M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z'
 				}
 			] as item, i}
@@ -390,7 +388,7 @@
 				Ready to automate<br><span class="italic text-emerald-400">your cash flow?</span>
 			</h2>
 			<p class="mx-auto mt-5 max-w-md text-[14px] leading-relaxed {isDark ? 'text-white/35' : 'text-zinc-500'}" style="font-family: 'DM Sans', sans-serif;">
-				Join thousands of African businesses using CashFlow AI to get paid faster and never chase a payment again.
+				Join thousands of African businesses using CashFlow AI to manage your cash flow faster and never chase a payment again.
 			</p>
 			<div class="mt-8 flex items-center justify-center gap-4">
 				<a

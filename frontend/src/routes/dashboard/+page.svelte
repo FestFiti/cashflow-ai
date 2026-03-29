@@ -74,10 +74,10 @@
 	{:else if data}
 		<!-- Stats Grid -->
 		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-			<!-- Receivables -->
+			<!-- Expected -->
 			<div class="rounded-2xl border border-emerald-500/10 bg-emerald-500/[0.03] p-6 transition-all duration-500 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
 				<div class="mb-4 flex items-center justify-between">
-					<span class="text-[11px] font-medium uppercase tracking-[0.12em] text-emerald-500/70">Receivables</span>
+					<span class="text-[11px] font-medium uppercase tracking-[0.12em] text-emerald-500/70">Expected</span>
 					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
@@ -107,10 +107,10 @@
 				<p class="mt-2 text-[11px] text-white/20">via M-Pesa</p>
 			</div>
 
-			<!-- Invoices -->
+			<!-- Pending -->
 			<div class="rounded-2xl border border-white/[0.04] bg-white/[0.02] p-6 transition-all duration-500 delay-150 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
 				<div class="mb-4 flex items-center justify-between">
-					<span class="text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">Invoices</span>
+					<span class="text-[11px] font-medium uppercase tracking-[0.12em] text-white/25">Pending</span>
 					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.03]">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
@@ -176,24 +176,31 @@
 				<div class="space-y-2">
 					{#each [
 						{
-							href: '/invoices/new',
-							label: 'New Invoice',
-							sub: 'Create with AI or manually',
+							href: '/payments/request',
+							label: 'Request Payment',
+							sub: 'Ask for money via M-Pesa or payment link',
 							icon: 'M12 4.5v15m7.5-7.5h-15',
 							accent: 'emerald'
 						},
 						{
-							href: '/invoices',
-							label: 'All Invoices',
-							sub: 'View and manage',
-							icon: 'M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z',
+							href: '/payments/remind',
+							label: 'Send Reminder',
+							sub: 'Remind clients to pay instantly',
+							icon: 'M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75c-.778 0-1.504.357-1.96.966l-.314.378a8.967 8.967 0 01-1.96-.966 8.967 8.967 0 00-1.96.966l-.314-.378A2.464 2.464 0 019.75 9.75a8.967 8.967 0 00-1.311 5.454M12 20.25a8.967 8.967 0 01-5.454-1.31m10.91 0a23.848 23.848 0 005.454-1.31',
 							accent: 'white'
 						},
 						{
-							href: '/reports',
-							label: 'Reports',
-							sub: 'Cash flow analytics',
-							icon: 'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z',
+							href: '/payments/record',
+							label: 'Record Payment',
+							sub: 'Log or confirm received payments',
+							icon: 'M9 12.75l3 3m0 0l3-3m-3 3V7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+							accent: 'white'
+						},
+						{
+							href: '/groups/create',
+							label: 'Create Group',
+							sub: 'Pool money and manage contributions',
+							icon: 'M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197A5.971 5.971 0 016 18.72v-2.007m0 0V18.72v-2.007m0 0a5.971 5.971 0 00-.941 3.197M5.058 15.522A5.971 5.971 0 006 18.72v-2.007M5.058 15.522A5.971 5.971 0 016 12.75v2.007m0 0a5.971 5.971 0 00.941 3.197m8.018-8.018a5.971 5.971 0 00-.941-3.197M6 12.75a5.971 5.971 0 01.941-3.197m5.059 5.059a5.971 5.971 0 01-.941 3.197M12 12.75a5.971 5.971 0 01-.941-3.197m0 6.394a5.971 5.971 0 00.941-3.197m0-6.394a5.971 5.971 0 00-.941 3.197',
 							accent: 'white'
 						}
 					] as action}
