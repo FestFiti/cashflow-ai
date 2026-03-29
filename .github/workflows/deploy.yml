@@ -21,6 +21,7 @@ jobs:
             set -e
 
             # Pull latest code
+            git config --global --add safe.directory /opt/cashflow-ai
             mkdir -p /opt/cashflow-ai
             cd /opt/cashflow-ai
             if [ ! -d .git ]; then
