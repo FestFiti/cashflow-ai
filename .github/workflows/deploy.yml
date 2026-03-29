@@ -21,13 +21,14 @@ jobs:
             set -e
 
             # Pull latest code
-            if [ -d /opt/cashflow-ai/.git ]; then
-              cd /opt/cashflow-ai
-              git pull origin main
-            else
-              git clone https://github.com/FestFifi/cashflow-ai.git /opt/cashflow-ai
-              cd /opt/cashflow-ai
+            mkdir -p /opt/cashflow-ai
+            cd /opt/cashflow-ai
+            if [ ! -d .git ]; then
+              git init
+              git remote add origin https://github.com/FestFifi/cashflow-ai.git
             fi
+            git fetch origin main
+            git reset --hard origin/main
 
             cd /opt/cashflow-ai
 
