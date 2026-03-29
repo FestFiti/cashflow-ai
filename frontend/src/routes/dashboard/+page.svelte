@@ -8,6 +8,8 @@
 	import Icon from '$lib/components/Icon.svelte';
 	import { marked } from 'marked';
 
+	marked.setOptions({ async: false });
+
 	const isDark = $derived($theme === 'dark');
 
 	interface DashboardData {
@@ -23,7 +25,7 @@
 	let isConfigured = $state(true);
 
 	// AI insights state
-	let insights = $state<string | null>(null);
+	let insightsHtml = $state<string | null>(null);
 	let insightsLoading = $state(false);
 	let insightsError = $state(false);
 
@@ -57,7 +59,7 @@
 		insightsError = false;
 		try {
 			const res = await api<{ status: string; insights: string }>('/ai/cash-flow-insights', { method: 'POST', token: $auth.token! });
-			insights = res.insights;
+			insightsHtml = marked.parse(res.insights) as string;
 		} catch {
 			insightsError = true;
 		} finally {
@@ -248,9 +250,9 @@
 					</div>
 				{:else if insightsError}
 					<p class="text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">Could not load insights. <button onclick={loadInsights} class="text-violet-400 hover:text-violet-300">Try again</button></p>
-				{:else if insights}
+				{:else if insightsHtml}
 					<div class="insights-prose text-[13px] leading-relaxed {isDark ? 'text-white/50' : 'text-zinc-600'}">
-						{@html marked(insights)}
+						{@html insightsHtml}
 					</div>
 				{:else}
 					<p class="text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">No data yet — create some invoices to get AI insights.</p>
