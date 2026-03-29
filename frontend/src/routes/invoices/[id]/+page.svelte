@@ -123,6 +123,27 @@
 		const text = encodeURIComponent(`Invoice #${invoiceNumber} for ${formatKES(invoice.amount)}\n\nView and pay here: ${shareableLink}`);
 		window.open(`https://wa.me/?text=${text}`, '_blank');
 	}
+
+	function downloadPDF() {
+		if (!invoice) return;
+		// Open the public invoice page in a new tab for printing
+		window.open(`/pay/${invoice.id}`, '_blank');
+	}
+
+	let sending = $state(false);
+	async function sendInvoice() {
+		if (!invoice) return;
+		sending = true;
+		try {
+			await api(`/invoices/${invoice.id}/send`, { method: 'POST' });
+			showSuccess('Invoice sent to client');
+			invoice = await api<Invoice>(`/invoices/${invoice.id}`);
+		} catch (err) {
+			showError(err instanceof Error ? err.message : 'Failed to send invoice');
+		} finally {
+			sending = false;
+		}
+	}
 </script>
 
 <svelte:head>
@@ -320,12 +341,32 @@
 							</svg>
 							Share via WhatsApp
 						</button>
-						<button class="flex w-full items-center gap-2 rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} px-4 py-2.5 text-[13px] font-medium {isDark ? 'text-white/40' : 'text-zinc-500'} transition-all {isDark ? 'hover:border-white/[0.15]' : 'hover:border-zinc-300'} {isDark ? 'hover:text-white/60' : 'hover:text-zinc-700'}">
+						<button
+							onclick={downloadPDF}
+							class="flex w-full items-center gap-2 rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} px-4 py-2.5 text-[13px] font-medium {isDark ? 'text-white/40' : 'text-zinc-500'} transition-all {isDark ? 'hover:border-white/[0.15]' : 'hover:border-zinc-300'} {isDark ? 'hover:text-white/60' : 'hover:text-zinc-700'}"
+						>
 							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
 							</svg>
-							Download PDF
+							Download / Print
 						</button>
+						{#if invoice.status !== 'paid' && invoice.client_email}
+							<button
+								onclick={sendInvoice}
+								disabled={sending}
+								class="flex w-full items-center gap-2 rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-2.5 text-[13px] font-medium text-emerald-400 transition-all hover:bg-emerald-500/10 disabled:opacity-50"
+							>
+								{#if sending}
+									<div class="h-3.5 w-3.5 animate-spin rounded-full border-2 border-emerald-400/30 border-t-emerald-400"></div>
+									Sending...
+								{:else}
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+									</svg>
+									Email to Client
+								{/if}
+							</button>
+						{/if}
 					</div>
 				</div>
 

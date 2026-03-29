@@ -1,26 +1,173 @@
-from fastapi import APIRouter, Depends
+import uuid
+import logging
+
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+from pydantic import BaseModel
+from datetime import date
 
 from app.database import get_db
+from app.models.invoice import Invoice
+from app.models.notification import Notification
 from app.utils.auth import get_current_business_id
+from app.services.claude import draft_reminder
+from app.services.email import send_email
+from app.services.email_templates import _base
+from app.config import settings
 
+logger = logging.getLogger("reminders")
 router = APIRouter()
 
 
-@router.post("/schedule")
-async def schedule_reminders(
-    invoice_id: str,
+class SendReminderRequest(BaseModel):
+    invoice_id: str
+    custom_message: str | None = None
+
+
+@router.get("/overdue")
+async def get_overdue_invoices(
     business_id: str = Depends(get_current_business_id),
     db: AsyncSession = Depends(get_db),
 ):
-    # TODO: Create reminder jobs via Ratiba API
-    return {"message": "Reminder scheduling - implementation pending", "invoice_id": invoice_id}
+    """Get all overdue and sent invoices for reminder purposes."""
+    bid = uuid.UUID(business_id)
+    result = await db.execute(
+        select(Invoice)
+        .where(
+            Invoice.business_id == bid,
+            Invoice.status.in_(["sent", "overdue"]),
+        )
+        .order_by(Invoice.due_date.asc())
+    )
+    invoices = result.scalars().all()
+    return [
+        {
+            "id": str(inv.id),
+            "client_name": inv.client_name,
+            "client_phone": inv.client_phone,
+            "client_email": inv.client_email,
+            "amount": float(inv.amount),
+            "description": inv.description,
+            "due_date": inv.due_date.isoformat(),
+            "status": inv.status,
+            "is_overdue": inv.due_date < date.today(),
+            "days_overdue": (date.today() - inv.due_date).days if inv.due_date < date.today() else 0,
+        }
+        for inv in invoices
+    ]
 
 
-@router.delete("/{invoice_id}")
-async def cancel_reminders(
-    invoice_id: str,
+@router.post("/send")
+async def send_reminder(
+    req: SendReminderRequest,
+    background_tasks: BackgroundTasks,
     business_id: str = Depends(get_current_business_id),
+    db: AsyncSession = Depends(get_db),
 ):
-    # TODO: Cancel Ratiba jobs for this invoice
-    return {"message": "Reminders cancelled", "invoice_id": invoice_id}
+    """Send a payment reminder email to the client."""
+    bid = uuid.UUID(business_id)
+    result = await db.execute(
+        select(Invoice).where(
+            Invoice.id == uuid.UUID(req.invoice_id),
+            Invoice.business_id == bid,
+        )
+    )
+    invoice = result.scalar_one_or_none()
+    if not invoice:
+        raise HTTPException(status_code=404, detail="Invoice not found")
+
+    if not invoice.client_email:
+        raise HTTPException(status_code=400, detail="Client has no email address")
+
+    # Generate AI reminder message or use custom
+    if req.custom_message:
+        reminder_text = req.custom_message
+    else:
+        try:
+            reminder_text = await draft_reminder(
+                client_name=invoice.client_name,
+                amount=float(invoice.amount),
+                due_date=invoice.due_date.isoformat(),
+            )
+        except Exception:
+            reminder_text = f"Hi {invoice.client_name}, this is a reminder that your invoice of KES {invoice.amount:,.0f} is due. Please arrange payment at your earliest convenience."
+
+    # Build reminder email
+    pay_link = f"{settings.APP_URL}/pay/{invoice.id}"
+    days_text = ""
+    if invoice.due_date < date.today():
+        days = (date.today() - invoice.due_date).days
+        days_text = f'<div class="big-sub" style="color:#ef4444;">Overdue by {days} day{"s" if days != 1 else ""}</div>'
+    else:
+        days_text = f'<div class="big-sub">Due {invoice.due_date.strftime("%B %d, %Y")}</div>'
+
+    content = f"""<div class="rule"></div>
+<h2 class="h1">Payment Reminder</h2>
+<p class="p">{reminder_text}</p>
+<div class="big">KES {float(invoice.amount):,.0f}</div>
+{days_text}
+<div class="rows">
+  <div class="row"><span class="row-label">Invoice</span><span class="row-val" style="font-family:monospace;font-size:13px;">#{str(invoice.id)[:8].upper()}</span></div>
+  <div class="row"><span class="row-label">Description</span><span class="row-val">{invoice.description}</span></div>
+</div>"""
+
+    subject = f"Payment Reminder — KES {float(invoice.amount):,.0f}"
+    html = _base(
+        content=content,
+        footer_link=pay_link,
+        footer_text="View invoice & pay now →",
+        bottom_note="You received this reminder because you have an outstanding invoice.",
+    )
+
+    background_tasks.add_task(
+        send_email,
+        to_email=invoice.client_email,
+        to_name=invoice.client_name,
+        subject=subject,
+        html=html,
+    )
+
+    # Create notification
+    notification = Notification(
+        business_id=bid,
+        title="Reminder sent",
+        message=f"Payment reminder sent to {invoice.client_name} for KES {float(invoice.amount):,.0f}",
+        category="reminder",
+        link=f"/invoices/{invoice.id}",
+    )
+    db.add(notification)
+    await db.commit()
+
+    logger.info("Reminder sent — invoice=%s client=%s", invoice.id, invoice.client_name)
+
+    return {"status": "sent", "message": f"Reminder sent to {invoice.client_email}"}
+
+
+@router.post("/ai-draft")
+async def ai_draft(
+    req: SendReminderRequest,
+    business_id: str = Depends(get_current_business_id),
+    db: AsyncSession = Depends(get_db),
+):
+    """Generate an AI-drafted reminder message for preview."""
+    bid = uuid.UUID(business_id)
+    result = await db.execute(
+        select(Invoice).where(
+            Invoice.id == uuid.UUID(req.invoice_id),
+            Invoice.business_id == bid,
+        )
+    )
+    invoice = result.scalar_one_or_none()
+    if not invoice:
+        raise HTTPException(status_code=404, detail="Invoice not found")
+
+    try:
+        message = await draft_reminder(
+            client_name=invoice.client_name,
+            amount=float(invoice.amount),
+            due_date=invoice.due_date.isoformat(),
+        )
+        return {"status": "ok", "message": message}
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=f"AI draft failed: {str(e)}")
