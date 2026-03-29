@@ -51,8 +51,9 @@ jobs:
             # Remove local dev override (not needed on server — host nginx handles routing)
             rm -f docker-compose.override.yml
 
-            # Build and start
+            # Build and start (clean any stale containers first)
             docker compose down --remove-orphans || true
+            docker container prune -f || true
             docker compose up -d --build
 
             # Run database migrations
