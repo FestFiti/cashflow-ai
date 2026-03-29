@@ -1,7 +1,7 @@
 import json
 import logging
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime
 
 from fastapi import APIRouter, Request, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -109,7 +109,7 @@ async def mpesa_stk_callback(request: Request, db: AsyncSession = Depends(get_db
         mpesa_receipt, paid_amount, phone_number, transaction_date,
     )
 
-    now = datetime.now(timezone.utc)
+    now = datetime.utcnow()
 
     # Update payment record
     await db.execute(

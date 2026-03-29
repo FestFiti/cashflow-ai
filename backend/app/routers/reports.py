@@ -19,7 +19,7 @@ async def reports_overview(
 ):
     """High-level stats for the reports dashboard."""
     bid = uuid.UUID(business_id)
-    now = datetime.now(timezone.utc)
+    now = datetime.utcnow()
     thirty_days_ago = now - timedelta(days=30)
 
     # All-time totals
@@ -92,7 +92,7 @@ async def revenue_chart(
 ):
     """Monthly invoiced vs collected for the last N months."""
     bid = uuid.UUID(business_id)
-    now = datetime.now(timezone.utc)
+    now = datetime.utcnow()
     results = []
 
     for i in range(months - 1, -1, -1):
