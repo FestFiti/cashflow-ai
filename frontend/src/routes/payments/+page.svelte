@@ -15,57 +15,42 @@
 	}
 
 	interface Transaction {
-		id: number;
-		name: string;
+		id: string;
+		client_name: string;
 		amount: number;
-		type: 'incoming' | 'outgoing';
 		status: 'completed' | 'pending' | 'failed';
-		timestamp: string;
-	}
-
-	interface AuditTrail {
-		id: number;
-		description: string;
-		timestamp: string;
-		status: 'success' | 'error' | 'info';
+		mpesa_receipt: string | null;
+		phone: string;
+		paid_at: string | null;
+		created_at: string | null;
 	}
 
 	let data = $state<PaymentData | null>(null);
+	let transactions = $state<Transaction[]>([]);
 	let loading = $state(true);
 	let visible = $state(false);
 
-	// Mock data
-	let transactions = $state<Transaction[]>([
-		{ id: 1, name: 'Mary Wanjiku', amount: 5000, type: 'incoming', status: 'completed', timestamp: '2 mins ago' },
-		{ id: 2, name: 'Supplier Payment', amount: 2000, type: 'outgoing', status: 'completed', timestamp: '15 mins ago' },
-		{ id: 3, name: 'John Kamau', amount: 3500, type: 'incoming', status: 'pending', timestamp: '30 mins ago' },
-		{ id: 4, name: 'Office Supplies', amount: 1500, type: 'outgoing', status: 'failed', timestamp: '1 hour ago' },
-		{ id: 5, name: 'Grace Njeri', amount: 8000, type: 'incoming', status: 'completed', timestamp: '2 hours ago' }
-	]);
-
-	let auditTrail = $state<AuditTrail[]>([
-		{ id: 1, description: 'STK Push initiated to 0712345678', timestamp: '2 mins ago', status: 'info' },
-		{ id: 2, description: 'Payment confirmed from M-Pesa callback', timestamp: '15 mins ago', status: 'success' },
-		{ id: 3, description: 'Payment failed - insufficient funds', timestamp: '1 hour ago', status: 'error' },
-		{ id: 4, description: 'Manual payment recorded - Cash transaction', timestamp: '2 hours ago', status: 'success' },
-		{ id: 5, description: 'Bulk STK push sent to 5 recipients', timestamp: '3 hours ago', status: 'success' }
-	]);
-
-	let insights = $state([
-		'You received KES 25,000 today',
-		'Outgoing payments increased this week',
-		'2 payments are still pending'
-	]);
+	function timeAgo(dateStr: string | null): string {
+		if (!dateStr) return '';
+		const diff = Date.now() - new Date(dateStr).getTime();
+		const mins = Math.floor(diff / 60000);
+		if (mins < 1) return 'just now';
+		if (mins < 60) return `${mins}m ago`;
+		const hrs = Math.floor(mins / 60);
+		if (hrs < 24) return `${hrs}h ago`;
+		const days = Math.floor(hrs / 24);
+		return `${days}d ago`;
+	}
 
 	onMount(async () => {
 		if (!$auth.token) { goto('/login'); return; }
 		try {
-			// TODO: Fetch actual payment data
-			data = {
-				incoming: 25000,
-				outgoing: 12000,
-				net_flow: 13000
-			};
+			const [statsRes, txRes] = await Promise.all([
+				api<PaymentData>('/payments/stats'),
+				api<Transaction[]>('/payments/')
+			]);
+			data = statsRes;
+			transactions = txRes;
 		} catch {
 			data = { incoming: 0, outgoing: 0, net_flow: 0 };
 		} finally {
@@ -85,18 +70,10 @@
 
 	function getAuditStatusColor(status: string) {
 		switch (status) {
-			case 'success': return 'bg-emerald-500/10 text-emerald-400';
-			case 'error': return 'bg-red-500/10 text-red-400';
-			case 'info': return 'bg-blue-500/10 text-blue-400';
+			case 'completed': return 'bg-emerald-500/10 text-emerald-400';
+			case 'failed': return 'bg-red-500/10 text-red-400';
+			case 'pending': return 'bg-amber-500/10 text-amber-400';
 			default: return isDark ? 'bg-white/[0.05] text-white/60' : 'bg-white text-zinc-600';
-		}
-	}
-
-	function getTypeColor(type: string) {
-		switch (type) {
-			case 'incoming': return 'text-emerald-400';
-			case 'outgoing': return 'text-red-400';
-			default: return isDark ? 'text-white/60' : 'text-zinc-600';
 		}
 	}
 </script>
@@ -257,33 +234,30 @@
 								</svg>
 							</div>
 							<p class="text-[13px] {isDark ? 'text-white/40' : 'text-zinc-500'}">No payment activity yet</p>
+							<p class="mt-1 text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">Payments will appear here when clients pay via M-Pesa</p>
 						</div>
 					{:else}
 						<div class="space-y-3">
-							{#each transactions as transaction}
+							{#each transactions as tx}
 								<div class="rounded-xl border {isDark ? 'border-white/[0.04] bg-white/[0.01]' : 'border-zinc-200 bg-white'} p-4 transition-all {isDark ? 'hover:border-white/[0.08]' : 'hover:border-zinc-300'}">
 									<div class="flex items-center justify-between">
 										<div class="flex items-center gap-3">
 											<div class="flex h-10 w-10 items-center justify-center rounded-full {isDark ? 'bg-white/[0.05]' : 'bg-white'}">
-												<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 {getTypeColor(transaction.type)}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-													{#if transaction.type === 'incoming'}
-														<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-													{:else}
-														<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-													{/if}
+												<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+													<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
 												</svg>
 											</div>
 											<div>
-												<p class="text-[13px] font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">{transaction.name}</p>
-												<p class="text-[11px] {isDark ? 'text-white/40' : 'text-zinc-500'}">{transaction.type} • {transaction.timestamp}</p>
+												<p class="text-[13px] font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">{tx.client_name}</p>
+												<p class="text-[11px] {isDark ? 'text-white/40' : 'text-zinc-500'}">
+													{tx.mpesa_receipt ?? 'M-Pesa'} • {timeAgo(tx.paid_at ?? tx.created_at)}
+												</p>
 											</div>
 										</div>
 										<div class="text-right">
-											<p class="text-lg font-medium {getTypeColor(transaction.type)}">
-												{transaction.type === 'incoming' ? '+' : '-'}{formatKES(transaction.amount)}
-											</p>
-											<span class="inline-block mt-1 rounded-full px-2 py-0.5 text-[10px] font-medium {getStatusColor(transaction.status)}">
-												{transaction.status}
+											<p class="text-lg font-medium text-emerald-400">+{formatKES(tx.amount)}</p>
+											<span class="inline-block mt-1 rounded-full px-2 py-0.5 text-[10px] font-medium {getStatusColor(tx.status)}">
+												{tx.status}
 											</span>
 										</div>
 									</div>
@@ -296,7 +270,7 @@
 
 			<!-- Sidebar -->
 			<div class="space-y-6 lg:col-span-4">
-				<!-- Intelligence Panel -->
+				<!-- Summary -->
 				<div class="rounded-2xl border border-emerald-500/10 bg-emerald-500/[0.03] p-6 transition-all duration-500 delay-400 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
 					<div class="mb-4 flex items-center gap-2">
 						<div class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-400">
@@ -304,32 +278,50 @@
 								<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
 							</svg>
 						</div>
-						<span class="text-[11px] font-medium text-emerald-400">Intelligence</span>
+						<span class="text-[11px] font-medium text-emerald-400">Summary</span>
 					</div>
 					<div class="space-y-3">
-						{#each insights as insight}
-							<div class="flex items-start gap-2">
-								<span class="mt-1 h-1 w-1 rounded-full bg-emerald-400"></span>
-								<p class="text-[12px] {isDark ? 'text-white/60' : 'text-zinc-600'}">{insight}</p>
-							</div>
-						{/each}
+						<div class="flex items-start gap-2">
+							<span class="mt-1 h-1 w-1 rounded-full bg-emerald-400"></span>
+							<p class="text-[12px] {isDark ? 'text-white/60' : 'text-zinc-600'}">{transactions.filter(t => t.status === 'completed').length} completed payments</p>
+						</div>
+						<div class="flex items-start gap-2">
+							<span class="mt-1 h-1 w-1 rounded-full bg-amber-400"></span>
+							<p class="text-[12px] {isDark ? 'text-white/60' : 'text-zinc-600'}">{transactions.filter(t => t.status === 'pending').length} pending</p>
+						</div>
+						<div class="flex items-start gap-2">
+							<span class="mt-1 h-1 w-1 rounded-full bg-red-400"></span>
+							<p class="text-[12px] {isDark ? 'text-white/60' : 'text-zinc-600'}">{transactions.filter(t => t.status === 'failed').length} failed</p>
+						</div>
 					</div>
 				</div>
 
 				<!-- Audit Trail -->
 				<div class="rounded-2xl border {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-white'} p-6 transition-all duration-500 delay-500 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
 					<span class="mb-4 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Audit Trail</span>
-					<div class="space-y-3">
-						{#each auditTrail as audit}
-							<div class="flex items-start gap-3">
-								<div class="mt-0.5 flex h-2 w-2 flex-shrink-0 rounded-full {getAuditStatusColor(audit.status)}"></div>
-								<div class="flex-1">
-									<p class="text-[12px] {isDark ? 'text-white/60' : 'text-zinc-600'}">{audit.description}</p>
-									<p class="mt-1 text-[10px] {isDark ? 'text-white/20' : 'text-zinc-400'}">{audit.timestamp}</p>
+					{#if transactions.length === 0}
+						<p class="text-[12px] {isDark ? 'text-white/30' : 'text-zinc-400'}">No activity to show</p>
+					{:else}
+						<div class="space-y-3">
+							{#each transactions.slice(0, 8) as tx}
+								<div class="flex items-start gap-3">
+									<div class="mt-0.5 flex h-2 w-2 flex-shrink-0 rounded-full {getAuditStatusColor(tx.status)}"></div>
+									<div class="flex-1">
+										<p class="text-[12px] {isDark ? 'text-white/60' : 'text-zinc-600'}">
+											{#if tx.status === 'completed'}
+												Payment confirmed from {tx.client_name} — {tx.mpesa_receipt ?? 'M-Pesa'}
+											{:else if tx.status === 'pending'}
+												STK Push sent to {tx.phone}
+											{:else}
+												Payment failed for {tx.client_name}
+											{/if}
+										</p>
+										<p class="mt-1 text-[10px] {isDark ? 'text-white/20' : 'text-zinc-400'}">{timeAgo(tx.paid_at ?? tx.created_at)}</p>
+									</div>
 								</div>
-							</div>
-						{/each}
-					</div>
+							{/each}
+						</div>
+					{/if}
 				</div>
 			</div>
 		</div>

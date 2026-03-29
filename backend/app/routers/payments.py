@@ -24,6 +24,60 @@ class STKPushRequest(BaseModel):
     phone: str | None = None  # override client_phone if provided
 
 
+@router.get("/")
+async def list_payments(
+    business_id: str = Depends(get_current_business_id),
+    db: AsyncSession = Depends(get_db),
+):
+    """List recent payments for the business (via invoices)."""
+    bid = uuid.UUID(business_id)
+    result = await db.execute(
+        select(Payment, Invoice.client_name)
+        .join(Invoice, Payment.invoice_id == Invoice.id)
+        .where(Invoice.business_id == bid)
+        .order_by(Payment.created_at.desc())
+        .limit(20)
+    )
+    rows = result.all()
+    return [
+        {
+            "id": str(p.id),
+            "client_name": client_name,
+            "amount": float(p.amount),
+            "status": p.status,
+            "mpesa_receipt": p.mpesa_receipt,
+            "phone": p.phone,
+            "paid_at": p.paid_at.isoformat() if p.paid_at else None,
+            "created_at": p.created_at.isoformat() if p.created_at else None,
+        }
+        for p, client_name in rows
+    ]
+
+
+@router.get("/stats")
+async def payment_stats(
+    business_id: str = Depends(get_current_business_id),
+    db: AsyncSession = Depends(get_db),
+):
+    """Aggregate payment stats for the business."""
+    from sqlalchemy import func
+
+    bid = uuid.UUID(business_id)
+    # Total completed incoming
+    incoming_result = await db.execute(
+        select(func.coalesce(func.sum(Payment.amount), 0))
+        .join(Invoice, Payment.invoice_id == Invoice.id)
+        .where(Invoice.business_id == bid, Payment.status == "completed")
+    )
+    incoming = float(incoming_result.scalar())
+
+    return {
+        "incoming": incoming,
+        "outgoing": 0,
+        "net_flow": incoming,
+    }
+
+
 @router.post("/stk-push")
 async def initiate_stk_push(
     req: STKPushRequest,

@@ -19,16 +19,22 @@
 	let loading = $state(true);
 	let visible = $state(false);
 
+	interface Contribution {
+		id: number;
+		member: string;
+		amount: number;
+		status: string;
+		timestamp: string;
+		rule: string;
+	}
+
+	let contributions = $state<Contribution[]>([]);
+
 	onMount(async () => {
 		if (!$auth.token) { goto('/imarisha'); return; }
 		try {
-			// TODO: Fetch actual Imarisha data
-			data = {
-				expected_inflow: 25000,
-				money_in_motion: 8500,
-				collected: 165000,
-				at_risk: 1200
-			};
+			// TODO: Wire to Imarisha backend when available
+			data = { expected_inflow: 0, money_in_motion: 0, collected: 0, at_risk: 0 };
 		} catch {
 			data = { expected_inflow: 0, money_in_motion: 0, collected: 0, at_risk: 0 };
 		} finally {
@@ -36,15 +42,6 @@
 			setTimeout(() => (visible = true), 50);
 		}
 	});
-
-	// Mock contributions data
-	const contributions = [
-		{ id: 1, member: 'John Kamau', amount: 5000, status: 'completed', timestamp: '2024-03-28 09:00', rule: 'Weekly' },
-		{ id: 2, member: 'Mary Njoroge', amount: 5000, status: 'pending', timestamp: '2024-03-28 09:05', rule: 'Weekly' },
-		{ id: 3, member: 'David Mwangi', amount: 5000, status: 'failed', timestamp: '2024-03-28 09:10', rule: 'Weekly' },
-		{ id: 4, member: 'Grace Wanjiru', amount: 5000, status: 'completed', timestamp: '2024-03-28 09:15', rule: 'Monthly' },
-		{ id: 5, member: 'Samuel Ochieng', amount: 5000, status: 'completed', timestamp: '2024-03-28 09:20', rule: 'Weekly' }
-	];
 
 	function getStatusColor(status: string) {
 		switch (status) {
@@ -174,27 +171,39 @@
 					</div>
 				</div>
 
-				<div class="space-y-3">
-					{#each contributions as contribution}
-						<div class="rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.01]' : 'bg-white'} p-4 transition-all {isDark ? 'hover:border-white/[0.08]' : 'hover:border-zinc-300'}">
-							<div class="flex items-center justify-between">
-								<div class="flex items-center gap-3">
-									<img src={getAvatarUrl(contribution.member)} alt={contribution.member} class="h-10 w-10 rounded-full" />
-									<div>
-										<p class="text-[13px] font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">{contribution.member}</p>
-										<p class="text-[11px] {isDark ? 'text-white/40' : 'text-zinc-500'}">{contribution.rule} • {contribution.timestamp}</p>
+				{#if contributions.length === 0}
+					<div class="text-center py-12">
+						<div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full {isDark ? 'bg-white/[0.05]' : 'bg-zinc-100'}">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 {isDark ? 'text-white/30' : 'text-zinc-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+							</svg>
+						</div>
+						<p class="text-[13px] {isDark ? 'text-white/40' : 'text-zinc-500'}">No contributions yet</p>
+						<p class="mt-1 text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">Create a group and add members to start collecting</p>
+					</div>
+				{:else}
+					<div class="space-y-3">
+						{#each contributions as contribution}
+							<div class="rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.01]' : 'bg-white'} p-4 transition-all {isDark ? 'hover:border-white/[0.08]' : 'hover:border-zinc-300'}">
+								<div class="flex items-center justify-between">
+									<div class="flex items-center gap-3">
+										<img src={getAvatarUrl(contribution.member)} alt={contribution.member} class="h-10 w-10 rounded-full" />
+										<div>
+											<p class="text-[13px] font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">{contribution.member}</p>
+											<p class="text-[11px] {isDark ? 'text-white/40' : 'text-zinc-500'}">{contribution.rule} • {contribution.timestamp}</p>
+										</div>
+									</div>
+									<div class="text-right">
+										<p class="text-lg font-medium {isDark ? 'text-white' : 'text-zinc-900'}">{formatKES(contribution.amount)}</p>
+										<span class="inline-block mt-1 rounded-full px-2 py-0.5 text-[10px] font-medium {getStatusColor(contribution.status)}">
+											{getStatusText(contribution.status)}
+										</span>
 									</div>
 								</div>
-								<div class="text-right">
-									<p class="text-lg font-medium {isDark ? 'text-white' : 'text-zinc-900'}">{formatKES(contribution.amount)}</p>
-									<span class="inline-block mt-1 rounded-full px-2 py-0.5 text-[10px] font-medium {getStatusColor(contribution.status)}">
-										{getStatusText(contribution.status)}
-									</span>
-								</div>
 							</div>
-						</div>
-					{/each}
-				</div>
+						{/each}
+					</div>
+				{/if}
 			</div>
 
 			<!-- Quick Actions & AI Indicator -->
@@ -243,14 +252,14 @@
 						</div>
 						<span class="text-[11px] font-medium text-emerald-400">AI Automation Active</span>
 					</div>
-					<p class="text-[12px] {isDark ? 'text-white/60' : 'text-zinc-600'}">All contributions are automatically processed and tracked.</p>
+					<p class="text-[12px] {isDark ? 'text-white/60' : 'text-zinc-600'}">Contributions will be automatically processed and tracked once your group is set up.</p>
 					<div class="mt-3">
 						<div class="mb-2 flex items-center justify-between text-[10px] {isDark ? 'text-white/40' : 'text-zinc-500'}">
 							<span>Automation Status</span>
-							<span class="text-emerald-400">98% Complete</span>
+							<span class="text-emerald-400">{contributions.length > 0 ? 'Active' : 'Ready'}</span>
 						</div>
 						<div class="h-2 w-full rounded-full {isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}">
-							<div class="h-full rounded-full bg-emerald-500/50 transition-all duration-1000" style="width: 98%"></div>
+							<div class="h-full rounded-full bg-emerald-500/50 transition-all duration-1000" style="width: {contributions.length > 0 ? '100' : '0'}%"></div>
 						</div>
 					</div>
 				</div>
