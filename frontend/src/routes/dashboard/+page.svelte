@@ -29,18 +29,18 @@
 	onMount(async () => {
 		if (!$auth.token) { goto('/login'); return; }
 		try {
-			const [dashRes, profileRes] = await Promise.all([
-				api<DashboardData>('/dashboard/summary'),
-				api<{ is_configured: boolean }>('/profile/')
-			]);
-			data = dashRes;
-			isConfigured = profileRes.is_configured;
+			data = await api<DashboardData>('/dashboard/summary');
 		} catch {
 			data = { total_receivables: 0, total_paid: 0, overdue_count: 0, total_invoices: 0 };
-		} finally {
-			loading = false;
-			setTimeout(() => (visible = true), 50);
 		}
+		try {
+			const profileRes = await api<{ is_configured: boolean }>('/profile/');
+			isConfigured = profileRes.is_configured;
+		} catch {
+			isConfigured = false;
+		}
+		loading = false;
+		setTimeout(() => (visible = true), 50);
 		loadInsights();
 	});
 
