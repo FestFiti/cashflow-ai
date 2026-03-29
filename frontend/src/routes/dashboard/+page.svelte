@@ -4,6 +4,7 @@
 	import { api, formatKES } from '$lib/api';
 	import { goto } from '$app/navigation';
 	import { theme } from '$lib/stores/theme';
+	import Icon from '$lib/components/Icon.svelte';
 	const isDark = $derived($theme === 'dark');
 
 	interface DashboardData {
@@ -177,43 +178,17 @@
 
 				<div class="space-y-2">
 					{#each [
-						{
-							href: '/payments/request',
-							label: 'Request Payment',
-							sub: 'Ask for money via M-Pesa or payment link',
-							icon: 'M12 4.5v15m7.5-7.5h-15',
-							accent: 'emerald'
-						},
-						{
-							href: '/payments/remind',
-							label: 'Send Reminder',
-							sub: 'Remind clients to pay instantly',
-							icon: 'M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75c-.778 0-1.504.357-1.96.966l-.314.378a8.967 8.967 0 01-1.96-.966 8.967 8.967 0 00-1.96.966l-.314-.378A2.464 2.464 0 019.75 9.75a8.967 8.967 0 00-1.311 5.454M12 20.25a8.967 8.967 0 01-5.454-1.31m10.91 0a23.848 23.848 0 005.454-1.31',
-							accent: 'white'
-						},
-						{
-							href: '/payments/record',
-							label: 'Record Payment',
-							sub: 'Log or confirm received payments',
-							icon: 'M9 12.75l3 3m0 0l3-3m-3 3V7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
-							accent: 'white'
-						},
-						{
-							href: '/groups/create',
-							label: 'Create Group',
-							sub: 'Pool money and manage contributions',
-							icon: 'M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197A5.971 5.971 0 016 18.72v-2.007m0 0V18.72v-2.007m0 0a5.971 5.971 0 00-.941 3.197M5.058 15.522A5.971 5.971 0 006 18.72v-2.007M5.058 15.522A5.971 5.971 0 016 12.75v2.007m0 0a5.971 5.971 0 00.941 3.197m8.018-8.018a5.971 5.971 0 00-.941-3.197M6 12.75a5.971 5.971 0 01.941-3.197m5.059 5.059a5.971 5.971 0 01-.941 3.197M12 12.75a5.971 5.971 0 01-.941-3.197m0 6.394a5.971 5.971 0 00.941-3.197m0-6.394a5.971 5.971 0 00-.941 3.197',
-							accent: 'white'
-						}
+						{ href: '/payments/request', label: 'Request Payment', sub: 'Ask for money via M-Pesa or payment link', icon: 'request-payment', accent: true },
+						{ href: '/payments/remind',  label: 'Send Reminder',   sub: 'Remind clients to pay instantly',           icon: 'send-reminder',   accent: false },
+						{ href: '/payments/record',  label: 'Record Payment',  sub: 'Log or confirm received payments',          icon: 'record-payment',  accent: false },
+						{ href: '/groups/create',    label: 'Create Group',    sub: 'Pool money and manage contributions',       icon: 'create-group',    accent: false }
 					] as action}
 						<a
 							href={action.href}
 							class="group flex items-center gap-3 rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} p-3 transition-all {isDark ? 'hover:border-white/[0.08]' : 'hover:border-zinc-300'} {isDark ? 'hover:bg-white/[0.02]' : 'hover:bg-zinc-50'}"
 						>
-							<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg {action.accent === 'emerald' ? 'bg-emerald-500/10' : isDark ? 'bg-white/[0.03]' : 'bg-zinc-100'}">
-								<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 {action.accent === 'emerald' ? 'text-emerald-400' : isDark ? 'text-white/30' : 'text-zinc-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-									<path stroke-linecap="round" stroke-linejoin="round" d={action.icon} />
-								</svg>
+							<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg {action.accent ? 'bg-emerald-500/10' : isDark ? 'bg-white/[0.03]' : 'bg-zinc-100'}">
+								<Icon name={action.icon} stroke={action.accent ? 'rgba(52,211,153,1)' : isDark ? 'rgba(255,255,255,0.3)' : 'rgba(113,113,122,1)'} />
 							</div>
 							<div>
 								<p class="text-[13px] font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">{action.label}</p>

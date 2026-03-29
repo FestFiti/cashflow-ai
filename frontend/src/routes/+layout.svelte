@@ -40,11 +40,11 @@
 	}
 
 	const navLinks = [
-		{ href: '/dashboard', label: 'Dashboard', icon: 'M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25' },
-		{ href: '/payments', label: 'Payments', icon: 'M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z' },
-		{ href: '/invoices', label: 'Invoices', icon: 'M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z' },
-		{ href: '/imarisha', label: 'Imarisha', icon: 'M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197A5.971 5.971 0 006 18.72v-2.007m0 0V18.72v-2.007m0 0a5.971 5.971 0 00-.941 3.197M5.058 15.522A5.971 5.971 0 006 18.72v-2.007M5.058 15.522A5.971 5.971 0 016 12.75v2.007m0 0a5.971 5.971 0 00.941 3.197m8.018-8.018a5.971 5.971 0 00-.941-3.197M6 12.75a5.971 5.971 0 01.941-3.197m5.059 5.059a5.971 5.971 0 01-.941 3.197M12 12.75a5.971 5.971 0 01-.941-3.197m0 6.394a5.971 5.971 0 00.941-3.197m0-6.394a5.971 5.971 0 00-.941 3.197' },
-		{ href: '/reports', label: 'Reports', icon: 'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z' }
+		{ href: '/dashboard', label: 'Dashboard' },
+		{ href: '/payments', label: 'Payments' },
+		{ href: '/invoices', label: 'Invoices' },
+		{ href: '/imarisha', label: 'Imarisha' },
+		{ href: '/reports', label: 'Reports' }
 	];
 
 	function isActive(href: string, pathname: string) {
@@ -77,13 +77,46 @@
 				<!-- Desktop Nav -->
 				<nav class="hidden items-center gap-0.5 md:flex">
 					{#each navLinks as link}
+						{@const active = isActive(link.href, $page.url.pathname)}
+						{@const stroke = active ? (isDark ? 'rgba(255,255,255,1)' : 'rgba(24,24,27,1)') : (isDark ? 'rgba(255,255,255,0.4)' : 'rgba(113,113,122,1)')}
 						<a
 							href={link.href}
-							class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-medium transition-all {isActive(link.href, $page.url.pathname) ? (isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200 text-zinc-900') : (isDark ? 'text-white/40 hover:text-white/70' : 'text-zinc-500 hover:text-zinc-700')}"
+							class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-medium transition-all {active ? (isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200 text-zinc-900') : (isDark ? 'text-white/40 hover:text-white/70' : 'text-zinc-500 hover:text-zinc-700')}"
 						>
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-								<path stroke-linecap="round" stroke-linejoin="round" d={link.icon} />
-							</svg>
+							{#if link.href === '/dashboard'}
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+									<path d="M9 16V12.75" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M3.145 5.95L8.395 1.96C8.753 1.688 9.248 1.688 9.605 1.96L14.855 5.95C15.104 6.139 15.25 6.434 15.25 6.746V14.25C15.25 15.355 14.355 16.25 13.25 16.25H4.75C3.645 16.25 2.75 15.355 2.75 14.25V6.746C2.75 6.433 2.896 6.139 3.145 5.95Z" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							{:else if link.href === '/payments'}
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+									<line x1="1.75" y1="7.25" x2="16.25" y2="7.25" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<rect x="1.75" y="3.75" width="14.5" height="10.5" rx="2" ry="2" transform="translate(18 18) rotate(180)" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<line x1="4.25" y1="11.25" x2="7.25" y2="11.25" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<line x1="12.75" y1="11.25" x2="13.75" y2="11.25" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							{:else if link.href === '/invoices'}
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+									<line x1="5.75" y1="6.75" x2="7.75" y2="6.75" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<line x1="5.75" y1="9.75" x2="12.25" y2="9.75" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<line x1="5.75" y1="12.75" x2="12.25" y2="12.75" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M2.75,14.25V3.75c0-1.105,.895-2,2-2h5.586c.265,0,.52,.105,.707,.293l3.914,3.914c.188,.188,.293,.442,.293,.707v7.586c0,1.105-.895,2-2,2H4.75c-1.105,0-2-.895-2-2Z" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M15.16,6.25h-3.41c-.552,0-1-.448-1-1V1.852" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							{:else if link.href === '/imarisha'}
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+									<path d="m12.974,8.731c-.4527,3.525-3.4373,4.0684-6.5358,3.5928" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="m2.75,15.25S4.062,3.729,15.25,2.75c-.56.976-.573,2.605-.946,4.239-.524,2.011-2.335,2.261-4.554,2.261" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							{:else if link.href === '/reports'}
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+									<rect x="13.25" y="2.75" width="2.5" height="12.5" rx="1" ry="1" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<rect x="7.75" y="7.75" width="2.5" height="7.5" rx="1" ry="1" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<rect x="2.25" y="11.75" width="2.5" height="3.5" rx="1" ry="1" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<polyline points="6.25 2.75 8.75 2.75 8.75 5.25" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<line x1="8.5" y1="3" x2="2.75" y2="8.75" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							{/if}
 							{link.label}
 						</a>
 					{/each}
@@ -176,14 +209,47 @@
 			{#if mobileMenuOpen}
 				<div class="mt-2 rounded-2xl border {isDark ? 'border-white/[0.06]' : 'border-zinc-200'} {isDark ? 'bg-zinc-950/90' : 'bg-white/90'} p-2 backdrop-blur-xl md:hidden">
 					{#each navLinks as link}
+						{@const active = isActive(link.href, $page.url.pathname)}
+						{@const stroke = active ? (isDark ? 'rgba(255,255,255,1)' : 'rgba(24,24,27,1)') : (isDark ? 'rgba(255,255,255,0.4)' : 'rgba(113,113,122,1)')}
 						<a
 							href={link.href}
 							onclick={() => (mobileMenuOpen = false)}
-							class="flex items-center gap-2.5 rounded-xl px-3 py-3 text-[13px] font-medium transition-all {isActive(link.href, $page.url.pathname) ? (isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200 text-zinc-900') : (isDark ? 'text-white/40' : 'text-zinc-500')}"
+							class="flex items-center gap-2.5 rounded-xl px-3 py-3 text-[13px] font-medium transition-all {active ? (isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200 text-zinc-900') : (isDark ? 'text-white/40' : 'text-zinc-500')}"
 						>
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-								<path stroke-linecap="round" stroke-linejoin="round" d={link.icon} />
-							</svg>
+							{#if link.href === '/dashboard'}
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+									<path d="M9 16V12.75" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M3.145 5.95L8.395 1.96C8.753 1.688 9.248 1.688 9.605 1.96L14.855 5.95C15.104 6.139 15.25 6.434 15.25 6.746V14.25C15.25 15.355 14.355 16.25 13.25 16.25H4.75C3.645 16.25 2.75 15.355 2.75 14.25V6.746C2.75 6.433 2.896 6.139 3.145 5.95Z" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							{:else if link.href === '/payments'}
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+									<line x1="1.75" y1="7.25" x2="16.25" y2="7.25" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<rect x="1.75" y="3.75" width="14.5" height="10.5" rx="2" ry="2" transform="translate(18 18) rotate(180)" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<line x1="4.25" y1="11.25" x2="7.25" y2="11.25" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<line x1="12.75" y1="11.25" x2="13.75" y2="11.25" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							{:else if link.href === '/invoices'}
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+									<line x1="5.75" y1="6.75" x2="7.75" y2="6.75" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<line x1="5.75" y1="9.75" x2="12.25" y2="9.75" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<line x1="5.75" y1="12.75" x2="12.25" y2="12.75" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M2.75,14.25V3.75c0-1.105,.895-2,2-2h5.586c.265,0,.52,.105,.707,.293l3.914,3.914c.188,.188,.293,.442,.293,.707v7.586c0,1.105-.895,2-2,2H4.75c-1.105,0-2-.895-2-2Z" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M15.16,6.25h-3.41c-.552,0-1-.448-1-1V1.852" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							{:else if link.href === '/imarisha'}
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+									<path d="m12.974,8.731c-.4527,3.525-3.4373,4.0684-6.5358,3.5928" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="m2.75,15.25S4.062,3.729,15.25,2.75c-.56.976-.573,2.605-.946,4.239-.524,2.011-2.335,2.261-4.554,2.261" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							{:else if link.href === '/reports'}
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+									<rect x="13.25" y="2.75" width="2.5" height="12.5" rx="1" ry="1" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<rect x="7.75" y="7.75" width="2.5" height="7.5" rx="1" ry="1" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<rect x="2.25" y="11.75" width="2.5" height="3.5" rx="1" ry="1" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<polyline points="6.25 2.75 8.75 2.75 8.75 5.25" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<line x1="8.5" y1="3" x2="2.75" y2="8.75" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							{/if}
 							{link.label}
 						</a>
 					{/each}
