@@ -64,12 +64,12 @@ RECEIPTS = [
 
 def random_past_date(days_ago_min: int, days_ago_max: int) -> date:
     offset = random.randint(days_ago_min, days_ago_max)
-    return (datetime.now(timezone.utc) - timedelta(days=offset)).date()
+    return (datetime.utcnow() - timedelta(days=offset)).date()
 
 
 def random_future_date(days_ahead_min: int, days_ahead_max: int) -> date:
     offset = random.randint(days_ahead_min, days_ahead_max)
-    return (datetime.now(timezone.utc) + timedelta(days=offset)).date()
+    return (datetime.utcnow() + timedelta(days=offset)).date()
 
 
 async def seed(email: str, password: str) -> None:
@@ -144,7 +144,7 @@ async def seed(email: str, password: str) -> None:
             service_desc, base_amount = SERVICES[s_idx]
             amount = amount_override or base_amount
 
-            created_date = datetime.now(timezone.utc) - timedelta(days=days_created)
+            created_date = datetime.utcnow() - timedelta(days=days_created)
             due = date.today() + timedelta(days=due_offset)
 
             inv = Invoice(
@@ -189,7 +189,7 @@ async def seed(email: str, password: str) -> None:
         # ------------------------------------------------------------------
         # 5. Seed notifications
         # ------------------------------------------------------------------
-        now = datetime.now(timezone.utc)
+        now = datetime.utcnow()
         notifications = [
             Notification(
                 id=uuid.uuid4(), business_id=bid,
