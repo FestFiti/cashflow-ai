@@ -29,8 +29,8 @@ export async function api<T>(path: string, options: FetchOptions = {}): Promise<
 	});
 
 	if (!res.ok) {
-		// Auto-logout on 401 (expired/invalid token)
-		if (res.status === 401 && browser) {
+		// Auto-logout on 401 (expired/invalid token) — skip on auth endpoints
+		if (res.status === 401 && browser && !path.startsWith('/auth/')) {
 			logout();
 			window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`;
 			throw new Error('Session expired. Please sign in again.');
