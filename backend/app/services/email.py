@@ -14,7 +14,7 @@ async def send_email(
         return {"status": "skipped"}
 
     payload = {
-        "from": {"email": settings.ESMS_FROM_EMAIL, "name": settings.ESMS_FROM_NAME},
+        "from_": {"email": settings.ESMS_FROM_EMAIL, "name": settings.ESMS_FROM_NAME},
         "to": [{"email": to_email, "name": to_name}],
         "subject": subject,
         "html": html,
