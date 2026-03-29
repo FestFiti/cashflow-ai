@@ -10,7 +10,7 @@ from app.database import engine, Base
 from app.models import Business, Invoice, Payment, Reminder, Notification, User, Service, InvoiceItem  # noqa: F401
 from app.models.session import Session  # noqa - needed for create_all
 from app.routers import auth, invoices, payments, webhooks, reminders, ai, dashboard, notifications, team, ws
-from app.routers import profile, services
+from app.routers import profile, services, reports
 
 
 @asynccontextmanager
@@ -54,6 +54,7 @@ api.include_router(team.router, prefix="/team", tags=["Team"])
 api.include_router(ws.router, tags=["WebSocket"])
 api.include_router(profile.router, prefix="/profile", tags=["profile"])
 api.include_router(services.router, prefix="/services", tags=["Services"])
+api.include_router(reports.router, prefix="/reports", tags=["Reports"])
 app.include_router(api)
 
 

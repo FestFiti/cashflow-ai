@@ -3,13 +3,76 @@
 	import { theme } from '$lib/stores/theme';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import { api, formatKES } from '$lib/api';
+	import { getAvatarUrl } from '$lib/avatar';
 
 	const isDark = $derived($theme === 'dark');
 	let visible = $state(false);
+	let loading = $state(true);
 
-	onMount(() => {
-		if (!$auth.token) goto('/login');
-		setTimeout(() => (visible = true), 50);
+	interface Overview {
+		total_invoiced: number;
+		total_collected: number;
+		total_outstanding: number;
+		overdue_amount: number;
+		invoice_count: number;
+		paid_count: number;
+		overdue_count: number;
+		collection_rate: number;
+		invoiced_30d: number;
+		collected_30d: number;
+	}
+	interface RevenueMonth { month: string; invoiced: number; collected: number; }
+	interface StatusItem { status: string; count: number; amount: number; }
+	interface TopClient { client_name: string; invoice_count: number; total_amount: number; paid_amount: number; collection_rate: number; }
+	interface AgingBucket { label: string; count: number; amount: number; }
+	interface RecentPayment { id: string; client_name: string; amount: number; mpesa_receipt: string | null; paid_at: string | null; }
+
+	let overview = $state<Overview | null>(null);
+	let revenueChart = $state<RevenueMonth[]>([]);
+	let statusBreakdown = $state<StatusItem[]>([]);
+	let topClients = $state<TopClient[]>([]);
+	let aging = $state<AgingBucket[]>([]);
+	let recentPayments = $state<RecentPayment[]>([]);
+
+	const maxRevenue = $derived(Math.max(...revenueChart.map(m => Math.max(m.invoiced, m.collected)), 1));
+
+	const statusColors: Record<string, string> = {
+		paid: 'bg-emerald-500',
+		sent: 'bg-blue-500',
+		overdue: 'bg-amber-500',
+		draft: 'bg-zinc-500',
+	};
+	const statusTextColors: Record<string, string> = {
+		paid: 'text-emerald-400',
+		sent: 'text-blue-400',
+		overdue: 'text-amber-400',
+		draft: isDark ? 'text-white/40' : 'text-zinc-500',
+	};
+
+	onMount(async () => {
+		if (!$auth.token) { goto('/login'); return; }
+		try {
+			const [ov, rc, sb, tc, ag, rp] = await Promise.all([
+				api<Overview>('/reports/overview', { token: $auth.token }),
+				api<RevenueMonth[]>('/reports/revenue-chart?months=6', { token: $auth.token }),
+				api<StatusItem[]>('/reports/status-breakdown', { token: $auth.token }),
+				api<TopClient[]>('/reports/top-clients?limit=5', { token: $auth.token }),
+				api<AgingBucket[]>('/reports/aging', { token: $auth.token }),
+				api<RecentPayment[]>('/reports/recent-payments?limit=8', { token: $auth.token }),
+			]);
+			overview = ov;
+			revenueChart = rc;
+			statusBreakdown = sb;
+			topClients = tc;
+			aging = ag;
+			recentPayments = rp;
+		} catch {
+			// fallback — API may not be ready
+		} finally {
+			loading = false;
+			setTimeout(() => (visible = true), 50);
+		}
 	});
 </script>
 
@@ -29,35 +92,229 @@
 		</h1>
 	</div>
 
-	<!-- Empty State -->
-	<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-12 text-center transition-all duration-500 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
-		<div class="mx-auto flex h-14 w-14 items-center justify-center rounded-lg bg-emerald-500/10">
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-				<path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-			</svg>
-		</div>
-		<h3 class="mt-5 font-['Instrument_Serif'] text-xl {isDark ? 'text-white' : 'text-zinc-900'}">Analytics coming soon</h3>
-		<p class="mx-auto mt-2 max-w-sm text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">
-			Cash flow charts, client breakdowns, and AI insights will be available here.
-		</p>
-
-		<!-- Feature preview cards -->
-		<div class="mx-auto mt-8 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
-			{#each [
-				{ label: 'Cash Flow', sub: 'Income vs expenses', icon: 'M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z' },
-				{ label: 'Client Insights', sub: 'Top payers & trends', icon: 'M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z' },
-				{ label: 'AI Forecasts', sub: 'Predict cash position', icon: 'M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6' }
-			] as feature}
-				<div class="flex flex-col items-center gap-2 rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} p-4">
-					<div class="flex h-9 w-9 items-center justify-center rounded-lg {isDark ? 'bg-white/[0.03]' : 'bg-white'}">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 {isDark ? 'text-white/20' : 'text-zinc-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-							<path stroke-linecap="round" stroke-linejoin="round" d={feature.icon} />
-						</svg>
-					</div>
-					<p class="text-[13px] font-medium {isDark ? 'text-white/50' : 'text-zinc-500'}">{feature.label}</p>
-					<p class="text-[11px] {isDark ? 'text-white/15' : 'text-zinc-400'}">{feature.sub}</p>
+	{#if loading}
+		<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+			{#each Array(4) as _}
+				<div class="animate-pulse rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6">
+					<div class="h-3 w-20 rounded {isDark ? 'bg-white/[0.04]' : 'bg-zinc-100'}"></div>
+					<div class="mt-3 h-8 w-32 rounded {isDark ? 'bg-white/[0.04]' : 'bg-zinc-100'}"></div>
 				</div>
 			{/each}
 		</div>
-	</div>
+	{:else if overview}
+		<!-- KPI Cards -->
+		<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 transition-all duration-500 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+			<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6">
+				<div class="flex items-center justify-between">
+					<span class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Total Invoiced</span>
+					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+					</div>
+				</div>
+				<p class="mt-3 font-['Instrument_Serif'] text-3xl italic tracking-tight text-emerald-400">{formatKES(overview.total_invoiced)}</p>
+				<p class="mt-1 text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">{overview.invoice_count} invoices</p>
+			</div>
+			<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6">
+				<div class="flex items-center justify-between">
+					<span class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Collected</span>
+					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z" /></svg>
+					</div>
+				</div>
+				<p class="mt-3 font-['Instrument_Serif'] text-3xl italic tracking-tight {isDark ? 'text-white' : 'text-zinc-900'}">{formatKES(overview.total_collected)}</p>
+				<p class="mt-1 text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">{overview.paid_count} paid · {overview.collection_rate}% rate</p>
+			</div>
+			<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6">
+				<div class="flex items-center justify-between">
+					<span class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Outstanding</span>
+					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+					</div>
+				</div>
+				<p class="mt-3 font-['Instrument_Serif'] text-3xl italic tracking-tight text-amber-400">{formatKES(overview.total_outstanding)}</p>
+				<p class="mt-1 text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">awaiting payment</p>
+			</div>
+			<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6">
+				<div class="flex items-center justify-between">
+					<span class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Overdue</span>
+					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500/10">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+					</div>
+				</div>
+				<p class="mt-3 font-['Instrument_Serif'] text-3xl italic tracking-tight text-red-400">{formatKES(overview.overdue_amount)}</p>
+				<p class="mt-1 text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">{overview.overdue_count} overdue</p>
+			</div>
+		</div>
+
+		<!-- 30-Day Snapshot -->
+		<div class="mt-4 grid gap-4 md:grid-cols-2 transition-all duration-500 delay-100 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+			<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6">
+				<span class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Invoiced (Last 30 Days)</span>
+				<p class="mt-2 font-['Instrument_Serif'] text-2xl italic tracking-tight {isDark ? 'text-white' : 'text-zinc-900'}">{formatKES(overview.invoiced_30d)}</p>
+			</div>
+			<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6">
+				<span class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Collected (Last 30 Days)</span>
+				<p class="mt-2 font-['Instrument_Serif'] text-2xl italic tracking-tight text-emerald-400">{formatKES(overview.collected_30d)}</p>
+			</div>
+		</div>
+
+		<div class="mt-4 grid gap-4 lg:grid-cols-12 transition-all duration-500 delay-200 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+			<!-- Revenue Chart -->
+			<div class="lg:col-span-8 rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6">
+				<div class="mb-6 flex items-center justify-between">
+					<span class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Revenue (6 Months)</span>
+					<div class="flex items-center gap-4">
+						<div class="flex items-center gap-1.5"><div class="h-2 w-2 rounded-full bg-emerald-500"></div><span class="text-[11px] {isDark ? 'text-white/30' : 'text-zinc-400'}">Invoiced</span></div>
+						<div class="flex items-center gap-1.5"><div class="h-2 w-2 rounded-full bg-blue-500"></div><span class="text-[11px] {isDark ? 'text-white/30' : 'text-zinc-400'}">Collected</span></div>
+					</div>
+				</div>
+				{#if revenueChart.length > 0}
+					<div class="flex items-end gap-3" style="height: 200px;">
+						{#each revenueChart as month}
+							<div class="flex flex-1 flex-col items-center gap-1">
+								<div class="flex w-full items-end justify-center gap-1" style="height: 170px;">
+									<div
+										class="w-5 rounded-t bg-emerald-500/70 transition-all duration-700"
+										style="height: {maxRevenue > 0 ? (month.invoiced / maxRevenue) * 100 : 0}%"
+									></div>
+									<div
+										class="w-5 rounded-t bg-blue-500/70 transition-all duration-700"
+										style="height: {maxRevenue > 0 ? (month.collected / maxRevenue) * 100 : 0}%"
+									></div>
+								</div>
+								<span class="text-[10px] {isDark ? 'text-white/20' : 'text-zinc-400'}">{month.month.split(' ')[0]}</span>
+							</div>
+						{/each}
+					</div>
+				{:else}
+					<div class="flex h-[200px] items-center justify-center">
+						<p class="text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">No data yet</p>
+					</div>
+				{/if}
+			</div>
+
+			<!-- Status Breakdown -->
+			<div class="lg:col-span-4 rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6">
+				<span class="mb-4 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Invoice Status</span>
+				{#if statusBreakdown.length > 0}
+					<div class="space-y-3">
+						{#each statusBreakdown as item}
+							{@const total = statusBreakdown.reduce((s, i) => s + i.count, 0)}
+							{@const pct = total > 0 ? Math.round((item.count / total) * 100) : 0}
+							<div>
+								<div class="mb-1 flex items-center justify-between">
+									<span class="text-[13px] font-medium capitalize {isDark ? 'text-white/60' : 'text-zinc-600'}">{item.status}</span>
+									<span class="text-[12px] {isDark ? 'text-white/30' : 'text-zinc-400'}">{item.count} · {formatKES(item.amount)}</span>
+								</div>
+								<div class="h-1.5 w-full rounded-full {isDark ? 'bg-white/[0.04]' : 'bg-zinc-100'}">
+									<div class="h-full rounded-full {statusColors[item.status] || 'bg-zinc-400'} transition-all duration-700" style="width: {pct}%"></div>
+								</div>
+							</div>
+						{/each}
+					</div>
+				{:else}
+					<p class="text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">No invoices yet</p>
+				{/if}
+			</div>
+		</div>
+
+		<div class="mt-4 grid gap-4 lg:grid-cols-12 transition-all duration-500 delay-300 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+			<!-- Top Clients -->
+			<div class="lg:col-span-7 rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6">
+				<span class="mb-4 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Top Clients</span>
+				{#if topClients.length > 0}
+					<div class="space-y-3">
+						{#each topClients as client, i}
+							<div class="flex items-center gap-3 rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-100'} p-3">
+								<img src={getAvatarUrl(client.client_name)} alt={client.client_name} class="h-9 w-9 rounded-lg" />
+								<div class="min-w-0 flex-1">
+									<div class="flex items-center justify-between">
+										<p class="truncate text-[13px] font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">{client.client_name}</p>
+										<p class="text-[13px] font-semibold text-emerald-400">{formatKES(client.total_amount)}</p>
+									</div>
+									<div class="mt-1 flex items-center justify-between">
+										<p class="text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">{client.invoice_count} invoices</p>
+										<p class="text-[11px] {client.collection_rate >= 80 ? 'text-emerald-400' : client.collection_rate >= 50 ? 'text-amber-400' : 'text-red-400'}">{client.collection_rate}% collected</p>
+									</div>
+								</div>
+							</div>
+						{/each}
+					</div>
+				{:else}
+					<p class="text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">No client data yet</p>
+				{/if}
+			</div>
+
+			<!-- Aging Report -->
+			<div class="lg:col-span-5 rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6">
+				<span class="mb-4 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Receivables Aging</span>
+				{#if aging.length > 0}
+					<div class="space-y-2">
+						{#each aging as bucket, i}
+							{@const colors = ['bg-emerald-500', 'bg-blue-500', 'bg-amber-500', 'bg-orange-500', 'bg-red-500']}
+							<div class="flex items-center gap-3 rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-100'} p-3">
+								<div class="h-2 w-2 rounded-full {colors[i] || 'bg-zinc-400'}"></div>
+								<div class="flex-1">
+									<p class="text-[13px] font-medium {isDark ? 'text-white/60' : 'text-zinc-600'}">{bucket.label}</p>
+								</div>
+								<div class="text-right">
+									<p class="text-[13px] font-semibold {isDark ? 'text-white/80' : 'text-zinc-700'}">{formatKES(bucket.amount)}</p>
+									<p class="text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">{bucket.count} invoice{bucket.count !== 1 ? 's' : ''}</p>
+								</div>
+							</div>
+						{/each}
+					</div>
+				{:else}
+					<p class="text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">No outstanding invoices</p>
+				{/if}
+			</div>
+		</div>
+
+		<!-- Recent Payments -->
+		<div class="mt-4 rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6 transition-all duration-500 delay-400 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+			<span class="mb-4 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Recent Payments</span>
+			{#if recentPayments.length > 0}
+				<div class="overflow-x-auto">
+					<table class="w-full">
+						<thead>
+							<tr class="border-b {isDark ? 'border-white/[0.04]' : 'border-zinc-100'}">
+								<th class="pb-3 text-left text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Client</th>
+								<th class="pb-3 text-left text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Amount</th>
+								<th class="pb-3 text-left text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Receipt</th>
+								<th class="pb-3 text-right text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Date</th>
+							</tr>
+						</thead>
+						<tbody>
+							{#each recentPayments as payment}
+								<tr class="border-b {isDark ? 'border-white/[0.02]' : 'border-zinc-50'}">
+									<td class="py-3">
+										<div class="flex items-center gap-2.5">
+											<img src={getAvatarUrl(payment.client_name)} alt={payment.client_name} class="h-7 w-7 rounded-md" />
+											<span class="text-[13px] font-medium {isDark ? 'text-white/70' : 'text-zinc-700'}">{payment.client_name}</span>
+										</div>
+									</td>
+									<td class="py-3 text-[13px] font-semibold text-emerald-400">{formatKES(payment.amount)}</td>
+									<td class="py-3 text-[12px] font-mono {isDark ? 'text-white/30' : 'text-zinc-400'}">{payment.mpesa_receipt || '—'}</td>
+									<td class="py-3 text-right text-[12px] {isDark ? 'text-white/30' : 'text-zinc-400'}">{payment.paid_at ? new Date(payment.paid_at).toLocaleDateString() : '—'}</td>
+								</tr>
+							{/each}
+						</tbody>
+					</table>
+				</div>
+			{:else}
+				<p class="text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">No payments received yet</p>
+			{/if}
+		</div>
+	{:else}
+		<!-- Fallback empty state -->
+		<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-12 text-center transition-all duration-500 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+			<div class="mx-auto flex h-14 w-14 items-center justify-center rounded-lg bg-emerald-500/10">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+				</svg>
+			</div>
+			<h3 class="mt-5 font-['Instrument_Serif'] text-xl {isDark ? 'text-white' : 'text-zinc-900'}">No data to report</h3>
+			<p class="mx-auto mt-2 max-w-sm text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">Create some invoices and collect payments to see your reports here.</p>
+		</div>
+	{/if}
 </div>
