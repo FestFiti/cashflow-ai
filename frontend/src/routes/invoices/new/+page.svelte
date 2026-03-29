@@ -73,26 +73,26 @@
 	}
 
 	function addServiceItem(svc: Service) {
-		items.push({
+		items = [...items, {
 			id: uid(),
 			service_id: svc.id,
 			name: svc.name,
 			description: svc.description || '',
 			quantity: 1,
 			unit_price: svc.price,
-		});
+		}];
 		showServicePicker = false;
 	}
 
 	function addCustomItem() {
-		items.push({
+		items = [...items, {
 			id: uid(),
 			service_id: null,
 			name: '',
 			description: '',
 			quantity: 1,
 			unit_price: 0,
-		});
+		}];
 	}
 
 	function removeItem(id: string) {
