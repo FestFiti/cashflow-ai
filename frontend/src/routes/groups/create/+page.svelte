@@ -226,21 +226,29 @@
 			<div class="sticky top-24 rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6 transition-all duration-500 delay-150 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
 				<div class="mb-5 flex items-center justify-between">
 					<span class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Group Preview</span>
-					<div class="flex h-6 w-6 items-center justify-center rounded-md {isDark ? 'bg-white/[0.03]' : 'bg-white'}">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 {isDark ? 'text-white/20' : 'text-zinc-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719" />
-						</svg>
-					</div>
+						<div class="flex h-6 w-6 items-center justify-center rounded-md {isDark ? 'bg-white/[0.03]' : 'bg-white'}">
+							<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 18 18" fill="none">
+								<path d="M6.5 8.25C7.743 8.25 8.75 7.243 8.75 6C8.75 4.757 7.743 3.75 6.5 3.75C5.257 3.75 4.25 4.757 4.25 6C4.25 7.243 5.257 8.25 6.5 8.25Z" stroke={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M1.75 14.25C1.75 11.767 3.878 9.75 6.5 9.75C7.28 9.75 8.017 9.934 8.667 10.261" stroke={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M13.25 16.25C15.045 16.25 16.5 14.795 16.25 13C16.25 11.205 14.795 9.75 13 9.75C11.205 9.75 9.75 11.205 9.75 13C9.75 14.795 11.205 16.25 13 16.25" stroke={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<line x1="13" y1="11.25" x2="13" y2="14.75" stroke={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<line x1="11.25" y1="13" x2="14.75" y2="13" stroke={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+						</div>
 				</div>
 
 				{#if !groupName}
 					<!-- Empty preview -->
 					<div class="flex flex-col items-center py-12 text-center">
-						<div class="flex h-12 w-12 items-center justify-center rounded-lg {isDark ? 'bg-white/[0.03]' : 'bg-white'}">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 {isDark ? 'text-white/15' : 'text-zinc-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197A5.971 5.971 0 006 18.72v-2.007m0 0V18.72v-2.007m0 0a5.971 5.971 0 00-.941 3.197M5.058 15.522A5.971 5.971 0 006 18.72v-2.007M5.058 15.522A5.971 5.971 0 016 12.75v2.007m0 0a5.971 5.971 0 00.941 3.197m8.018-8.018a5.971 5.971 0 00-.941-3.197M6 12.75a5.971 5.971 0 01.941-3.197m5.059 5.059a5.971 5.971 0 01-.941 3.197M12 12.75a5.971 5.971 0 01-.941-3.197m0 6.394a5.971 5.971 0 00.941-3.197m0-6.394a5.971 5.971 0 00-.941 3.197" />
-							</svg>
-						</div>
+							<div class="flex h-12 w-12 items-center justify-center rounded-lg {isDark ? 'bg-white/[0.03]' : 'bg-zinc-50'}">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 18 18" fill="none">
+									<path d="M6.5 8.25C7.743 8.25 8.75 7.243 8.75 6C8.75 4.757 7.743 3.75 6.5 3.75C5.257 3.75 4.25 4.757 4.25 6C4.25 7.243 5.257 8.25 6.5 8.25Z" stroke={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M1.75 14.25C1.75 11.767 3.878 9.75 6.5 9.75C7.28 9.75 8.017 9.934 8.667 10.261" stroke={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M13.25 16.25C15.045 16.25 16.5 14.795 16.25 13C16.25 11.205 14.795 9.75 13 9.75C11.205 9.75 9.75 11.205 9.75 13C9.75 14.795 11.205 16.25 13 16.25" stroke={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<line x1="13" y1="11.25" x2="13" y2="14.75" stroke={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									<line x1="11.25" y1="13" x2="14.75" y2="13" stroke={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</div>
 						<p class="mt-4 text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">Enter a group name to see preview</p>
 					</div>
 				{:else}
