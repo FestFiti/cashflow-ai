@@ -6,6 +6,7 @@
 	import { theme } from '$lib/stores/theme';
 	import { lastEvent } from '$lib/stores/ws';
 	import Icon from '$lib/components/Icon.svelte';
+	import { marked } from 'marked';
 
 	const isDark = $derived($theme === 'dark');
 
@@ -248,10 +249,8 @@
 				{:else if insightsError}
 					<p class="text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">Could not load insights. <button onclick={loadInsights} class="text-violet-400 hover:text-violet-300">Try again</button></p>
 				{:else if insights}
-					<div class="space-y-3">
-						{#each insights.split('\n').filter(l => l.trim()) as line}
-							<p class="text-[13px] leading-relaxed {isDark ? 'text-white/50' : 'text-zinc-600'}">{line}</p>
-						{/each}
+					<div class="insights-prose text-[13px] leading-relaxed {isDark ? 'text-white/50' : 'text-zinc-600'}">
+						{@html marked(insights)}
 					</div>
 				{:else}
 					<p class="text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">No data yet — create some invoices to get AI insights.</p>
@@ -286,3 +285,11 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	:global(.insights-prose p) { margin-bottom: 0.6rem; }
+	:global(.insights-prose p:last-child) { margin-bottom: 0; }
+	:global(.insights-prose ul) { list-style: disc; padding-left: 1.2rem; margin-bottom: 0.6rem; }
+	:global(.insights-prose li) { margin-bottom: 0.3rem; }
+	:global(.insights-prose strong) { font-weight: 600; color: inherit; opacity: 1; }
+</style>
