@@ -55,7 +55,7 @@
 		insightsLoading = true;
 		insightsError = false;
 		try {
-			const res = await api<{ status: string; insights: string }>('/ai/cash-flow-insights');
+			const res = await api<{ status: string; insights: string }>('/ai/cash-flow-insights', { method: 'POST', token: $auth.token! });
 			insights = res.insights;
 		} catch {
 			insightsError = true;
