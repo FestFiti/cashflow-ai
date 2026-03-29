@@ -173,4 +173,4 @@ See `backend/.env.example` for all required configuration.
 
 ---
 
-*Built for African businesses by the CashFlow AI team*
+*Built for African businesses by **Gatekeepers Group***
