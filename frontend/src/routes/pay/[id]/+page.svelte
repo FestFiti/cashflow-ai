@@ -417,11 +417,20 @@
 				</div>
 			</div>
 
-			<!-- Branding Footer -->
-			<div class="mt-10 text-center">
+			<!-- Download / Print + Branding Footer -->
+			<div class="mt-10 flex items-center justify-between">
 				<p class="text-[12px] text-zinc-400">
 					Powered by <span class="font-semibold text-emerald-500">CashFlow AI</span>
 				</p>
+				<button
+					onclick={() => window.print()}
+					class="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 px-3 py-1.5 text-[12px] font-medium text-zinc-500 transition-colors hover:border-zinc-300 hover:text-zinc-700 print:hidden"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+					</svg>
+					Download PDF
+				</button>
 			</div>
 		{/if}
 	</div>

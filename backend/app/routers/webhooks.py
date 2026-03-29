@@ -3,11 +3,14 @@ import logging
 import uuid
 from datetime import datetime
 
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter, Request, Depends, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
 
 from app.database import get_db
+from app.services.email import send_email
+from app.services.email_templates import _base
+from app.config import settings
 from app.models.invoice import Invoice
 from app.models.payment import Payment
 from app.models.notification import Notification
@@ -27,7 +30,7 @@ def _get_metadata_value(items: list, name: str):
 
 
 @router.post("/c2b")
-async def mpesa_stk_callback(request: Request, db: AsyncSession = Depends(get_db)):
+async def mpesa_stk_callback(request: Request, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
     """Receive M-Pesa STK Push payment callback from Daraja."""
     raw_body = await request.body()
     logger.info("M-Pesa STK callback received: %s", raw_body.decode())
@@ -144,6 +147,35 @@ async def mpesa_stk_callback(request: Request, db: AsyncSession = Depends(get_db
     await db.commit()
 
     logger.info("Invoice %s marked as paid", invoice_id)
+
+    # Send receipt email to client
+    invoice_result = await db.execute(select(Invoice).where(Invoice.id == invoice_id))
+    invoice_obj = invoice_result.scalar_one_or_none()
+    if invoice_obj and invoice_obj.client_email:
+        receipt_content = f"""<div class="rule"></div>
+<h2 class="h1">Payment Received</h2>
+<p class="p">Hi {client_name}, we've received your payment. Thank you!</p>
+<div class="big">KES {paid_amount or amount:,}</div>
+<div class="big-sub">Paid via M-Pesa</div>
+<div class="rows">
+  <div class="row"><span class="row-label">Receipt</span><span class="row-val" style="font-family:monospace;font-size:13px;">{mpesa_receipt}</span></div>
+  <div class="row"><span class="row-label">Invoice</span><span class="row-val" style="font-family:monospace;font-size:13px;">#{str(invoice_id)[:8].upper()}</span></div>
+  <div class="row"><span class="row-label">Description</span><span class="row-val">{invoice_obj.description}</span></div>
+</div>"""
+        receipt_html = _base(
+            content=receipt_content,
+            footer_link=f"{settings.APP_URL}/pay/{invoice_id}",
+            footer_text="View invoice →",
+            bottom_note="You received this because a payment was made on your invoice.",
+        )
+        background_tasks.add_task(
+            send_email,
+            to_email=invoice_obj.client_email,
+            to_name=client_name,
+            subject=f"Payment Received — KES {paid_amount or amount:,} (Receipt {mpesa_receipt})",
+            html=receipt_html,
+        )
+        logger.info("Receipt email queued for %s", invoice_obj.client_email)
 
     # Fire WebSocket event to dashboard
     if business_id:

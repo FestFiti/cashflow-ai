@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { theme } from '$lib/stores/theme';
-	import { showError } from '$lib/stores/toast';
+	import { showError, showSuccess } from '$lib/stores/toast';
 	import Select from '$lib/components/Select.svelte';
 
 	const isDark = $derived($theme === 'dark');
@@ -59,7 +59,8 @@
 		e.preventDefault();
 		loading = true;
 		try {
-			await api('/payments/request', {
+			// 1. Create invoice
+			const invoice = await api<{ id: string }>('/invoices/', {
 				method: 'POST',
 				body: JSON.stringify({
 					client_name: clientName,
@@ -68,10 +69,30 @@
 					amount: parsedAmount,
 					description,
 					due_date: dueDate,
-					payment_method: paymentMethod
 				})
 			});
-			goto('/payments');
+
+			// 2. If M-Pesa, trigger STK push
+			if (paymentMethod === 'mpesa' || paymentMethod === 'both') {
+				try {
+					await api('/payments/stk-push', {
+						method: 'POST',
+						body: JSON.stringify({ invoice_id: invoice.id, phone: clientPhone })
+					});
+					showSuccess('M-Pesa request sent! Check client phone.');
+				} catch {
+					showSuccess('Invoice created. STK push failed — send manually from invoice page.');
+				}
+			}
+
+			// 3. If link/both, send invoice email
+			if ((paymentMethod === 'link' || paymentMethod === 'both') && clientEmail) {
+				try {
+					await api(`/invoices/${invoice.id}/send`, { method: 'POST' });
+				} catch { /* email send is best-effort */ }
+			}
+
+			goto(`/invoices/${invoice.id}`);
 		} catch (err) {
 			showError(err instanceof Error ? err.message : 'Failed to create payment request');
 		} finally {
