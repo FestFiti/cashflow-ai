@@ -160,7 +160,7 @@ def invoice_sent_email(
 </div>"""
     html = _base(
         content=content,
-        footer_link=f"{settings.APP_URL}/invoices/{invoice_id}",
+        footer_link=f"{settings.APP_URL}/pay/{invoice_id}",
         footer_text="View invoice",
         bottom_note=f"You received this because {business_name} sent you an invoice via CashFlow AI.",
     )
