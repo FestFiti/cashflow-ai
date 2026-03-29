@@ -1,9 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+import hashlib
+from datetime import datetime
 
 from app.database import get_db
 from app.models.business import Business
+from app.models.session import Session
 from app.schemas.auth import (
     RegisterRequest,
     LoginRequest,
@@ -20,8 +23,44 @@ from app.utils.auth import (
     decode_reset_token,
     get_current_business_id,
 )
+from app.services.email import send_email
+from app.services.email_templates import welcome_email, password_reset_email, login_notification_email
 
 router = APIRouter()
+
+
+def parse_device(user_agent: str) -> str:
+    ua = user_agent.lower()
+    if "mobile" in ua or "android" in ua or "iphone" in ua:
+        device_type = "Mobile"
+    else:
+        device_type = "Desktop"
+
+    if "chrome" in ua:
+        browser = "Chrome"
+    elif "firefox" in ua:
+        browser = "Firefox"
+    elif "safari" in ua:
+        browser = "Safari"
+    elif "edge" in ua:
+        browser = "Edge"
+    else:
+        browser = "Browser"
+
+    if "windows" in ua:
+        os_name = "Windows"
+    elif "mac" in ua:
+        os_name = "Mac"
+    elif "linux" in ua:
+        os_name = "Linux"
+    elif "android" in ua:
+        os_name = "Android"
+    elif "ios" in ua or "iphone" in ua or "ipad" in ua:
+        os_name = "iOS"
+    else:
+        os_name = "Unknown OS"
+
+    return f"{browser} on {os_name} ({device_type})"
 
 
 @router.post("/quick-login", response_model=TokenResponse)
@@ -61,7 +100,7 @@ async def quick_login(db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
-async def register(req: RegisterRequest, db: AsyncSession = Depends(get_db)):
+async def register(req: RegisterRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
     existing = await db.execute(select(Business).where(Business.email == req.email))
     if existing.scalar_one_or_none():
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -77,6 +116,10 @@ async def register(req: RegisterRequest, db: AsyncSession = Depends(get_db)):
     await db.refresh(business)
 
     token = create_access_token(str(business.id))
+
+    subject, html = welcome_email(business.name)
+    background_tasks.add_task(send_email, business.email, business.name, subject, html)
+
     return TokenResponse(
         access_token=token,
         business_id=str(business.id),
@@ -86,13 +129,38 @@ async def register(req: RegisterRequest, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/login", response_model=TokenResponse)
-async def login(req: LoginRequest, db: AsyncSession = Depends(get_db)):
+async def login(req: LoginRequest, request: Request, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Business).where(Business.email == req.email))
     business = result.scalar_one_or_none()
     if not business or not verify_password(req.password, business.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    token = create_access_token(str(business.id))
+    # Create session
+    ip = request.headers.get("X-Forwarded-For", request.client.host if request.client else "unknown").split(",")[0].strip()
+    ua = request.headers.get("User-Agent", "")
+    device = parse_device(ua)
+
+    session = Session(
+        business_id=business.id,
+        token_hash="pending",  # will update after token creation
+        ip_address=ip,
+        user_agent=ua[:500],
+        device_name=device,
+    )
+    db.add(session)
+    await db.flush()  # get session.id
+
+    token = create_access_token(str(business.id), session_id=str(session.id))
+    token_hash = hashlib.sha256(token.encode()).hexdigest()
+    session.token_hash = token_hash
+    await db.commit()
+
+    # Send login notification email (non-blocking)
+    from datetime import timezone
+    login_time = datetime.now(timezone.utc).strftime("%B %d, %Y at %H:%M UTC")
+    subject, html = login_notification_email(business.name, ip, device, "", login_time)
+    background_tasks.add_task(send_email, business.email, business.name, subject, html)
+
     return TokenResponse(
         access_token=token,
         business_id=str(business.id),
@@ -102,8 +170,7 @@ async def login(req: LoginRequest, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/forgot-password")
-async def forgot_password(req: ForgotPasswordRequest, db: AsyncSession = Depends(get_db)):
-    """Generate a password reset token. In production, send this via email."""
+async def forgot_password(req: ForgotPasswordRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Business).where(Business.email == req.email))
     business = result.scalar_one_or_none()
 
@@ -113,9 +180,10 @@ async def forgot_password(req: ForgotPasswordRequest, db: AsyncSession = Depends
 
     reset_token = create_reset_token(req.email)
 
-    # TODO: Send email with reset link containing the token
-    # For now, log it (remove in production)
-    print(f"[DEV] Password reset token for {req.email}: {reset_token}")
+    from datetime import timezone
+    requested_at = datetime.now(timezone.utc).strftime("%B %d, %Y at %H:%M UTC")
+    subject, html = password_reset_email(business.name, reset_token, requested_at)
+    background_tasks.add_task(send_email, business.email, business.name, subject, html)
 
     return {"message": "If an account exists, a reset link has been sent"}
 
