@@ -13,8 +13,25 @@
 		name: string;
 		description: string | null;
 		price: number;
+		category: string | null;
+		billing_type: string;
+		billing_cycle: string | null;
+		unit: string | null;
 		created_at: string;
 	}
+
+	const BILLING_TYPES = [
+		{ value: 'one_time', label: 'One-time' },
+		{ value: 'recurring', label: 'Recurring' },
+		{ value: 'hourly', label: 'Hourly' },
+	];
+	const BILLING_CYCLES = [
+		{ value: 'weekly', label: 'Weekly' },
+		{ value: 'monthly', label: 'Monthly' },
+		{ value: 'quarterly', label: 'Quarterly' },
+		{ value: 'yearly', label: 'Yearly' },
+	];
+	const CATEGORIES = ['Design', 'Development', 'Marketing', 'Consulting', 'Photography', 'Printing', 'Training', 'Other'];
 
 	let services = $state<Service[]>([]);
 	let loading = $state(true);
@@ -25,6 +42,10 @@
 	let addName = $state('');
 	let addDescription = $state('');
 	let addPrice = $state('');
+	let addCategory = $state('');
+	let addBillingType = $state('one_time');
+	let addBillingCycle = $state('');
+	let addUnit = $state('');
 	let addSaving = $state(false);
 
 	// Edit state
@@ -32,6 +53,10 @@
 	let editName = $state('');
 	let editDescription = $state('');
 	let editPrice = $state('');
+	let editCategory = $state('');
+	let editBillingType = $state('one_time');
+	let editBillingCycle = $state('');
+	let editUnit = $state('');
 	let editSaving = $state(false);
 
 	// Delete state
@@ -66,15 +91,18 @@
 				body: JSON.stringify({
 					name: addName.trim(),
 					description: addDescription.trim() || null,
-					price: parseFloat(addPrice)
+					price: parseFloat(addPrice),
+					category: addCategory || null,
+					billing_type: addBillingType,
+					billing_cycle: addBillingType === 'recurring' ? addBillingCycle || null : null,
+					unit: addBillingType === 'hourly' ? (addUnit || 'hour') : addUnit || null,
 				}),
 				token: $auth.token!
 			});
 			services = [service, ...services];
 			showSuccess('Service added');
-			addName = '';
-			addDescription = '';
-			addPrice = '';
+			addName = ''; addDescription = ''; addPrice = '';
+			addCategory = ''; addBillingType = 'one_time'; addBillingCycle = ''; addUnit = '';
 			showAddForm = false;
 		} catch (err) {
 			showError(err instanceof Error ? err.message : 'Failed to add service');
@@ -88,6 +116,10 @@
 		editName = service.name;
 		editDescription = service.description || '';
 		editPrice = service.price.toString();
+		editCategory = service.category || '';
+		editBillingType = service.billing_type || 'one_time';
+		editBillingCycle = service.billing_cycle || '';
+		editUnit = service.unit || '';
 	}
 
 	function cancelEdit() {
@@ -99,11 +131,15 @@
 		editSaving = true;
 		try {
 			const updated = await api<Service>(`/services/${editingId}`, {
-				method: 'PUT',
+				method: 'PATCH',
 				body: JSON.stringify({
 					name: editName.trim(),
 					description: editDescription.trim() || null,
-					price: parseFloat(editPrice)
+					price: parseFloat(editPrice),
+					category: editCategory || null,
+					billing_type: editBillingType,
+					billing_cycle: editBillingType === 'recurring' ? editBillingCycle || null : null,
+					unit: editBillingType === 'hourly' ? (editUnit || 'hour') : editUnit || null,
 				}),
 				token: $auth.token!
 			});
@@ -163,55 +199,68 @@
 	{#if showAddForm}
 		<div class="mb-6 rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6 transition-all duration-300">
 			<h3 class="mb-4 font-['Instrument_Serif'] text-xl {isDark ? 'text-white' : 'text-zinc-900'}">New Service</h3>
-			<form onsubmit={(e) => { e.preventDefault(); addService(); }} class="grid gap-6 md:grid-cols-2">
-				<div class="space-y-4">
+			<form onsubmit={(e) => { e.preventDefault(); addService(); }} class="space-y-4">
+				<div class="grid gap-4 md:grid-cols-3">
 					<div>
 						<label class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Name *</label>
-						<input
-							bind:value={addName}
-							type="text"
-							required
-							placeholder="e.g. Web Design"
-							class="w-full rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} placeholder:{isDark ? 'text-white/20' : 'text-zinc-400'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20"
-						/>
+						<input bind:value={addName} type="text" required placeholder="e.g. Web Design"
+							class="w-full rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} placeholder:{isDark ? 'text-white/20' : 'text-zinc-400'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20" />
 					</div>
 					<div>
 						<label class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Price (KES) *</label>
-						<input
-							bind:value={addPrice}
-							type="number"
-							required
-							min="0"
-							step="1"
-							placeholder="5000"
-							class="w-full rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} placeholder:{isDark ? 'text-white/20' : 'text-zinc-400'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20"
-						/>
+						<input bind:value={addPrice} type="number" required min="0" step="1" placeholder="5000"
+							class="w-full rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} placeholder:{isDark ? 'text-white/20' : 'text-zinc-400'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20" />
+					</div>
+					<div>
+						<label class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Category</label>
+						<select bind:value={addCategory}
+							class="w-full rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20">
+							<option value="">Select category</option>
+							{#each CATEGORIES as cat}<option value={cat}>{cat}</option>{/each}
+						</select>
 					</div>
 				</div>
-				<div class="flex flex-col space-y-4">
-					<div class="flex-1">
+				<div class="grid gap-4 md:grid-cols-3">
+					<div>
+						<label class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Billing Type</label>
+						<select bind:value={addBillingType}
+							class="w-full rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20">
+							{#each BILLING_TYPES as bt}<option value={bt.value}>{bt.label}</option>{/each}
+						</select>
+					</div>
+					{#if addBillingType === 'recurring'}
+						<div>
+							<label class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Billing Cycle</label>
+							<select bind:value={addBillingCycle}
+								class="w-full rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20">
+								<option value="">Select cycle</option>
+								{#each BILLING_CYCLES as bc}<option value={bc.value}>{bc.label}</option>{/each}
+							</select>
+						</div>
+					{/if}
+					{#if addBillingType === 'hourly'}
+						<div>
+							<label class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Unit</label>
+							<input bind:value={addUnit} type="text" placeholder="hour"
+								class="w-full rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} placeholder:{isDark ? 'text-white/20' : 'text-zinc-400'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20" />
+						</div>
+					{/if}
+					<div>
 						<label class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Description</label>
-						<textarea
-							bind:value={addDescription}
-							rows="4"
-							placeholder="Brief description of this service..."
-							class="w-full h-[calc(100%-24px)] rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} placeholder:{isDark ? 'text-white/20' : 'text-zinc-400'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20 resize-none"
-						></textarea>
+						<input bind:value={addDescription} type="text" placeholder="Brief description..."
+							class="w-full rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} placeholder:{isDark ? 'text-white/20' : 'text-zinc-400'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20" />
 					</div>
-					<div class="flex justify-end">
-						<button
-							type="submit"
-							disabled={addSaving || !addName.trim() || !addPrice.trim()}
-							class="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-2.5 text-[13px] font-semibold text-zinc-950 transition-all hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-50"
-						>
-							{#if addSaving}
-								<div class="h-4 w-4 animate-spin rounded-full border-2 border-zinc-950/30 border-t-zinc-950"></div>
-								Saving...
-							{:else}
-								Save Service
-							{/if}
-						</button>
-					</div>
+				</div>
+				<div class="flex justify-end">
+					<button type="submit" disabled={addSaving || !addName.trim() || !addPrice.trim()}
+						class="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-2.5 text-[13px] font-semibold text-zinc-950 transition-all hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-50">
+						{#if addSaving}
+							<div class="h-4 w-4 animate-spin rounded-full border-2 border-zinc-950/30 border-t-zinc-950"></div>
+							Saving...
+						{:else}
+							Save Service
+						{/if}
+					</button>
 				</div>
 			</form>
 		</div>
@@ -315,8 +364,16 @@
 										{/if}
 									</div>
 								</div>
-								<div class="mt-4 border-t {isDark ? 'border-white/[0.04]' : 'border-zinc-100'} pt-4">
-									<p class="font-['Instrument_Serif'] text-xl italic tracking-tight text-emerald-400">{formatKES(service.price)}</p>
+								<div class="mt-4 flex items-center gap-2 flex-wrap">
+									{#if service.category}
+										<span class="rounded-full border {isDark ? 'border-white/[0.06]' : 'border-zinc-200'} px-2 py-0.5 text-[10px] font-medium {isDark ? 'text-white/30' : 'text-zinc-400'}">{service.category}</span>
+									{/if}
+									<span class="rounded-full px-2 py-0.5 text-[10px] font-medium {service.billing_type === 'recurring' ? 'bg-violet-500/10 text-violet-400 border border-violet-500/20' : service.billing_type === 'hourly' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : (isDark ? 'bg-white/[0.04] text-white/30 border border-white/[0.06]' : 'bg-zinc-50 text-zinc-400 border border-zinc-200')}">
+										{service.billing_type === 'recurring' ? `Recurring${service.billing_cycle ? ' / ' + service.billing_cycle : ''}` : service.billing_type === 'hourly' ? `Per ${service.unit || 'hour'}` : 'One-time'}
+									</span>
+								</div>
+								<div class="mt-3 border-t {isDark ? 'border-white/[0.04]' : 'border-zinc-100'} pt-3">
+									<p class="font-['Instrument_Serif'] text-xl italic tracking-tight text-emerald-400">{formatKES(service.price)}{service.billing_type === 'recurring' && service.billing_cycle ? `/${service.billing_cycle.slice(0, 2)}` : service.billing_type === 'hourly' ? `/${service.unit || 'hr'}` : ''}</p>
 								</div>
 							{/if}
 						</button>
@@ -363,8 +420,20 @@
 						<div class="space-y-3">
 							<div>
 								<p class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/20' : 'text-zinc-400'}">Price</p>
-								<p class="mt-1 font-['Instrument_Serif'] text-3xl italic tracking-tight text-emerald-400">{formatKES(selectedService.price)}</p>
+								<p class="mt-1 font-['Instrument_Serif'] text-3xl italic tracking-tight text-emerald-400">{formatKES(selectedService.price)}{selectedService.billing_type === 'recurring' && selectedService.billing_cycle ? `/${selectedService.billing_cycle}` : selectedService.billing_type === 'hourly' ? `/${selectedService.unit || 'hour'}` : ''}</p>
 							</div>
+							<div>
+								<p class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/20' : 'text-zinc-400'}">Billing</p>
+								<p class="mt-1 text-[13px] font-medium {isDark ? 'text-white/60' : 'text-zinc-600'}">
+									{selectedService.billing_type === 'recurring' ? `Recurring${selectedService.billing_cycle ? ' — ' + selectedService.billing_cycle : ''}` : selectedService.billing_type === 'hourly' ? `Hourly (per ${selectedService.unit || 'hour'})` : 'One-time'}
+								</p>
+							</div>
+							{#if selectedService.category}
+								<div>
+									<p class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/20' : 'text-zinc-400'}">Category</p>
+									<p class="mt-1 text-[13px] font-medium {isDark ? 'text-white/60' : 'text-zinc-600'}">{selectedService.category}</p>
+								</div>
+							{/if}
 							<div>
 								<p class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/20' : 'text-zinc-400'}">Created</p>
 								<p class="mt-1 text-[13px] font-medium {isDark ? 'text-white/60' : 'text-zinc-600'}">{new Date(selectedService.created_at).toLocaleDateString()}</p>

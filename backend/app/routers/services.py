@@ -16,25 +16,37 @@ class ServiceCreate(BaseModel):
     name: str
     description: str | None = None
     price: float
+    category: str | None = None
+    billing_type: str = "one_time"  # one_time, recurring, hourly
+    billing_cycle: str | None = None  # weekly, monthly, quarterly, yearly
+    unit: str | None = None  # hour, session, project, etc.
 
 
 class ServiceUpdate(BaseModel):
     name: str | None = None
     description: str | None = None
     price: float | None = None
+    category: str | None = None
+    billing_type: str | None = None
+    billing_cycle: str | None = None
+    unit: str | None = None
     is_active: bool | None = None
 
 
-class ServiceResponse(BaseModel):
-    id: uuid.UUID
-    business_id: uuid.UUID
-    name: str
-    description: str | None
-    price: float
-    is_active: bool
-    created_at: str
-
-    model_config = {"from_attributes": True}
+def _service_dict(s: Service) -> dict:
+    return {
+        "id": str(s.id),
+        "business_id": str(s.business_id),
+        "name": s.name,
+        "description": s.description,
+        "price": float(s.price),
+        "category": s.category,
+        "billing_type": s.billing_type,
+        "billing_cycle": s.billing_cycle,
+        "unit": s.unit,
+        "is_active": s.is_active,
+        "created_at": s.created_at.isoformat(),
+    }
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
@@ -48,19 +60,15 @@ async def create_service(
         name=req.name,
         description=req.description,
         price=req.price,
+        category=req.category,
+        billing_type=req.billing_type,
+        billing_cycle=req.billing_cycle,
+        unit=req.unit,
     )
     db.add(service)
     await db.commit()
     await db.refresh(service)
-    return {
-        "id": str(service.id),
-        "business_id": str(service.business_id),
-        "name": service.name,
-        "description": service.description,
-        "price": float(service.price),
-        "is_active": service.is_active,
-        "created_at": service.created_at.isoformat(),
-    }
+    return _service_dict(service)
 
 
 @router.get("/")
@@ -73,19 +81,7 @@ async def list_services(
         .where(Service.business_id == uuid.UUID(business_id), Service.is_active == True)
         .order_by(Service.created_at.desc())
     )
-    services = result.scalars().all()
-    return [
-        {
-            "id": str(s.id),
-            "business_id": str(s.business_id),
-            "name": s.name,
-            "description": s.description,
-            "price": float(s.price),
-            "is_active": s.is_active,
-            "created_at": s.created_at.isoformat(),
-        }
-        for s in services
-    ]
+    return [_service_dict(s) for s in result.scalars().all()]
 
 
 @router.patch("/{service_id}")
@@ -102,26 +98,12 @@ async def update_service(
     if not service:
         raise HTTPException(status_code=404, detail="Service not found")
 
-    if req.name is not None:
-        service.name = req.name
-    if req.description is not None:
-        service.description = req.description
-    if req.price is not None:
-        service.price = req.price
-    if req.is_active is not None:
-        service.is_active = req.is_active
+    for field, value in req.model_dump(exclude_unset=True).items():
+        setattr(service, field, value)
 
     await db.commit()
     await db.refresh(service)
-    return {
-        "id": str(service.id),
-        "business_id": str(service.business_id),
-        "name": service.name,
-        "description": service.description,
-        "price": float(service.price),
-        "is_active": service.is_active,
-        "created_at": service.created_at.isoformat(),
-    }
+    return _service_dict(service)
 
 
 @router.delete("/{service_id}")
