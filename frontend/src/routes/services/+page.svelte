@@ -163,8 +163,8 @@
 	{#if showAddForm}
 		<div class="mb-6 rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6 transition-all duration-300">
 			<h3 class="mb-4 font-['Instrument_Serif'] text-xl {isDark ? 'text-white' : 'text-zinc-900'}">New Service</h3>
-			<form onsubmit={(e) => { e.preventDefault(); addService(); }} class="space-y-4">
-				<div class="grid gap-4 md:grid-cols-2">
+			<form onsubmit={(e) => { e.preventDefault(); addService(); }} class="grid gap-6 md:grid-cols-2">
+				<div class="space-y-4">
 					<div>
 						<label class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Name *</label>
 						<input
@@ -188,28 +188,30 @@
 						/>
 					</div>
 				</div>
-				<div>
-					<label class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Description</label>
-					<textarea
-						bind:value={addDescription}
-						rows="2"
-						placeholder="Brief description of this service..."
-						class="w-full rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} placeholder:{isDark ? 'text-white/20' : 'text-zinc-400'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20 resize-none"
-					></textarea>
-				</div>
-				<div class="flex justify-end">
-					<button
-						type="submit"
-						disabled={addSaving || !addName.trim() || !addPrice.trim()}
-						class="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-2.5 text-[13px] font-semibold text-zinc-950 transition-all hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-50"
-					>
-						{#if addSaving}
-							<div class="h-4 w-4 animate-spin rounded-full border-2 border-zinc-950/30 border-t-zinc-950"></div>
-							Saving...
-						{:else}
-							Save Service
-						{/if}
-					</button>
+				<div class="flex flex-col space-y-4">
+					<div class="flex-1">
+						<label class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Description</label>
+						<textarea
+							bind:value={addDescription}
+							rows="4"
+							placeholder="Brief description of this service..."
+							class="w-full h-[calc(100%-24px)] rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} placeholder:{isDark ? 'text-white/20' : 'text-zinc-400'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20 resize-none"
+						></textarea>
+					</div>
+					<div class="flex justify-end">
+						<button
+							type="submit"
+							disabled={addSaving || !addName.trim() || !addPrice.trim()}
+							class="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-2.5 text-[13px] font-semibold text-zinc-950 transition-all hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-50"
+						>
+							{#if addSaving}
+								<div class="h-4 w-4 animate-spin rounded-full border-2 border-zinc-950/30 border-t-zinc-950"></div>
+								Saving...
+							{:else}
+								Save Service
+							{/if}
+						</button>
+					</div>
 				</div>
 			</form>
 		</div>
