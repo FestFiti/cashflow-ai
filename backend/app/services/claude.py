@@ -41,22 +41,30 @@ async def _chat(system: str, user_message: str, max_tokens: int = 512) -> str:
         return data["choices"][0]["message"]["content"].strip()
 
 
-async def generate_invoice(prompt: str) -> dict:
-    """Parse natural language into structured invoice JSON."""
+async def generate_invoice(prompt: str, services: list[dict] | None = None) -> dict:
+    """Parse natural language into structured invoice JSON with line items."""
+    services_context = ""
+    if services:
+        svc_list = ", ".join(f'"{s["name"]}" (KES {s["price"]:,.0f})' for s in services)
+        services_context = f"\n\nAvailable services catalog: [{svc_list}]. When the user mentions a service, match it to the catalog and use the exact name and price."
+
     text = await _chat(
-        system="""You are an invoice parser. Extract invoice details from natural language.
+        system=f"""You are an invoice parser for a Kenyan business. Extract invoice details from natural language.
 Return ONLY valid JSON with these fields:
-{
+{{
   "client_name": "string",
   "client_phone": "string (Kenyan format like 0712345678, or empty)",
   "client_email": "string or null",
-  "amount": number,
-  "description": "string",
-  "due_date": "YYYY-MM-DD"
-}
-If a field is unclear, make a reasonable guess. For due_date, if not specified, use 14 days from today.""",
+  "description": "short summary of the invoice",
+  "due_date": "YYYY-MM-DD",
+  "items": [
+    {{ "name": "Service or item name", "description": "optional detail", "quantity": 1, "unit_price": 5000 }}
+  ]
+}}
+The items array should contain individual line items. If the user mentions specific services, create separate items for each.
+If a field is unclear, make a reasonable guess. For due_date, if not specified, use 14 days from today.{services_context}""",
         user_message=prompt,
-        max_tokens=512,
+        max_tokens=800,
     )
     # Strip markdown code fences if present
     if text.startswith("```"):

@@ -5,6 +5,7 @@ from sqlalchemy import select, func
 
 from app.database import get_db
 from app.models.invoice import Invoice
+from app.models.service import Service
 from app.schemas.ai import AIInvoiceRequest, AIInsightRequest
 from app.services.claude import generate_invoice, draft_reminder, cash_flow_insights
 from app.utils.auth import get_current_business_id
@@ -16,10 +17,23 @@ router = APIRouter()
 async def ai_generate_invoice(
     req: AIInvoiceRequest,
     business_id: str = Depends(get_current_business_id),
+    db: AsyncSession = Depends(get_db),
 ):
+    # Fetch business services to help AI match
+    result = await db.execute(
+        select(Service).where(
+            Service.business_id == uuid.UUID(business_id),
+            Service.is_active == True,
+        )
+    )
+    services = [
+        {"name": s.name, "price": float(s.price), "id": str(s.id)}
+        for s in result.scalars().all()
+    ]
+
     try:
-        result = await generate_invoice(req.prompt)
-        return {"status": "ok", "invoice": result}
+        invoice_data = await generate_invoice(req.prompt, services=services or None)
+        return {"status": "ok", "invoice": invoice_data, "services": services}
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"AI parsing failed: {str(e)}")
 
