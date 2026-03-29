@@ -41,7 +41,7 @@
 
 	onMount(async () => {
 		try {
-			const res = await fetch(`${API_URL}/invoices/public/${$page.params.id}`);
+			const res = await fetch(`${API_URL}/api/invoices/public/${$page.params.id}`);
 			if (!res.ok) {
 				error = res.status === 404 ? 'Invoice not found' : 'Failed to load invoice';
 				return;

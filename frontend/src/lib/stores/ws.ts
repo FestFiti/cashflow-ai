@@ -25,7 +25,7 @@ export function connectWs() {
 	const { token } = get(auth);
 	if (!token || ws?.readyState === WebSocket.OPEN) return;
 
-	const url = `${getWsUrl()}/ws`;
+	const url = `${getWsUrl()}/api/ws`;
 	ws = new WebSocket(url);
 
 	ws.onopen = () => {

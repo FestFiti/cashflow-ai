@@ -1,7 +1,7 @@
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -40,18 +40,21 @@ static_dir = os.path.join(os.path.dirname(__file__), "..", "static", "logos")
 os.makedirs(static_dir, exist_ok=True)
 app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "..", "static")), name="static")
 
-app.include_router(auth.router, prefix="/auth", tags=["Auth"])
-app.include_router(invoices.router, prefix="/invoices", tags=["Invoices"])
-app.include_router(payments.router, prefix="/payments", tags=["Payments"])
-app.include_router(webhooks.router, prefix="/webhooks", tags=["Webhooks"])
-app.include_router(reminders.router, prefix="/reminders", tags=["Reminders"])
-app.include_router(ai.router, prefix="/ai", tags=["AI"])
-app.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])
-app.include_router(notifications.router, prefix="/notifications", tags=["Notifications"])
-app.include_router(team.router, prefix="/team", tags=["Team"])
-app.include_router(ws.router, tags=["WebSocket"])
-app.include_router(profile.router, prefix="/profile", tags=["profile"])
-app.include_router(services.router, prefix="/services", tags=["Services"])
+# All API routes under /api prefix
+api = APIRouter(prefix="/api")
+api.include_router(auth.router, prefix="/auth", tags=["Auth"])
+api.include_router(invoices.router, prefix="/invoices", tags=["Invoices"])
+api.include_router(payments.router, prefix="/payments", tags=["Payments"])
+api.include_router(webhooks.router, prefix="/webhooks", tags=["Webhooks"])
+api.include_router(reminders.router, prefix="/reminders", tags=["Reminders"])
+api.include_router(ai.router, prefix="/ai", tags=["AI"])
+api.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])
+api.include_router(notifications.router, prefix="/notifications", tags=["Notifications"])
+api.include_router(team.router, prefix="/team", tags=["Team"])
+api.include_router(ws.router, tags=["WebSocket"])
+api.include_router(profile.router, prefix="/profile", tags=["profile"])
+api.include_router(services.router, prefix="/services", tags=["Services"])
+app.include_router(api)
 
 
 @app.get("/health")

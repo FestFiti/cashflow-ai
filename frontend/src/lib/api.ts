@@ -25,7 +25,7 @@ export async function api<T>(path: string, options: FetchOptions = {}): Promise<
 		headers['Authorization'] = `Bearer ${authToken}`;
 	}
 
-	const res = await fetch(`${API_URL}${path}`, {
+	const res = await fetch(`${API_URL}/api${path}`, {
 		...fetchOptions,
 		headers
 	});

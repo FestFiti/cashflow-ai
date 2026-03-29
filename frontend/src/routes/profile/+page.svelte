@@ -110,7 +110,7 @@
 		try {
 			const form = new FormData();
 			form.append('file', file);
-			const res = await fetch('/profile/logo', {
+			const res = await fetch('/api/profile/logo', {
 				method: 'POST',
 				headers: { 'Authorization': `Bearer ${$auth.token}` },
 				body: form
