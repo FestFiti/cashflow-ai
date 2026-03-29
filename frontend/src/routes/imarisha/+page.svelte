@@ -4,6 +4,7 @@
 	import { api, formatKES } from '$lib/api';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import Select from '$lib/components/Select.svelte';
 
 	const isDark = $derived($theme === 'dark');
 	let loading = $state(true);
@@ -182,13 +183,10 @@
 
 						<div>
 							<label class="mb-2 block text-sm font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">Preferred Language</label>
-							<select
-								bind:value={language}
-								class="w-full rounded-xl border {isDark ? 'border-white/[0.06]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-3 {isDark ? 'text-white' : 'text-zinc-900'} outline-none transition-colors focus:border-emerald-500/50 {isDark ? 'focus:bg-white/[0.05]' : 'focus:bg-zinc-50'}"
-							>
-								<option value="english">English</option>
-								<option value="swahili">Swahili</option>
-							</select>
+							<Select bind:value={language} options={[
+								{ value: 'english', label: 'English' },
+								{ value: 'swahili', label: 'Swahili' }
+							]} />
 						</div>
 
 						<button
@@ -256,14 +254,11 @@
 
 							<div>
 								<label class="mb-2 block text-sm font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">Frequency</label>
-								<select
-									bind:value={frequency}
-									class="w-full rounded-xl border {isDark ? 'border-white/[0.06]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-3 {isDark ? 'text-white' : 'text-zinc-900'} outline-none transition-colors focus:border-emerald-500/50 {isDark ? 'focus:bg-white/[0.05]' : 'focus:bg-zinc-50'}"
-								>
-									<option value="weekly">Weekly</option>
-									<option value="monthly">Monthly</option>
-									<option value="custom">Custom</option>
-								</select>
+								<Select bind:value={frequency} options={[
+									{ value: 'weekly', label: 'Weekly' },
+									{ value: 'monthly', label: 'Monthly' },
+									{ value: 'custom', label: 'Custom' }
+								]} />
 							</div>
 
 							<button

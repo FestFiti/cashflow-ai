@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import { theme } from '$lib/stores/theme';
 	import { showError } from '$lib/stores/toast';
+	import Select from '$lib/components/Select.svelte';
 
 	const isDark = $derived($theme === 'dark');
 
@@ -189,11 +190,11 @@
 						</div>
 						<div>
 							<label for="paymentMethod" class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Payment Method</label>
-							<select id="paymentMethod" bind:value={paymentMethod} class="w-full rounded-xl border {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} outline-none {isDark ? 'placeholder-white/15' : 'placeholder-zinc-400'} focus:border-emerald-500/30">
-								<option value="mpesa">M-Pesa STK Push</option>
-								<option value="link">Payment Link</option>
-								<option value="both">Both Options</option>
-							</select>
+							<Select bind:value={paymentMethod} options={[
+								{ value: 'mpesa', label: 'M-Pesa STK Push' },
+								{ value: 'link', label: 'Payment Link' },
+								{ value: 'both', label: 'Both Options' }
+							]} />
 						</div>
 						<div>
 							<label for="description" class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Description</label>

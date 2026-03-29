@@ -5,6 +5,7 @@
 	import { goto } from '$app/navigation';
 	import { theme } from '$lib/stores/theme';
 	import { showError, showSuccess } from '$lib/stores/toast';
+	import Select from '$lib/components/Select.svelte';
 
 	const isDark = $derived($theme === 'dark');
 
@@ -213,29 +214,18 @@
 					</div>
 					<div>
 						<label class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Category</label>
-						<select bind:value={addCategory}
-							class="w-full rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20">
-							<option value="">Select category</option>
-							{#each CATEGORIES as cat}<option value={cat}>{cat}</option>{/each}
-						</select>
+						<Select bind:value={addCategory} placeholder="Select category" options={CATEGORIES.map(c => ({ value: c, label: c }))} />
 					</div>
 				</div>
 				<div class="grid gap-4 md:grid-cols-3">
 					<div>
 						<label class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Billing Type</label>
-						<select bind:value={addBillingType}
-							class="w-full rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20">
-							{#each BILLING_TYPES as bt}<option value={bt.value}>{bt.label}</option>{/each}
-						</select>
+						<Select bind:value={addBillingType} options={BILLING_TYPES} />
 					</div>
 					{#if addBillingType === 'recurring'}
 						<div>
 							<label class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Billing Cycle</label>
-							<select bind:value={addBillingCycle}
-								class="w-full rounded-xl border {isDark ? 'border-white/[0.08]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.03]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20">
-								<option value="">Select cycle</option>
-								{#each BILLING_CYCLES as bc}<option value={bc.value}>{bc.label}</option>{/each}
-							</select>
+							<Select bind:value={addBillingCycle} placeholder="Select cycle" options={BILLING_CYCLES} />
 						</div>
 					{/if}
 					{#if addBillingType === 'hourly'}

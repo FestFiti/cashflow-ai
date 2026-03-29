@@ -5,6 +5,7 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { showError } from '$lib/stores/toast';
+	import Select from '$lib/components/Select.svelte';
 
 	const isDark = $derived($theme === 'dark');
 	let groupName = $state('');
@@ -12,6 +13,13 @@
 	let contributionAmount = $state('');
 	let contributionFrequency = $state('monthly');
 	let contributionDay = $state('1');
+	const dayOptions = $derived(
+		contributionFrequency === 'monthly'
+			? Array.from({ length: 31 }, (_, i) => ({ value: String(i + 1), label: `${i + 1}${i === 0 ? 'st' : i === 1 ? 'nd' : i === 2 ? 'rd' : 'th'}` }))
+			: contributionFrequency === 'weekly'
+				? [{ value: '1', label: 'Monday' }, { value: '2', label: 'Tuesday' }, { value: '3', label: 'Wednesday' }, { value: '4', label: 'Thursday' }, { value: '5', label: 'Friday' }, { value: '6', label: 'Saturday' }, { value: '7', label: 'Sunday' }]
+				: [{ value: '1', label: '1st Period' }, { value: '2', label: '2nd Period' }, { value: '3', label: '3rd Period' }, { value: '4', label: '4th Period' }]
+	);
 	let members = $state([{ name: '', phone: '', email: '' }]);
 	let loading = $state(false);
 	let visible = $state(false);
@@ -115,12 +123,12 @@
 						</div>
 						<div>
 							<label for="contributionFrequency" class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Frequency</label>
-							<select id="contributionFrequency" bind:value={contributionFrequency} class="w-full rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} outline-none {isDark ? 'placeholder-white/15' : 'placeholder-zinc-400'} focus:border-emerald-500/30">
-								<option value="daily">Daily</option>
-								<option value="weekly">Weekly</option>
-								<option value="monthly">Monthly</option>
-								<option value="quarterly">Quarterly</option>
-							</select>
+							<Select bind:value={contributionFrequency} options={[
+								{ value: 'daily', label: 'Daily' },
+								{ value: 'weekly', label: 'Weekly' },
+								{ value: 'monthly', label: 'Monthly' },
+								{ value: 'quarterly', label: 'Quarterly' }
+							]} />
 						</div>
 					</div>
 
@@ -128,26 +136,7 @@
 						<label for="contributionDay" class="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">
 							{contributionFrequency === 'monthly' ? 'Day of Month' : contributionFrequency === 'weekly' ? 'Day of Week' : 'Time Period'}
 						</label>
-						<select id="contributionDay" bind:value={contributionDay} class="w-full rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} px-4 py-2.5 text-[13px] {isDark ? 'text-white' : 'text-zinc-900'} outline-none {isDark ? 'placeholder-white/15' : 'placeholder-zinc-400'} focus:border-emerald-500/30">
-							{#if contributionFrequency === 'monthly'}
-								{#each Array.from({length: 31}, (_, i) => i + 1) as day}
-									<option value={day}>{day}{day === 1 ? 'st' : day === 2 ? 'nd' : day === 3 ? 'rd' : 'th'}</option>
-								{/each}
-							{:else if contributionFrequency === 'weekly'}
-								<option value="1">Monday</option>
-								<option value="2">Tuesday</option>
-								<option value="3">Wednesday</option>
-								<option value="4">Thursday</option>
-								<option value="5">Friday</option>
-								<option value="6">Saturday</option>
-								<option value="7">Sunday</option>
-							{:else}
-								<option value="1">1st Period</option>
-								<option value="2">2nd Period</option>
-								<option value="3">3rd Period</option>
-								<option value="4">4th Period</option>
-							{/if}
-						</select>
+						<Select bind:value={contributionDay} options={dayOptions} />
 					</div>
 
 					<!-- Members -->
