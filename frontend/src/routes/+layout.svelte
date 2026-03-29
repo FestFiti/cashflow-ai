@@ -22,7 +22,8 @@
 		$page.url.pathname.startsWith('/reset-password')
 	);
 	const isLanding = $derived($page.url.pathname === '/');
-	const showNav = $derived(!isAuthPage && !isLanding);
+	const isPublicPage = $derived($page.url.pathname.startsWith('/pay/'));
+	const showNav = $derived(!isAuthPage && !isLanding && !isPublicPage);
 
 	onMount(() => {
 		if ($auth.token) connectWs();
@@ -41,9 +42,9 @@
 
 	const navLinks = [
 		{ href: '/dashboard', label: 'Dashboard' },
-		{ href: '/payments', label: 'Payments' },
 		{ href: '/invoices', label: 'Invoices' },
-		{ href: '/imarisha', label: 'Imarisha' },
+		{ href: '/payments', label: 'Payments' },
+		{ href: '/services', label: 'Services' },
 		{ href: '/reports', label: 'Reports' }
 	];
 
@@ -103,10 +104,11 @@
 									<path d="M2.75,14.25V3.75c0-1.105,.895-2,2-2h5.586c.265,0,.52,.105,.707,.293l3.914,3.914c.188,.188,.293,.442,.293,.707v7.586c0,1.105-.895,2-2,2H4.75c-1.105,0-2-.895-2-2Z" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 									<path d="M15.16,6.25h-3.41c-.552,0-1-.448-1-1V1.852" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 								</svg>
-							{:else if link.href === '/imarisha'}
-								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-									<path d="m12.974,8.731c-.4527,3.525-3.4373,4.0684-6.5358,3.5928" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-									<path d="m2.75,15.25S4.062,3.729,15.25,2.75c-.56.976-.573,2.605-.946,4.239-.524,2.011-2.335,2.261-4.554,2.261" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+							{:else if link.href === '/services'}
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+									<polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+									<line x1="12" y1="22.08" x2="12" y2="12"/>
 								</svg>
 							{:else if link.href === '/reports'}
 								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -236,10 +238,11 @@
 									<path d="M2.75,14.25V3.75c0-1.105,.895-2,2-2h5.586c.265,0,.52,.105,.707,.293l3.914,3.914c.188,.188,.293,.442,.293,.707v7.586c0,1.105-.895,2-2,2H4.75c-1.105,0-2-.895-2-2Z" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 									<path d="M15.16,6.25h-3.41c-.552,0-1-.448-1-1V1.852" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 								</svg>
-							{:else if link.href === '/imarisha'}
-								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-									<path d="m12.974,8.731c-.4527,3.525-3.4373,4.0684-6.5358,3.5928" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-									<path d="m2.75,15.25S4.062,3.729,15.25,2.75c-.56.976-.573,2.605-.946,4.239-.524,2.011-2.335,2.261-4.554,2.261" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+							{:else if link.href === '/services'}
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={stroke} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+									<polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+									<line x1="12" y1="22.08" x2="12" y2="12"/>
 								</svg>
 							{:else if link.href === '/reports'}
 								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">

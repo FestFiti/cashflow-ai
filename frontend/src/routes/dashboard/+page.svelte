@@ -19,6 +19,7 @@
 	let data = $state<DashboardData | null>(null);
 	let loading = $state(true);
 	let visible = $state(false);
+	let isConfigured = $state(true);
 
 	// AI insights state
 	let insights = $state<string | null>(null);
@@ -28,14 +29,18 @@
 	onMount(async () => {
 		if (!$auth.token) { goto('/login'); return; }
 		try {
-			data = await api<DashboardData>('/dashboard/summary');
+			const [dashRes, profileRes] = await Promise.all([
+				api<DashboardData>('/dashboard/summary'),
+				api<{ is_configured: boolean }>('/profile/')
+			]);
+			data = dashRes;
+			isConfigured = profileRes.is_configured;
 		} catch {
 			data = { total_receivables: 0, total_paid: 0, overdue_count: 0, total_invoices: 0 };
 		} finally {
 			loading = false;
 			setTimeout(() => (visible = true), 50);
 		}
-		// Load AI insights in background after main data
 		loadInsights();
 	});
 
@@ -92,6 +97,23 @@
 			New Invoice
 		</a>
 	</div>
+
+	{#if !loading && !isConfigured}
+		<a href="/profile" class="mb-6 flex items-center gap-3 rounded-2xl border border-amber-500/20 bg-amber-500/[0.05] p-4 transition-all hover:bg-amber-500/[0.08]">
+			<div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-amber-500/10">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+				</svg>
+			</div>
+			<div class="flex-1">
+				<p class="text-[13px] font-medium text-amber-400">Complete your business profile</p>
+				<p class="text-[11px] {isDark ? 'text-white/30' : 'text-zinc-500'}">Add your logo and address to enable branded invoices and shareable payment links</p>
+			</div>
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-amber-400/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+			</svg>
+		</a>
+	{/if}
 
 	{#if loading}
 		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">

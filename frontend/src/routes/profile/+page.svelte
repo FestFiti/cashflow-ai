@@ -15,6 +15,11 @@
 	let businessName = $state('');
 	let phone = $state('');
 	let mpesaShortcode = $state('');
+	let address = $state('');
+	let city = $state('');
+	let description = $state('');
+	let logoUrl = $state<string | null>(null);
+	let logoUploading = $state(false);
 
 	// Password state
 	let currentPassword = $state('');
@@ -48,10 +53,14 @@
 
 	async function loadProfile() {
 		try {
-			const data = await api<{ name: string; phone: string; mpesa_shortcode: string }>('/profile/');
+			const data = await api<{ name: string; phone: string; mpesa_shortcode: string; address: string; city: string; description: string; logo_url: string | null }>('/profile/');
 			businessName = data.name ?? '';
 			phone = data.phone ?? '';
 			mpesaShortcode = data.mpesa_shortcode ?? '';
+			address = data.address ?? '';
+			city = data.city ?? '';
+			description = data.description ?? '';
+			logoUrl = data.logo_url;
 		} catch (err) {
 			showError(err instanceof Error ? err.message : 'Failed to load profile');
 		} finally {
@@ -79,7 +88,10 @@
 				body: JSON.stringify({
 					name: businessName || undefined,
 					phone: phone || undefined,
-					mpesa_shortcode: mpesaShortcode || undefined
+					mpesa_shortcode: mpesaShortcode || undefined,
+					address: address || undefined,
+					city: city || undefined,
+					description: description || undefined
 				})
 			});
 			showSuccess('Profile updated');
@@ -87,6 +99,30 @@
 			showError(err instanceof Error ? err.message : 'Failed to update profile');
 		} finally {
 			profileSaving = false;
+		}
+	}
+
+	async function uploadLogo(e: Event) {
+		const input = e.target as HTMLInputElement;
+		const file = input.files?.[0];
+		if (!file) return;
+		logoUploading = true;
+		try {
+			const form = new FormData();
+			form.append('file', file);
+			const res = await fetch('/profile/logo', {
+				method: 'POST',
+				headers: { 'Authorization': `Bearer ${$auth.token}` },
+				body: form
+			});
+			if (!res.ok) throw new Error('Upload failed');
+			const data = await res.json();
+			logoUrl = data.logo_url;
+			showSuccess('Logo uploaded');
+		} catch (err) {
+			showError(err instanceof Error ? err.message : 'Failed to upload logo');
+		} finally {
+			logoUploading = false;
 		}
 	}
 
@@ -226,6 +262,24 @@
 					<span class="mb-5 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Business Information</span>
 
 					<div class="space-y-4">
+						<!-- Logo -->
+						<div>
+							<label class="mb-2 block text-[11px] font-medium {isDark ? 'text-white/60' : 'text-zinc-600'}">Business Logo</label>
+							<div class="flex items-center gap-4">
+								{#if logoUrl}
+									<img src={logoUrl} alt="Logo" class="h-14 w-14 rounded-xl object-cover border {isDark ? 'border-white/[0.06]' : 'border-zinc-200'}" />
+								{:else}
+									<div class="flex h-14 w-14 items-center justify-center rounded-xl {isDark ? 'bg-white/[0.04]' : 'bg-zinc-100'} text-[20px] font-bold {isDark ? 'text-white/20' : 'text-zinc-300'}">
+										{businessName?.[0]?.toUpperCase() || '?'}
+									</div>
+								{/if}
+								<label class="cursor-pointer rounded-xl border {isDark ? 'border-white/[0.06]' : 'border-zinc-200'} px-4 py-2 text-[12px] font-medium {isDark ? 'text-white/50 hover:text-white/70' : 'text-zinc-500 hover:text-zinc-700'} transition-colors">
+									{logoUploading ? 'Uploading...' : 'Upload Logo'}
+									<input type="file" accept="image/*" class="hidden" onchange={uploadLogo} disabled={logoUploading} />
+								</label>
+							</div>
+						</div>
+
 						<div>
 							<label for="businessName" class="mb-2 block text-[11px] font-medium {isDark ? 'text-white/60' : 'text-zinc-600'}">Business Name</label>
 							<input
@@ -235,6 +289,40 @@
 								placeholder="Acme Ltd."
 								class="w-full rounded-xl border {isDark ? 'border-white/[0.06] bg-white/[0.03]' : 'border-zinc-200 bg-white'} px-4 py-3 text-[14px] {isDark ? 'text-white placeholder-white/20' : 'text-zinc-900 placeholder-zinc-400'} outline-none transition-colors focus:border-emerald-500/50 {isDark ? 'focus:bg-white/[0.05]' : 'focus:bg-white'}"
 							/>
+						</div>
+
+						<div>
+							<label for="description" class="mb-2 block text-[11px] font-medium {isDark ? 'text-white/60' : 'text-zinc-600'}">Business Description</label>
+							<textarea
+								id="description"
+								bind:value={description}
+								placeholder="What your business does..."
+								rows={2}
+								class="w-full rounded-xl border {isDark ? 'border-white/[0.06] bg-white/[0.03]' : 'border-zinc-200 bg-white'} px-4 py-3 text-[14px] {isDark ? 'text-white placeholder-white/20' : 'text-zinc-900 placeholder-zinc-400'} outline-none transition-colors focus:border-emerald-500/50 {isDark ? 'focus:bg-white/[0.05]' : 'focus:bg-white'}"
+							></textarea>
+						</div>
+
+						<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+							<div>
+								<label for="address" class="mb-2 block text-[11px] font-medium {isDark ? 'text-white/60' : 'text-zinc-600'}">Address</label>
+								<input
+									id="address"
+									type="text"
+									bind:value={address}
+									placeholder="123 Business St"
+									class="w-full rounded-xl border {isDark ? 'border-white/[0.06] bg-white/[0.03]' : 'border-zinc-200 bg-white'} px-4 py-3 text-[14px] {isDark ? 'text-white placeholder-white/20' : 'text-zinc-900 placeholder-zinc-400'} outline-none transition-colors focus:border-emerald-500/50 {isDark ? 'focus:bg-white/[0.05]' : 'focus:bg-white'}"
+								/>
+							</div>
+							<div>
+								<label for="city" class="mb-2 block text-[11px] font-medium {isDark ? 'text-white/60' : 'text-zinc-600'}">City</label>
+								<input
+									id="city"
+									type="text"
+									bind:value={city}
+									placeholder="Nairobi"
+									class="w-full rounded-xl border {isDark ? 'border-white/[0.06] bg-white/[0.03]' : 'border-zinc-200 bg-white'} px-4 py-3 text-[14px] {isDark ? 'text-white placeholder-white/20' : 'text-zinc-900 placeholder-zinc-400'} outline-none transition-colors focus:border-emerald-500/50 {isDark ? 'focus:bg-white/[0.05]' : 'focus:bg-white'}"
+								/>
+							</div>
 						</div>
 
 						<div class="grid grid-cols-1 gap-4 md:grid-cols-2">

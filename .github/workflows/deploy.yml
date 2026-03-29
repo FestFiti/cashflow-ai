@@ -48,6 +48,9 @@ jobs:
             sed -i "s|RATIBA_WEBHOOK_URL=.*|RATIBA_WEBHOOK_URL=https://flowai.cash/webhooks/ratiba|" backend/.env
             sed -i "s|CORS_ORIGINS=.*|CORS_ORIGINS=https://flowai.cash,https://www.flowai.cash|" backend/.env
 
+            # Remove local dev override (not needed on server — host nginx handles routing)
+            rm -f docker-compose.override.yml
+
             # Build and start
             docker compose down --remove-orphans || true
             docker compose up -d --build

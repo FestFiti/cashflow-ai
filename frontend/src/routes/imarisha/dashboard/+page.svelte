@@ -211,28 +211,42 @@
 				<!-- Quick Actions -->
 				<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6 transition-all duration-500 delay-400 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
 					<span class="mb-4 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Quick Actions</span>
+					{@const ic = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(113,113,122,1)'}
 					<div class="space-y-2">
-						<a href="/imarisha/contributions" class="flex items-center gap-3 rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} p-3 transition-all {isDark ? 'hover:border-white/[0.08]' : 'hover:border-zinc-300'} {isDark ? 'hover:bg-white/[0.02]' : 'hover:bg-zinc-50'}">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 {isDark ? 'text-white/30' : 'text-zinc-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+						<a href="/imarisha/contributions" class="flex w-full items-center gap-3 rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} p-3 transition-all {isDark ? 'hover:border-white/[0.08]' : 'hover:border-zinc-300'} {isDark ? 'hover:bg-white/[0.02]' : 'hover:bg-zinc-50'}">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 18 18" fill="none">
+								<line x1="5.75" y1="6.75" x2="7.75" y2="6.75" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<line x1="5.75" y1="9.75" x2="12.25" y2="9.75" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<line x1="5.75" y1="12.75" x2="9.25" y2="12.75" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M2.75,14.25V3.75c0-1.105,.895-2,2-2h5.586c.265,0,.52,.105,.707,.293l3.914,3.914c.188,.188,.293,.442,.293,.707v7.586c0,1.105-.895,2-2,2H4.75c-1.105,0-2-.895-2-2Z" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M15.16,6.25h-3.41c-.552,0-1-.448-1-1V1.852" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 							</svg>
 							<div>
 								<p class="text-[13px] font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">View Contribution Details</p>
 								<p class="text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">Full audit trail</p>
 							</div>
 						</a>
-						<button class="flex items-center gap-3 rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} p-3 transition-all {isDark ? 'hover:border-white/[0.08]' : 'hover:border-zinc-300'} {isDark ? 'hover:bg-white/[0.02]' : 'hover:bg-zinc-50'}">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 {isDark ? 'text-white/30' : 'text-zinc-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75c-.778 0-1.504.357-1.96.966l-.314.378a8.967 8.967 0 01-1.96-.966 8.967 8.967 0 00-1.96.966l-.314-.378A2.464 2.464 0 019.75 9.75a8.967 8.967 0 00-1.311 5.454M12 20.25a8.967 8.967 0 01-5.454-1.31m10.91 0a23.848 23.848 0 005.454-1.31" />
+						<button class="flex w-full items-center gap-3 rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} p-3 transition-all {isDark ? 'hover:border-white/[0.08]' : 'hover:border-zinc-300'} {isDark ? 'hover:bg-white/[0.02]' : 'hover:bg-zinc-50'}">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 18 18" fill="none">
+								<path d="M9 1.75C9 1.75 9 3.25 9 4.75" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M14.6 4.15C14.6 4.15 13.54 5.21 12.48 6.27" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M3.4 4.15C3.4 4.15 4.46 5.21 5.52 6.27" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M2.75 12.25H15.25" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M3.5 12.25C3.5 8.8 5.962 6 9 6C12.038 6 14.5 8.8 14.5 12.25" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M7.25 12.25C7.25 13.355 8.045 14.25 9 14.25C9.955 14.25 10.75 13.355 10.75 12.25" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 							</svg>
 							<div>
 								<p class="text-[13px] font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">Send Reminder</p>
 								<p class="text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">For failed deductions</p>
 							</div>
 						</button>
-						<button class="flex items-center gap-3 rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} p-3 transition-all {isDark ? 'hover:border-white/[0.08]' : 'hover:border-zinc-300'} {isDark ? 'hover:bg-white/[0.02]' : 'hover:bg-zinc-50'}">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 {isDark ? 'text-white/30' : 'text-zinc-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197A5.971 5.971 0 006 18.72v-2.007m0 0V18.72v-2.007m0 0a5.971 5.971 0 00-.941 3.197M5.058 15.522A5.971 5.971 0 006 18.72v-2.007M5.058 15.522A5.971 5.971 0 016 12.75v2.007m0 0A5.971 5.971 0 00.941 3.197m8.018-8.018a5.971 5.971 0 00-.941-3.197M6 12.75a5.971 5.971 0 01.941-3.197m5.059 5.059a5.971 5.971 0 01-.941 3.197M12 12.75a5.971 5.971 0 01-.941-3.197m0 6.394a5.971 5.971 0 00.941-3.197m0-6.394a5.971 5.971 0 00-.941 3.197" />
+						<button class="flex w-full items-center gap-3 rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} p-3 transition-all {isDark ? 'hover:border-white/[0.08]' : 'hover:border-zinc-300'} {isDark ? 'hover:bg-white/[0.02]' : 'hover:bg-zinc-50'}">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 18 18" fill="none">
+								<path d="M6.5 8.25C7.743 8.25 8.75 7.243 8.75 6C8.75 4.757 7.743 3.75 6.5 3.75C5.257 3.75 4.25 4.757 4.25 6C4.25 7.243 5.257 8.25 6.5 8.25Z" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M1.75 14.25C1.75 11.767 3.878 9.75 6.5 9.75C7.28 9.75 8.017 9.934 8.667 10.261" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M13.25 16.25C15.045 16.25 16.5 14.795 16.25 13C16.25 11.205 14.795 9.75 13 9.75C11.205 9.75 9.75 11.205 9.75 13C9.75 14.795 11.205 16.25 13 16.25" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<line x1="13" y1="11.25" x2="13" y2="14.75" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<line x1="11.25" y1="13" x2="14.75" y2="13" stroke={ic} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 							</svg>
 							<div>
 								<p class="text-[13px] font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">Add Member / Edit Rules</p>

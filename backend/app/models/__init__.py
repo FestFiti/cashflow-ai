@@ -5,5 +5,7 @@ from app.models.reminder import Reminder
 from app.models.notification import Notification
 from app.models.user import User
 from app.models.session import Session
+from app.models.service import Service
+from app.models.invoice_item import InvoiceItem
 
-__all__ = ["Business", "Invoice", "Payment", "Reminder", "Notification", "User", "Session"]
+__all__ = ["Business", "Invoice", "Payment", "Reminder", "Notification", "User", "Session", "Service", "InvoiceItem"]

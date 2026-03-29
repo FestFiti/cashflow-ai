@@ -27,3 +27,4 @@ class Invoice(Base):
     business = relationship("Business", back_populates="invoices")
     payments = relationship("Payment", back_populates="invoice", lazy="selectin")
     reminders = relationship("Reminder", back_populates="invoice", lazy="selectin")
+    items = relationship("InvoiceItem", back_populates="invoice", lazy="selectin")
