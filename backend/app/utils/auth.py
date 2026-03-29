@@ -19,13 +19,20 @@ def verify_password(plain: str, hashed: str) -> bool:
     return pwd_context.verify(plain, hashed)
 
 
-def create_access_token(business_id: str) -> str:
+def create_access_token(business_id: str, session_id: str | None = None) -> str:
     expire = datetime.now(timezone.utc) + timedelta(minutes=settings.JWT_EXPIRATION_MINUTES)
-    return jwt.encode(
-        {"sub": business_id, "exp": expire},
-        settings.JWT_SECRET,
-        algorithm=settings.JWT_ALGORITHM,
-    )
+    payload = {"sub": business_id, "exp": expire}
+    if session_id:
+        payload["sid"] = session_id
+    return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+
+
+def get_session_id_from_token(token: str) -> str | None:
+    try:
+        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM])
+        return payload.get("sid")
+    except JWTError:
+        return None
 
 
 def create_reset_token(email: str) -> str:

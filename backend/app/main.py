@@ -6,7 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine, Base
 from app.models import Business, Invoice, Payment, Reminder, Notification, User  # noqa: F401
+from app.models.session import Session  # noqa - needed for create_all
 from app.routers import auth, invoices, payments, webhooks, reminders, ai, dashboard, notifications, team, ws
+from app.routers import profile
 
 
 @asynccontextmanager
@@ -41,6 +43,7 @@ app.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])
 app.include_router(notifications.router, prefix="/notifications", tags=["Notifications"])
 app.include_router(team.router, prefix="/team", tags=["Team"])
 app.include_router(ws.router, tags=["WebSocket"])
+app.include_router(profile.router, prefix="/profile", tags=["profile"])
 
 
 @app.get("/health")

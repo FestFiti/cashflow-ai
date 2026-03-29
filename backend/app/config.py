@@ -39,6 +39,13 @@ class Settings(BaseSettings):
     AT_USERNAME: str = "sandbox"
     AT_SENDER_ID: str = ""
 
+    # eSMS Mail
+    ESMS_API_KEY: str = ""
+    ESMS_BASE_URL: str = "https://send.esmsafrica.io"
+    ESMS_FROM_EMAIL: str = "hello@flowai.cash"
+    ESMS_FROM_NAME: str = "CashFlow AI"
+    APP_URL: str = "https://flowai.cash"
+
     model_config = {"env_file": ".env", "extra": "ignore"}
 
 

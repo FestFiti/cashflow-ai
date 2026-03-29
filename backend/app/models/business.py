@@ -20,3 +20,4 @@ class Business(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     invoices = relationship("Invoice", back_populates="business", lazy="selectin")
+    sessions = relationship("Session", back_populates="business", cascade="all, delete-orphan")

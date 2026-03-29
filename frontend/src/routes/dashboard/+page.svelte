@@ -4,7 +4,9 @@
 	import { api, formatKES } from '$lib/api';
 	import { goto } from '$app/navigation';
 	import { theme } from '$lib/stores/theme';
+	import { lastEvent } from '$lib/stores/ws';
 	import Icon from '$lib/components/Icon.svelte';
+
 	const isDark = $derived($theme === 'dark');
 
 	interface DashboardData {
@@ -18,6 +20,11 @@
 	let loading = $state(true);
 	let visible = $state(false);
 
+	// AI insights state
+	let insights = $state<string | null>(null);
+	let insightsLoading = $state(false);
+	let insightsError = $state(false);
+
 	onMount(async () => {
 		if (!$auth.token) { goto('/login'); return; }
 		try {
@@ -28,7 +35,29 @@
 			loading = false;
 			setTimeout(() => (visible = true), 50);
 		}
+		// Load AI insights in background after main data
+		loadInsights();
 	});
+
+	// Refresh dashboard data when a payment lands via WebSocket
+	$effect(() => {
+		if ($lastEvent?.type === 'payment_received' || $lastEvent?.type === 'dashboard_update') {
+			api<DashboardData>('/dashboard/summary').then(d => { data = d; loadInsights(); }).catch(() => {});
+		}
+	});
+
+	async function loadInsights() {
+		insightsLoading = true;
+		insightsError = false;
+		try {
+			const res = await api<{ status: string; insights: string }>('/ai/cash-flow-insights');
+			insights = res.insights;
+		} catch {
+			insightsError = true;
+		} finally {
+			insightsLoading = false;
+		}
+	}
 
 	const recoveryRate = $derived(
 		data && data.total_receivables + data.total_paid > 0
@@ -65,7 +94,6 @@
 	</div>
 
 	{#if loading}
-		<!-- Skeleton -->
 		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
 			{#each Array(4) as _}
 				<div class="animate-pulse rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6">
@@ -77,7 +105,6 @@
 	{:else if data}
 		<!-- Stats Grid -->
 		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-			<!-- Expected -->
 			<div class="rounded-2xl border border-emerald-500/10 bg-emerald-500/[0.03] p-6 transition-all duration-500 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
 				<div class="mb-4 flex items-center justify-between">
 					<span class="text-[11px] font-medium uppercase tracking-[0.12em] text-emerald-500/70">Expected</span>
@@ -96,7 +123,6 @@
 				</div>
 			</div>
 
-			<!-- Collected -->
 			<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6 transition-all duration-500 delay-75 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
 				<div class="mb-4 flex items-center justify-between">
 					<span class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Collected</span>
@@ -110,10 +136,9 @@
 				<p class="mt-2 text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">via M-Pesa</p>
 			</div>
 
-			<!-- Pending -->
 			<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6 transition-all duration-500 delay-150 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
 				<div class="mb-4 flex items-center justify-between">
-					<span class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Pending</span>
+					<span class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Invoices</span>
 					<div class="flex h-8 w-8 items-center justify-center rounded-lg {isDark ? 'bg-white/[0.03]' : 'bg-zinc-100'}">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 {isDark ? 'text-white/30' : 'text-zinc-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
@@ -124,7 +149,6 @@
 				<p class="mt-2 text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">total created</p>
 			</div>
 
-			<!-- Overdue -->
 			<div class="rounded-2xl border p-6 transition-all duration-500 delay-200 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'} {data.overdue_count > 0 ? 'border-amber-500/10 bg-amber-500/[0.03]' : isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-white'}">
 				<div class="mb-4 flex items-center justify-between">
 					<span class="text-[11px] font-medium uppercase tracking-[0.12em] {data.overdue_count > 0 ? 'text-amber-500/70' : isDark ? 'text-white/25' : 'text-zinc-400'}">Overdue</span>
@@ -141,30 +165,25 @@
 
 		<!-- Bottom Row -->
 		<div class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-12">
-			<!-- Recovery Rate -->
-			<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6 lg:col-span-8 transition-all duration-500 delay-300 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+			<!-- Collection Overview -->
+			<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6 lg:col-span-5 transition-all duration-500 delay-300 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
 				<div class="mb-6 flex items-center justify-between">
 					<span class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Collection Overview</span>
-					<span class="text-[11px] {isDark ? 'text-white/15' : 'text-zinc-300'}">Last 30 days</span>
+					<span class="text-[11px] {isDark ? 'text-white/15' : 'text-zinc-300'}">All time</span>
 				</div>
-
 				<div class="flex items-end gap-8">
 					<div>
 						<p class="font-['Instrument_Serif'] text-5xl italic tracking-tight text-emerald-400 md:text-6xl">{recoveryRate}%</p>
 						<p class="mt-1 text-[12px] {isDark ? 'text-white/25' : 'text-zinc-400'}">Recovery Rate</p>
 					</div>
-
 					<div class="flex flex-1 items-end gap-2 pb-1">
 						{#each [
 							{ label: 'Total', value: data.total_invoices, color: isDark ? 'bg-white/[0.06]' : 'bg-zinc-200' },
 							{ label: 'Paid', value: data.total_paid > 0 ? Math.round((data.total_paid / Math.max(data.total_receivables + data.total_paid, 1)) * data.total_invoices) : 0, color: 'bg-emerald-500/40' },
 							{ label: 'Overdue', value: data.overdue_count, color: 'bg-amber-500/40' }
-						] as bar, i}
+						] as bar}
 							<div class="flex flex-1 flex-col items-center gap-2">
-								<div
-									class="w-full rounded-lg {bar.color} transition-all duration-1000"
-									style="height: {Math.max((bar.value / Math.max(data.total_invoices, 1)) * 100, 6)}px"
-								></div>
+								<div class="w-full rounded-lg {bar.color} transition-all duration-1000" style="height: {Math.max((bar.value / Math.max(data.total_invoices, 1)) * 100, 6)}px"></div>
 								<span class="text-[10px] {isDark ? 'text-white/20' : 'text-zinc-400'}">{bar.label}</span>
 							</div>
 						{/each}
@@ -172,31 +191,75 @@
 				</div>
 			</div>
 
-			<!-- Quick Actions -->
-			<div class="rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6 lg:col-span-4 transition-all duration-500 delay-400 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
-				<span class="mb-4 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Quick Actions</span>
-
-				<div class="space-y-2">
-					{#each [
-						{ href: '/payments/request', label: 'Request Payment', sub: 'Ask for money via M-Pesa or payment link', icon: 'request-payment', accent: true },
-						{ href: '/payments/remind',  label: 'Send Reminder',   sub: 'Remind clients to pay instantly',           icon: 'send-reminder',   accent: false },
-						{ href: '/payments/record',  label: 'Record Payment',  sub: 'Log or confirm received payments',          icon: 'record-payment',  accent: false },
-						{ href: '/groups/create',    label: 'Create Group',    sub: 'Pool money and manage contributions',       icon: 'create-group',    accent: false }
-					] as action}
-						<a
-							href={action.href}
-							class="group flex items-center gap-3 rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} p-3 transition-all {isDark ? 'hover:border-white/[0.08]' : 'hover:border-zinc-300'} {isDark ? 'hover:bg-white/[0.02]' : 'hover:bg-zinc-50'}"
-						>
-							<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg {action.accent ? 'bg-emerald-500/10' : isDark ? 'bg-white/[0.03]' : 'bg-zinc-100'}">
-								<Icon name={action.icon} stroke={action.accent ? 'rgba(52,211,153,1)' : isDark ? 'rgba(255,255,255,0.3)' : 'rgba(113,113,122,1)'} />
-							</div>
-							<div>
-								<p class="text-[13px] font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">{action.label}</p>
-								<p class="text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">{action.sub}</p>
-							</div>
-						</a>
-					{/each}
+			<!-- AI Insights -->
+			<div class="rounded-2xl border border-violet-500/10 bg-violet-500/[0.02] p-6 lg:col-span-7 transition-all duration-500 delay-350 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+				<div class="mb-4 flex items-center justify-between">
+					<div class="flex items-center gap-2.5">
+						<div class="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-500/10">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+							</svg>
+						</div>
+						<span class="text-[11px] font-medium uppercase tracking-[0.12em] text-violet-400/70">AI Insights</span>
+					</div>
+					<button
+						onclick={loadInsights}
+						disabled={insightsLoading}
+						class="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] {isDark ? 'text-white/20 hover:text-white/40' : 'text-zinc-400 hover:text-zinc-600'} transition-colors disabled:opacity-40"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 {insightsLoading ? 'animate-spin' : ''}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+						</svg>
+						Refresh
+					</button>
 				</div>
+
+				{#if insightsLoading}
+					<div class="space-y-2.5">
+						{#each Array(3) as _}
+							<div class="animate-pulse">
+								<div class="h-3 w-full rounded {isDark ? 'bg-white/[0.04]' : 'bg-zinc-100'}"></div>
+								<div class="mt-1.5 h-3 w-4/5 rounded {isDark ? 'bg-white/[0.04]' : 'bg-zinc-100'}"></div>
+							</div>
+						{/each}
+					</div>
+				{:else if insightsError}
+					<p class="text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">Could not load insights. <button onclick={loadInsights} class="text-violet-400 hover:text-violet-300">Try again</button></p>
+				{:else if insights}
+					<div class="space-y-3">
+						{#each insights.split('\n').filter(l => l.trim()) as line}
+							<p class="text-[13px] leading-relaxed {isDark ? 'text-white/50' : 'text-zinc-600'}">{line}</p>
+						{/each}
+					</div>
+				{:else}
+					<p class="text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">No data yet — create some invoices to get AI insights.</p>
+				{/if}
+			</div>
+		</div>
+
+		<!-- Quick Actions row -->
+		<div class="mt-4 rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6 transition-all duration-500 delay-400 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
+			<span class="mb-4 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Quick Actions</span>
+			<div class="grid grid-cols-2 gap-2 md:grid-cols-4">
+				{#each [
+					{ href: '/invoices/new',     label: 'New Invoice',     sub: 'AI or manual',               icon: 'record-payment',  accent: true },
+					{ href: '/payments/request', label: 'Request Payment', sub: 'Send M-Pesa push',           icon: 'request-payment', accent: false },
+					{ href: '/payments/remind',  label: 'Send Reminder',   sub: 'Nudge late clients',         icon: 'send-reminder',   accent: false },
+					{ href: '/reports',          label: 'View Reports',    sub: 'Cash flow breakdown',        icon: 'create-group',    accent: false }
+				] as action}
+					<a
+						href={action.href}
+						class="group flex items-center gap-3 rounded-xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} p-3 transition-all {isDark ? 'hover:border-white/[0.08]' : 'hover:border-zinc-300'} {isDark ? 'hover:bg-white/[0.02]' : 'hover:bg-zinc-50'}"
+					>
+						<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg {action.accent ? 'bg-emerald-500/10' : isDark ? 'bg-white/[0.03]' : 'bg-zinc-100'}">
+							<Icon name={action.icon} stroke={action.accent ? 'rgba(52,211,153,1)' : isDark ? 'rgba(255,255,255,0.3)' : 'rgba(113,113,122,1)'} />
+						</div>
+						<div>
+							<p class="text-[13px] font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">{action.label}</p>
+							<p class="text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">{action.sub}</p>
+						</div>
+					</a>
+				{/each}
 			</div>
 		</div>
 	{/if}
