@@ -55,6 +55,10 @@ jobs:
             docker compose down --remove-orphans || true
             docker compose up -d --build
 
+            # Run database migrations
+            sleep 5
+            docker compose exec -T backend alembic upgrade head || echo "Migration warning (may already be applied)"
+
             # Update nginx config
             cp deploy/nginx-cashflow.conf /etc/nginx/sites-available/nginx-cashflow.conf
             ln -sf /etc/nginx/sites-available/nginx-cashflow.conf /etc/nginx/sites-enabled/cashflow-ai

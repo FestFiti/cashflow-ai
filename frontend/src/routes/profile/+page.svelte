@@ -115,7 +115,10 @@
 				headers: { 'Authorization': `Bearer ${$auth.token}` },
 				body: form
 			});
-			if (!res.ok) throw new Error('Upload failed');
+			if (!res.ok) {
+				const err = await res.json().catch(() => ({ detail: 'Upload failed' }));
+				throw new Error(err.detail || `Upload failed (${res.status})`);
+			}
 			const data = await res.json();
 			logoUrl = data.logo_url;
 			showSuccess('Logo uploaded');
