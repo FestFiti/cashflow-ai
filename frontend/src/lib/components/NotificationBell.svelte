@@ -9,6 +9,9 @@
 		markAllRead
 	} from '$lib/stores/notifications';
 	import { lastEvent } from '$lib/stores/ws';
+	import { theme } from '$lib/stores/theme';
+
+	const isDark = $derived($theme === 'dark');
 
 	let open = $state(false);
 
@@ -38,7 +41,7 @@
 			case 'reminder': return 'text-blue-400';
 			case 'alert': return 'text-amber-400';
 			case 'ai': return 'text-violet-400';
-			default: return 'text-zinc-400';
+			default: return isDark ? 'text-zinc-400' : 'text-zinc-500';
 		}
 	}
 
@@ -56,7 +59,7 @@
 <div class="relative">
 	<button
 		onclick={() => { open = !open; if (open) fetchNotifications(); }}
-		class="relative rounded-lg p-2 text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white"
+		class="relative rounded-lg p-2 {isDark ? 'text-zinc-400' : 'text-zinc-500'} transition-colors {isDark ? 'hover:bg-zinc-800' : 'hover:bg-zinc-100'} {isDark ? 'hover:text-white' : 'hover:text-zinc-900'}"
 	>
 		<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
 			<path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
@@ -73,8 +76,8 @@
 		<button class="fixed inset-0 z-40" onclick={() => (open = false)} aria-label="Close notifications"></button>
 
 		<!-- Dropdown -->
-		<div class="absolute right-0 top-full z-50 mt-2 w-80 rounded-[16px] border border-zinc-800 bg-zinc-900 shadow-2xl">
-			<div class="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
+		<div class="absolute right-0 top-full z-50 mt-2 w-80 rounded-[16px] border {isDark ? 'border-zinc-800' : 'border-zinc-200'} {isDark ? 'bg-zinc-900' : 'bg-white'} shadow-2xl">
+			<div class="flex items-center justify-between border-b {isDark ? 'border-zinc-800' : 'border-zinc-200'} px-4 py-3">
 				<h3 class="text-sm font-semibold">Notifications</h3>
 				{#if $unreadCount > 0}
 					<button
@@ -88,14 +91,14 @@
 
 			<div class="max-h-80 overflow-y-auto">
 				{#if $notifications.length === 0}
-					<div class="px-4 py-8 text-center text-sm text-zinc-500">
+					<div class="px-4 py-8 text-center text-sm {isDark ? 'text-zinc-500' : 'text-zinc-400'}">
 						No notifications yet
 					</div>
 				{:else}
 					{#each $notifications as n}
 						<button
 							onclick={() => handleClick(n)}
-							class="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-zinc-800 {!n.is_read ? 'bg-emerald-950' : ''}"
+							class="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors {isDark ? 'hover:bg-zinc-800' : 'hover:bg-zinc-100'} {!n.is_read ? (isDark ? 'bg-emerald-950' : 'bg-emerald-50') : ''}"
 						>
 							<span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center">
 								<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 {categoryColor(n.category)}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -103,12 +106,12 @@
 								</svg>
 							</span>
 							<div class="min-w-0 flex-1">
-								<p class="text-sm font-medium" class:text-white={!n.is_read} class:text-zinc-400={n.is_read}>
+								<p class="text-sm font-medium {!n.is_read ? (isDark ? 'text-white' : 'text-zinc-900') : (isDark ? 'text-zinc-400' : 'text-zinc-500')}">
 									{n.title}
 								</p>
-								<p class="mt-0.5 truncate text-xs text-zinc-500">{n.message}</p>
+								<p class="mt-0.5 truncate text-xs {isDark ? 'text-zinc-500' : 'text-zinc-400'}">{n.message}</p>
 							</div>
-							<span class="mt-0.5 shrink-0 text-xs text-zinc-600">{timeAgo(n.created_at)}</span>
+							<span class="mt-0.5 shrink-0 text-xs {isDark ? 'text-zinc-600' : 'text-zinc-400'}">{timeAgo(n.created_at)}</span>
 						</button>
 					{/each}
 				{/if}

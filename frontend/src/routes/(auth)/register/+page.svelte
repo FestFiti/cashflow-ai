@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { api } from '$lib/api';
 	import { login } from '$lib/stores/auth';
+	import { showError } from '$lib/stores/toast';
 	import HeroBlob from '$lib/components/HeroBlob.svelte';
 	import HeroBlobLight from '$lib/components/HeroBlobLight.svelte';
 	import { theme } from '$lib/stores/theme';
@@ -13,7 +14,6 @@
 	let phone = $state('');
 	let password = $state('');
 	let confirmPassword = $state('');
-	let error = $state('');
 	let loading = $state(false);
 	let showPassword = $state(false);
 
@@ -46,9 +46,8 @@
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
-		error = '';
-		if (!passwordValid) { error = 'Password does not meet requirements'; return; }
-		if (!passwordsMatch) { error = 'Passwords do not match'; return; }
+		if (!passwordValid) { showError('Password does not meet requirements'); return; }
+		if (!passwordsMatch) { showError('Passwords do not match'); return; }
 
 		loading = true;
 		try {
@@ -59,7 +58,7 @@
 			login(res.access_token, res.business_id, res.name, email);
 			goto('/dashboard');
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Registration failed';
+			showError(err instanceof Error ? err.message : 'Registration failed');
 		} finally {
 			loading = false;
 		}
@@ -105,10 +104,6 @@
 			</p>
 
 			<form onsubmit={handleSubmit} class="space-y-4" style="font-family: 'DM Sans', sans-serif;">
-				{#if error}
-					<div class="rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-2.5 text-[13px] text-red-400">{error}</div>
-				{/if}
-
 				<div>
 					<label for="name" class="mb-1.5 block text-[13px] font-medium {isDark ? 'text-white/40' : 'text-zinc-500'}">Business Name</label>
 					<input id="name" type="text" bind:value={name} required class="w-full rounded-xl border px-4 py-3 text-[14px] outline-none transition-colors focus:border-emerald-500/50 {isDark ? 'border-white/[0.06] bg-white/[0.03] text-white placeholder-white/20 focus:bg-white/[0.05]' : 'border-zinc-300 bg-zinc-50 text-zinc-900 placeholder-zinc-400 focus:bg-white'}" placeholder="Acme Solutions" />

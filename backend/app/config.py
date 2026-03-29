@@ -29,9 +29,10 @@ class Settings(BaseSettings):
     RATIBA_BASE_URL: str = "https://api.ratiba.io"
     RATIBA_WEBHOOK_URL: str = ""
 
-    # Claude AI
-    ANTHROPIC_API_KEY: str = ""
-    CLAUDE_MODEL: str = "claude-haiku-4-5-20251001"  # cheapest model
+    # OpenRouter AI
+    OPENROUTER_API_KEY: str = ""
+    OPENROUTER_MODEL: str = "nvidia/nemotron-3-super-120b-a12b:free"
+    OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
 
     # Africa's Talking
     AT_API_KEY: str = ""

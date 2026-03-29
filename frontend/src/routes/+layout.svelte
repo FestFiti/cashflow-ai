@@ -6,11 +6,14 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { connectWs, disconnectWs, wsConnected } from '$lib/stores/ws';
 	import NotificationBell from '$lib/components/NotificationBell.svelte';
+	import Toaster from '$lib/components/Toaster.svelte';
 	import { theme, toggleTheme } from '$lib/stores/theme';
+	import { getAvatarUrl } from '$lib/avatar';
 
 	let { children } = $props();
 	let mobileMenuOpen = $state(false);
 	let userMenuOpen = $state(false);
+	const isDark = $derived($theme === 'dark');
 
 	const isAuthPage = $derived(
 		$page.url.pathname.startsWith('/login') ||
@@ -64,11 +67,11 @@
 {#if showNav}
 	<header class="sticky top-0 z-50" style="font-family: 'DM Sans', sans-serif;">
 		<div class="mx-auto max-w-7xl px-4 py-3 md:px-6">
-			<div class="flex items-center justify-between rounded-2xl border border-white/[0.06] bg-zinc-950/60 px-4 py-2 backdrop-blur-xl md:px-5">
+			<div class="flex items-center justify-between rounded-2xl border {isDark ? 'border-white/[0.06]' : 'border-zinc-200'} {isDark ? 'bg-zinc-950/60' : 'bg-white/80'} px-4 py-2 backdrop-blur-xl md:px-5">
 				<!-- Logo -->
 				<a href="/dashboard" class="flex items-center gap-2.5">
 					<img src="/logo-gold.png" alt="CashFlow AI" class="h-7 w-7" />
-					<span class="text-[15px] font-semibold tracking-tight text-white/90">CashFlow AI</span>
+					<span class="text-[15px] font-semibold tracking-tight {isDark ? 'text-white/90' : 'text-zinc-800'}">CashFlow AI</span>
 				</a>
 
 				<!-- Desktop Nav -->
@@ -76,7 +79,7 @@
 					{#each navLinks as link}
 						<a
 							href={link.href}
-							class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-medium transition-all {isActive(link.href, $page.url.pathname) ? 'bg-white/[0.06] text-white' : 'text-white/40 hover:text-white/70'}"
+							class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-medium transition-all {isActive(link.href, $page.url.pathname) ? (isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200 text-zinc-900') : (isDark ? 'text-white/40 hover:text-white/70' : 'text-zinc-500 hover:text-zinc-700')}"
 						>
 							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 								<path stroke-linecap="round" stroke-linejoin="round" d={link.icon} />
@@ -95,7 +98,7 @@
 					<!-- Theme toggle -->
 					<button
 						onclick={toggleTheme}
-						class="flex h-8 w-8 items-center justify-center rounded-lg text-white/30 transition-colors hover:bg-white/[0.06] hover:text-white/60"
+						class="flex h-8 w-8 items-center justify-center rounded-lg {isDark ? 'text-white/30' : 'text-zinc-400'} transition-colors {isDark ? 'hover:bg-white/[0.06] hover:text-white/60' : 'hover:bg-zinc-100 hover:text-zinc-600'}"
 						title="Toggle theme"
 					>
 						{#if $theme === 'dark'}
@@ -115,37 +118,35 @@
 					<div class="relative">
 						<button
 							onclick={() => (userMenuOpen = !userMenuOpen)}
-							class="flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-white/[0.06]"
+							class="flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors {isDark ? 'hover:bg-white/[0.06]' : 'hover:bg-zinc-100'}"
 						>
-							<div class="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/15 text-[11px] font-bold text-emerald-400">
-								{getInitials($auth.name)}
-							</div>
-							<span class="hidden text-[13px] text-white/50 sm:inline">{$auth.name}</span>
-							<svg xmlns="http://www.w3.org/2000/svg" class="hidden h-3 w-3 text-white/20 sm:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+							<img src={getAvatarUrl($auth.name || $auth.email || 'user')} alt="Avatar" class="h-7 w-7 rounded-full" />
+							<span class="hidden text-[13px] {isDark ? 'text-white/50' : 'text-zinc-500'} sm:inline">{$auth.name}</span>
+							<svg xmlns="http://www.w3.org/2000/svg" class="hidden h-3 w-3 {isDark ? 'text-white/20' : 'text-zinc-400'} sm:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
 							</svg>
 						</button>
 
 						{#if userMenuOpen}
 							<button class="fixed inset-0 z-40" onclick={() => (userMenuOpen = false)} aria-label="Close"></button>
-							<div class="absolute right-0 top-full z-50 mt-2 w-56 rounded-xl border border-white/[0.06] bg-zinc-900/95 p-1.5 shadow-2xl backdrop-blur-xl">
-								<div class="border-b border-white/[0.04] px-3 py-3">
-									<p class="text-[13px] font-medium text-white/80">{$auth.name}</p>
+							<div class="absolute right-0 top-full z-50 mt-2 w-56 rounded-xl border {isDark ? 'border-white/[0.06]' : 'border-zinc-200'} {isDark ? 'bg-zinc-900/95' : 'bg-white/95'} p-1.5 shadow-2xl backdrop-blur-xl">
+								<div class="border-b {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} px-3 py-3">
+									<p class="text-[13px] font-medium {isDark ? 'text-white/80' : 'text-zinc-800'}">{$auth.name}</p>
 									{#if $auth.email}
-										<p class="mt-0.5 text-[11px] text-white/25">{$auth.email}</p>
+										<p class="mt-0.5 text-[11px] {isDark ? 'text-white/25' : 'text-zinc-400'}">{$auth.email}</p>
 									{/if}
 								</div>
 								<div class="py-1.5">
-									<a href="/dashboard" onclick={() => (userMenuOpen = false)} class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] text-white/40 transition-colors hover:bg-white/[0.04] hover:text-white/70">
+									<a href="/dashboard" onclick={() => (userMenuOpen = false)} class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] {isDark ? 'text-white/40' : 'text-zinc-500'} transition-colors {isDark ? 'hover:bg-white/[0.04] hover:text-white/70' : 'hover:bg-zinc-50 hover:text-zinc-700'}">
 										<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
 										Profile
 									</a>
-									<a href="/invoices/new" onclick={() => (userMenuOpen = false)} class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] text-white/40 transition-colors hover:bg-white/[0.04] hover:text-white/70">
+									<a href="/invoices/new" onclick={() => (userMenuOpen = false)} class="flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] {isDark ? 'text-white/40' : 'text-zinc-500'} transition-colors {isDark ? 'hover:bg-white/[0.04] hover:text-white/70' : 'hover:bg-zinc-50 hover:text-zinc-700'}">
 										<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
 										New Invoice
 									</a>
 								</div>
-								<div class="border-t border-white/[0.04] pt-1.5">
+								<div class="border-t {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} pt-1.5">
 									<button onclick={handleLogout} class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] text-red-400/60 transition-colors hover:bg-red-500/[0.06] hover:text-red-400">
 										<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>
 										Sign out
@@ -158,7 +159,7 @@
 					<!-- Mobile toggle -->
 					<button
 						onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
-						class="flex h-8 w-8 items-center justify-center rounded-lg text-white/30 hover:bg-white/[0.06] md:hidden"
+						class="flex h-8 w-8 items-center justify-center rounded-lg {isDark ? 'text-white/30' : 'text-zinc-400'} {isDark ? 'hover:bg-white/[0.06]' : 'hover:bg-zinc-100'} md:hidden"
 					>
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 							{#if mobileMenuOpen}
@@ -173,12 +174,12 @@
 
 			<!-- Mobile nav -->
 			{#if mobileMenuOpen}
-				<div class="mt-2 rounded-2xl border border-white/[0.06] bg-zinc-950/90 p-2 backdrop-blur-xl md:hidden">
+				<div class="mt-2 rounded-2xl border {isDark ? 'border-white/[0.06]' : 'border-zinc-200'} {isDark ? 'bg-zinc-950/90' : 'bg-white/90'} p-2 backdrop-blur-xl md:hidden">
 					{#each navLinks as link}
 						<a
 							href={link.href}
 							onclick={() => (mobileMenuOpen = false)}
-							class="flex items-center gap-2.5 rounded-xl px-3 py-3 text-[13px] font-medium transition-all {isActive(link.href, $page.url.pathname) ? 'bg-white/[0.06] text-white' : 'text-white/40'}"
+							class="flex items-center gap-2.5 rounded-xl px-3 py-3 text-[13px] font-medium transition-all {isActive(link.href, $page.url.pathname) ? (isDark ? 'bg-white/[0.06] text-white' : 'bg-zinc-200 text-zinc-900') : (isDark ? 'text-white/40' : 'text-zinc-500')}"
 						>
 							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 								<path stroke-linecap="round" stroke-linejoin="round" d={link.icon} />
@@ -188,7 +189,7 @@
 					{/each}
 					<button
 						onclick={toggleTheme}
-						class="mt-1 flex w-full items-center gap-2.5 rounded-xl px-3 py-3 text-[13px] font-medium text-white/40"
+						class="mt-1 flex w-full items-center gap-2.5 rounded-xl px-3 py-3 text-[13px] font-medium {isDark ? 'text-white/40' : 'text-zinc-500'}"
 					>
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 							{#if $theme === 'dark'}
@@ -205,4 +206,7 @@
 	</header>
 {/if}
 
+<Toaster />
+<div class="{showNav ? (isDark ? 'bg-zinc-950' : 'bg-gray-50') : ''} min-h-screen">
 {@render children()}
+</div>

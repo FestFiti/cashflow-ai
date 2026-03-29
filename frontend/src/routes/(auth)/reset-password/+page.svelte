@@ -2,10 +2,10 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { api } from '$lib/api';
+	import { showError } from '$lib/stores/toast';
 
 	let password = $state('');
 	let confirmPassword = $state('');
-	let error = $state('');
 	let success = $state(false);
 	let loading = $state(false);
 	let showPassword = $state(false);
@@ -25,18 +25,16 @@
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
-		error = '';
-
 		if (!token) {
-			error = 'Invalid or missing reset token';
+			showError('Invalid or missing reset token');
 			return;
 		}
 		if (!passwordValid) {
-			error = 'Password does not meet requirements';
+			showError('Password does not meet requirements');
 			return;
 		}
 		if (!passwordsMatch) {
-			error = 'Passwords do not match';
+			showError('Passwords do not match');
 			return;
 		}
 
@@ -48,7 +46,7 @@
 			});
 			success = true;
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Reset failed';
+			showError(err instanceof Error ? err.message : 'Reset failed');
 		} finally {
 			loading = false;
 		}
@@ -90,12 +88,6 @@
 			</div>
 		{:else}
 			<form onsubmit={handleSubmit} class="gradient-bg rounded-[20px] border border-zinc-800 bg-zinc-900/30 p-6 space-y-4">
-				{#if error}
-					<div class="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm text-red-400">
-						{error}
-					</div>
-				{/if}
-
 				{#if !token}
 					<div class="rounded-lg border border-orange-500/20 bg-orange-500/10 px-4 py-2 text-sm text-orange-400">
 						Invalid reset link. Please request a new one.

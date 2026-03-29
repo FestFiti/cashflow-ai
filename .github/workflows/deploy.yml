@@ -25,7 +25,7 @@ jobs:
         working-directory: frontend
         run: npm run build
         env:
-          PUBLIC_API_URL: http://173.212.245.66:8888
+          PUBLIC_API_URL: https://flowai.cash
 
       - name: Upload frontend build
         uses: actions/upload-artifact@v4
@@ -110,9 +110,17 @@ jobs:
             if [ -n "${{ secrets.JWT_SECRET }}" ]; then
               sed -i "s|JWT_SECRET=.*|JWT_SECRET=${{ secrets.JWT_SECRET }}|" backend/.env
             fi
-            if [ -n "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
-              sed -i "s|ANTHROPIC_API_KEY=.*|ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}|" backend/.env
+            if [ -n "${{ secrets.OPENROUTER_API_KEY }}" ]; then
+              sed -i "s|OPENROUTER_API_KEY=.*|OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}|" backend/.env
             fi
+            if [ -n "${{ secrets.MPESA_CONSUMER_KEY }}" ]; then
+              sed -i "s|MPESA_CONSUMER_KEY=.*|MPESA_CONSUMER_KEY=${{ secrets.MPESA_CONSUMER_KEY }}|" backend/.env
+              sed -i "s|MPESA_CONSUMER_SECRET=.*|MPESA_CONSUMER_SECRET=${{ secrets.MPESA_CONSUMER_SECRET }}|" backend/.env
+              sed -i "s|MPESA_PASSKEY=.*|MPESA_PASSKEY=${{ secrets.MPESA_PASSKEY }}|" backend/.env
+            fi
+            sed -i "s|MPESA_CALLBACK_URL=.*|MPESA_CALLBACK_URL=https://flowai.cash/webhooks/c2b|" backend/.env
+            sed -i "s|RATIBA_WEBHOOK_URL=.*|RATIBA_WEBHOOK_URL=https://flowai.cash/webhooks/ratiba|" backend/.env
+            sed -i "s|CORS_ORIGINS=.*|CORS_ORIGINS=https://flowai.cash,https://www.flowai.cash|" backend/.env
 
             # Build and start
             docker compose up -d --build

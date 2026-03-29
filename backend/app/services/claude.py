@@ -1,23 +1,49 @@
-"""Anthropic Claude API wrapper for AI features.
+"""OpenRouter AI wrapper for AI features.
 
-Uses claude-haiku-4-5-20251001 (cheapest model) by default.
-Model is configurable via CLAUDE_MODEL env var.
+Uses free models via OpenRouter's OpenAI-compatible API.
+Model is configurable via OPENROUTER_MODEL env var.
 """
 
 import json
-import anthropic
+import httpx
 
 from app.config import settings
 
-client = anthropic.AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
-MODEL = settings.CLAUDE_MODEL
+BASE_URL = settings.OPENROUTER_BASE_URL
+API_KEY = settings.OPENROUTER_API_KEY
+MODEL = settings.OPENROUTER_MODEL
+
+HEADERS = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json",
+    "HTTP-Referer": "https://cashflow-ai.com",
+    "X-OpenRouter-Title": "CashFlow AI",
+}
+
+
+async def _chat(system: str, user_message: str, max_tokens: int = 512) -> str:
+    """Send a chat completion request to OpenRouter."""
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        response = await client.post(
+            f"{BASE_URL}/chat/completions",
+            headers=HEADERS,
+            json={
+                "model": MODEL,
+                "max_tokens": max_tokens,
+                "messages": [
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user_message},
+                ],
+            },
+        )
+        response.raise_for_status()
+        data = response.json()
+        return data["choices"][0]["message"]["content"].strip()
 
 
 async def generate_invoice(prompt: str) -> dict:
     """Parse natural language into structured invoice JSON."""
-    response = await client.messages.create(
-        model=MODEL,
-        max_tokens=512,
+    text = await _chat(
         system="""You are an invoice parser. Extract invoice details from natural language.
 Return ONLY valid JSON with these fields:
 {
@@ -29,9 +55,9 @@ Return ONLY valid JSON with these fields:
   "due_date": "YYYY-MM-DD"
 }
 If a field is unclear, make a reasonable guess. For due_date, if not specified, use 14 days from today.""",
-        messages=[{"role": "user", "content": prompt}],
+        user_message=prompt,
+        max_tokens=512,
     )
-    text = response.content[0].text.strip()
     # Strip markdown code fences if present
     if text.startswith("```"):
         text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
@@ -46,47 +72,31 @@ async def draft_reminder(
     if context:
         prompt += f"\nContext: {context}"
 
-    response = await client.messages.create(
-        model=MODEL,
-        max_tokens=200,
+    return await _chat(
         system="""Write a short, polite payment reminder SMS (under 160 chars) for a Kenyan business context.
 Be professional but warm. Include the amount and due date. Return ONLY the SMS text, nothing else.""",
-        messages=[{"role": "user", "content": prompt}],
+        user_message=prompt,
+        max_tokens=200,
     )
-    return response.content[0].text.strip()
 
 
 async def cash_flow_insights(data: dict) -> str:
     """Generate a natural-language cash flow summary."""
-    response = await client.messages.create(
-        model=MODEL,
-        max_tokens=300,
+    return await _chat(
         system="""You are a financial analyst for a small Kenyan business.
 Given their cash flow data, write 2-3 concise insights with actionable advice.
 Use KES currency. Be direct and specific.""",
-        messages=[
-            {
-                "role": "user",
-                "content": f"Cash flow data:\n{json.dumps(data, indent=2)}",
-            }
-        ],
+        user_message=f"Cash flow data:\n{json.dumps(data, indent=2)}",
+        max_tokens=300,
     )
-    return response.content[0].text.strip()
 
 
 async def summarise_dispute(conversation: list[str]) -> str:
     """Summarise a payment dispute conversation."""
-    response = await client.messages.create(
-        model=MODEL,
-        max_tokens=400,
+    return await _chat(
         system="""Summarise this payment dispute timeline objectively.
 List key facts, each party's position, and suggest a fair resolution.
 Be concise and professional.""",
-        messages=[
-            {
-                "role": "user",
-                "content": "\n---\n".join(conversation),
-            }
-        ],
+        user_message="\n---\n".join(conversation),
+        max_tokens=400,
     )
-    return response.content[0].text.strip()

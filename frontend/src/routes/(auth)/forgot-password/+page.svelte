@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { api } from '$lib/api';
+	import { showError } from '$lib/stores/toast';
 	import HeroBlob from '$lib/components/HeroBlob.svelte';
 	import HeroBlobLight from '$lib/components/HeroBlobLight.svelte';
 	import { theme } from '$lib/stores/theme';
@@ -7,13 +8,11 @@
 	const isDark = $derived($theme === 'dark');
 
 	let email = $state('');
-	let error = $state('');
 	let success = $state(false);
 	let loading = $state(false);
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
-		error = '';
 		loading = true;
 		try {
 			await api('/auth/forgot-password', {
@@ -22,7 +21,7 @@
 			});
 			success = true;
 		} catch (err) {
-			error = err instanceof Error ? err.message : 'Something went wrong';
+			showError(err instanceof Error ? err.message : 'Something went wrong');
 		} finally {
 			loading = false;
 		}
@@ -84,10 +83,6 @@
 				</div>
 			{:else}
 				<form onsubmit={handleSubmit} class="space-y-5" style="font-family: 'DM Sans', sans-serif;">
-					{#if error}
-						<div class="rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-2.5 text-[13px] text-red-400">{error}</div>
-					{/if}
-
 					<div>
 						<label for="email" class="mb-1.5 block text-[13px] font-medium {isDark ? 'text-white/40' : 'text-zinc-500'}">Email</label>
 						<input
