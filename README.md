@@ -30,16 +30,16 @@ CashFlow AI is an intelligent payment orchestration platform that automates the 
 ## Screenshots of Key Features
 
 ### Dashboard - Real-time Cash Flow Overview
-![Dashboard](https://via.placeholder.com/800x400/10b981/ffffff?text=CashFlow+AI+Dashboard+-+Real-time+Cash+Flow+Overview)
+![Dashboard](frontend/src/Images/Dash%201.jpeg)
 
 ### AI Invoice Generation
-![AI Invoice](https://via.placeholder.com/800x400/3b82f6/ffffff?text=AI+Invoice+Generation+-+Natural+Language+to+Professional+Invoice)
+![AI Invoice](frontend/src/Images/Invoice.jpeg)
 
 ### Payment Request & Collection
-![Payment Collection](https://via.placeholder.com/800x400/8b5cf6/ffffff?text=M-Pesa+Integration+-+STK+Push+Payment+Collection)
+![Payment Collection](frontend/src/Images/Payment.jpeg)
 
 ### Smart Reminders Automation
-![Smart Reminders](https://via.placeholder.com/800x400/f59e0b/ffffff?text=AI+Smart+Reminders+-+Automated+Follow-ups)
+![Smart Reminders](frontend/src/Images/WhatsApp%20Image%202026-03-29%20at%2008.06.31.jpeg)
 
 ## Live Demo
 
