@@ -41,6 +41,34 @@
 <div class="reveal">
 	<div class="slides">
 
+		<!-- ==================== WELCOME / QR ==================== -->
+		<section data-background-color="#09090b">
+			<div class="flex flex-col items-center justify-center gap-6">
+				<img src="/logo-gold.png" alt="CashFlow AI" class="w-16 h-16 mb-2" />
+				<h2 class="font-serif text-5xl text-white">
+					Welcome to <span class="italic text-emerald-400">Demo Day</span>
+				</h2>
+				<p class="text-xl text-white/40 mb-4">Scan to follow along on your phone</p>
+				<div class="flex items-start gap-16">
+					<div class="text-center">
+						{#if qrApp}
+							<img src={qrApp} alt="QR App" class="mx-auto h-48 w-48 mb-4" />
+						{/if}
+						<p class="text-lg text-emerald-400 font-medium">flowai.cash</p>
+						<p class="text-sm text-white/30 mt-1">Try the live app</p>
+					</div>
+					<div class="text-center">
+						{#if qrDemo}
+							<img src={qrDemo} alt="QR Demo Page" class="mx-auto h-48 w-48 mb-4" />
+						{/if}
+						<p class="text-lg text-white font-medium">flowai.cash/demo</p>
+						<p class="text-sm text-white/30 mt-1">Instructions + QR codes</p>
+					</div>
+				</div>
+				<p class="mt-6 text-base text-white/20">We'll begin shortly — feel free to explore</p>
+			</div>
+		</section>
+
 		<!-- ==================== TITLE ==================== -->
 		<section data-auto-animate data-background-color="#09090b">
 			<div class="flex flex-col items-center justify-center gap-8">

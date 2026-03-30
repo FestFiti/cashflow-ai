@@ -22,7 +22,11 @@
 		$page.url.pathname.startsWith('/reset-password')
 	);
 	const isLanding = $derived($page.url.pathname === '/');
-	const isPublicPage = $derived($page.url.pathname.startsWith('/pay/'));
+	const isPublicPage = $derived(
+		$page.url.pathname.startsWith('/pay/') ||
+		$page.url.pathname === '/pitch' ||
+		$page.url.pathname === '/demo'
+	);
 	const showNav = $derived(!isAuthPage && !isLanding && !isPublicPage);
 
 	onMount(() => {
