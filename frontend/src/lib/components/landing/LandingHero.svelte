@@ -139,18 +139,36 @@
 <section class="relative border-y transition-colors {isDark ? 'border-white/[0.04] bg-zinc-950' : 'border-zinc-200 bg-zinc-50'}">
 	<div class="mx-auto grid max-w-5xl grid-cols-2 gap-0 md:grid-cols-4">
 		{#each [
-			{ value: '10K+', label: 'Payment Requests Created', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-			{ value: 'KES 50M', label: 'Money Processed', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
-			{ value: '95%', label: 'Collection Rate', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
-			{ value: '5K+', label: 'Active Businesses', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' }
+			{ value: 'Instant', label: 'M-Pesa STK Push' },
+			{ value: 'AI', label: 'Invoice Generation' },
+			{ value: 'Real-time', label: 'Payment Tracking' },
+			{ value: 'Branded', label: 'Shareable Invoices' }
 		] as stat, i}
 			<div
 				class="flex flex-col items-center py-10 last:border-r-0 transition-all duration-700 delay-{i * 100}ms {isDark ? 'border-r border-white/[0.04]' : 'border-r border-zinc-200'} {statsVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}"
 				style="font-family: 'DM Sans', sans-serif;"
 			>
-				<svg xmlns="http://www.w3.org/2000/svg" class="mb-3 h-5 w-5 text-emerald-500/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-					<path stroke-linecap="round" stroke-linejoin="round" d={stat.icon} />
-				</svg>
+				{#if i === 0}
+					<!-- Phone / M-Pesa -->
+					<svg xmlns="http://www.w3.org/2000/svg" class="mb-3 h-5 w-5 text-emerald-500/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+					</svg>
+				{:else if i === 1}
+					<!-- Sparkle / AI -->
+					<svg xmlns="http://www.w3.org/2000/svg" class="mb-3 h-5 w-5 text-emerald-500/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
+					</svg>
+				{:else if i === 2}
+					<!-- Signal / Real-time -->
+					<svg xmlns="http://www.w3.org/2000/svg" class="mb-3 h-5 w-5 text-emerald-500/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+					</svg>
+				{:else}
+					<!-- Share / Branded -->
+					<svg xmlns="http://www.w3.org/2000/svg" class="mb-3 h-5 w-5 text-emerald-500/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-1.06a4.5 4.5 0 00-1.242-7.244l-4.5-4.5a4.5 4.5 0 00-6.364 6.364l1.757 1.757" />
+					</svg>
+				{/if}
 				<p class="text-2xl font-bold tracking-tight md:text-3xl {isDark ? 'text-white' : 'text-zinc-900'}">{stat.value}</p>
 				<p class="mt-1 text-[12px] {isDark ? 'text-white/30' : 'text-zinc-500'}">{stat.label}</p>
 			</div>
