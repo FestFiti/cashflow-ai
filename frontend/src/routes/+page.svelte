@@ -361,10 +361,10 @@
 		<!-- Bento layout -->
 		<div class="grid grid-cols-1 gap-4 md:grid-cols-6" style="font-family: 'DM Sans', sans-serif;">
 
-			<!-- M-Pesa — wide card with inner grid texture -->
+			<!-- M-Pesa — wide card with animated grid texture -->
 			<div class="group relative overflow-hidden rounded-2xl border md:col-span-4 {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'} transition-all hover:border-emerald-500/20">
-				<!-- Inner grid texture -->
-				<div class="pointer-events-none absolute inset-0 {isDark ? 'opacity-[0.03]' : 'opacity-[0.06]'}" style="background-image: linear-gradient({isDark ? 'rgba(16,185,129,0.3)' : 'rgba(16,185,129,0.2)'} 1px, transparent 1px), linear-gradient(90deg, {isDark ? 'rgba(16,185,129,0.3)' : 'rgba(16,185,129,0.2)'} 1px, transparent 1px); background-size: 40px 40px;"></div>
+				<!-- Animated sliding grid -->
+				<div class="mpesa-grid pointer-events-none absolute -inset-20 {isDark ? 'opacity-[0.04]' : 'opacity-[0.07]'}" style="background-image: linear-gradient({isDark ? 'rgba(16,185,129,0.4)' : 'rgba(16,185,129,0.3)'} 1px, transparent 1px), linear-gradient(90deg, {isDark ? 'rgba(16,185,129,0.4)' : 'rgba(16,185,129,0.3)'} 1px, transparent 1px); background-size: 40px 40px;"></div>
 				<div class="absolute -right-10 -top-10 h-52 w-52 rounded-full opacity-[0.06]" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
 				<div class="relative p-8">
 					<div class="mb-5 flex items-center gap-3">
@@ -399,10 +399,10 @@
 				</div>
 			</div>
 
-			<!-- Kashi AI — tall card with dot grid bleeding outside -->
+			<!-- Kashi AI — tall card with animated dot grid bleeding outside -->
 			<div class="group relative md:col-span-2 md:row-span-2">
-				<!-- Outer dots bleeding beyond the card -->
-				<div class="pointer-events-none absolute -inset-4 {isDark ? 'opacity-[0.04]' : 'opacity-[0.08]'}" style="background-image: radial-gradient(circle, {isDark ? '#8b5cf6' : '#7c3aed'} 1px, transparent 1px); background-size: 16px 16px;"></div>
+				<!-- Animated outer dots bleeding beyond the card -->
+				<div class="ai-dots pointer-events-none absolute -inset-6 {isDark ? 'opacity-[0.05]' : 'opacity-[0.1]'}" style="background-image: radial-gradient(circle, {isDark ? '#8b5cf6' : '#7c3aed'} 1.5px, transparent 1.5px); background-size: 16px 16px;"></div>
 				<div class="relative h-full overflow-hidden rounded-2xl border {isDark ? 'border-white/[0.04] bg-zinc-950/80' : 'border-zinc-200 bg-white'} backdrop-blur-sm transition-all hover:border-violet-500/20">
 					<div class="absolute -right-16 -bottom-16 h-56 w-56 rounded-full opacity-[0.06]" style="background: radial-gradient(circle, #8b5cf6 0%, transparent 60%);"></div>
 					<div class="relative flex h-full flex-col p-8">
@@ -429,9 +429,9 @@
 				</div>
 			</div>
 
-			<!-- Ratiba — with diagonal lines texture -->
+			<!-- Ratiba — with animated diagonal lines texture -->
 			<div class="group relative overflow-hidden rounded-2xl border md:col-span-2 {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'} transition-all hover:border-blue-500/20">
-				<div class="pointer-events-none absolute inset-0 {isDark ? 'opacity-[0.02]' : 'opacity-[0.04]'}" style="background-image: repeating-linear-gradient(45deg, {isDark ? 'rgba(59,130,246,0.4)' : 'rgba(59,130,246,0.3)'} 0px, {isDark ? 'rgba(59,130,246,0.4)' : 'rgba(59,130,246,0.3)'} 1px, transparent 1px, transparent 12px);"></div>
+				<div class="ratiba-stripes pointer-events-none absolute -inset-10 {isDark ? 'opacity-[0.03]' : 'opacity-[0.05]'}" style="background-image: repeating-linear-gradient(45deg, {isDark ? 'rgba(59,130,246,0.5)' : 'rgba(59,130,246,0.4)'} 0px, {isDark ? 'rgba(59,130,246,0.5)' : 'rgba(59,130,246,0.4)'} 1px, transparent 1px, transparent 12px);"></div>
 				<div class="relative p-8">
 					<div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-blue-500/20 bg-blue-500/[0.08]">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -441,26 +441,39 @@
 					<h3 class="mb-1 text-[17px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">Ratiba</h3>
 					<p class="mb-3 text-[11px] {isDark ? 'text-white/25' : 'text-zinc-400'}">Scheduling Engine</p>
 					<p class="text-[14px] leading-relaxed {isDark ? 'text-white/40' : 'text-zinc-500'}">Scheduled reminders, recurring invoice automation, and webhook-driven status updates.</p>
-					<!-- Mini timeline -->
+					<!-- Animated timeline -->
 					<div class="mt-5 flex items-center gap-2">
 						{#each Array(4) as _, k}
-							<div class="h-1 flex-1 rounded-full {k === 1 ? 'bg-blue-500/50' : isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}"></div>
+							<div class="relative h-1 flex-1 overflow-hidden rounded-full {isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}">
+								<div class="timeline-fill absolute inset-y-0 left-0 rounded-full bg-blue-500/60" style="animation-delay: {k * 0.6}s;"></div>
+							</div>
 						{/each}
 						<div class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20">
-							<div class="h-1.5 w-1.5 rounded-full bg-blue-400"></div>
+							<div class="h-1.5 w-1.5 rounded-full bg-blue-400" style="animation: pulse-dot 2s ease-in-out infinite;"></div>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<!-- Kashi Mail — with concentric rings -->
+			<!-- Kashi Mail — with animated floating dots -->
 			<div class="group relative overflow-hidden rounded-2xl border md:col-span-2 {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'} transition-all hover:border-amber-500/20">
-				<!-- Concentric rings decoration -->
-				<div class="pointer-events-none absolute -bottom-20 -right-20">
-					{#each Array(4) as _, r}
+				<!-- Animated floating dots -->
+				<div class="pointer-events-none absolute inset-0 overflow-hidden">
+					{#each [
+						{ x: 75, y: 20, s: 4, d: 3.5 },
+						{ x: 85, y: 45, s: 3, d: 4.2 },
+						{ x: 65, y: 65, s: 5, d: 3.0 },
+						{ x: 90, y: 75, s: 3, d: 5.0 },
+						{ x: 55, y: 35, s: 2, d: 3.8 },
+						{ x: 80, y: 85, s: 4, d: 4.5 },
+						{ x: 70, y: 50, s: 2, d: 3.2 },
+						{ x: 60, y: 80, s: 3, d: 4.8 },
+						{ x: 92, y: 30, s: 2, d: 3.6 },
+						{ x: 50, y: 55, s: 3, d: 4.0 },
+					] as dot}
 						<div
-							class="absolute rounded-full border {isDark ? 'border-amber-500/[0.06]' : 'border-amber-300/20'}"
-							style="width: {80 + r * 40}px; height: {80 + r * 40}px; bottom: {-20 - r * 20}px; right: {-20 - r * 20}px;"
+							class="mail-dot absolute rounded-full {isDark ? 'bg-amber-400' : 'bg-amber-500'}"
+							style="left: {dot.x}%; top: {dot.y}%; width: {dot.s}px; height: {dot.s}px; animation: mail-float {dot.d}s ease-in-out infinite; animation-delay: {dot.d * 0.3}s;"
 						></div>
 					{/each}
 				</div>
@@ -623,5 +636,50 @@
 	@keyframes pulse-dot {
 		0%, 100% { opacity: 0.3; transform: scale(1); }
 		50% { opacity: 0.8; transform: scale(1.3); }
+	}
+
+	/* M-Pesa: slowly drifting grid */
+	:global(.mpesa-grid) {
+		animation: grid-drift 20s linear infinite;
+	}
+	@keyframes grid-drift {
+		0% { transform: translate(0, 0); }
+		100% { transform: translate(40px, 40px); }
+	}
+
+	/* Kashi AI: rotating dot field */
+	:global(.ai-dots) {
+		animation: dots-rotate 40s linear infinite;
+		transform-origin: center center;
+	}
+	@keyframes dots-rotate {
+		0% { transform: rotate(0deg); }
+		100% { transform: rotate(360deg); }
+	}
+
+	/* Ratiba: sliding diagonal stripes */
+	:global(.ratiba-stripes) {
+		animation: stripes-slide 12s linear infinite;
+	}
+	@keyframes stripes-slide {
+		0% { transform: translate(0, 0); }
+		100% { transform: translate(17px, 17px); }
+	}
+
+	/* Ratiba: timeline segment fill */
+	:global(.timeline-fill) {
+		animation: timeline-sweep 2.4s ease-in-out infinite;
+	}
+	@keyframes timeline-sweep {
+		0% { width: 0%; opacity: 0; }
+		40% { width: 100%; opacity: 1; }
+		70% { width: 100%; opacity: 0.3; }
+		100% { width: 0%; opacity: 0; }
+	}
+
+	/* Kashi Mail: floating dots */
+	@keyframes mail-float {
+		0%, 100% { transform: translateY(0px); opacity: 0.15; }
+		50% { transform: translateY(-10px); opacity: 0.4; }
 	}
 </style>
