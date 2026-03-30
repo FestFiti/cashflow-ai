@@ -120,8 +120,26 @@
 
 	function shareViaWhatsApp() {
 		if (!invoice) return;
-		const text = encodeURIComponent(`Invoice #${invoiceNumber} for ${formatKES(invoice.amount)}\n\nView and pay here: ${shareableLink}`);
-		// Format phone: strip leading 0, ensure 254 prefix
+		const from = $auth.name || 'Our business';
+		let items = '';
+		if (invoice.items && invoice.items.length > 0) {
+			items = invoice.items.map(i => `• ${i.name} × ${i.quantity} — ${formatKES(i.total)}`).join('\n');
+		} else {
+			items = `• ${invoice.description}`;
+		}
+		const msg = [
+			`📄 *Invoice #${invoiceNumber}*`,
+			`From: *${from}*`,
+			`To: ${invoice.client_name}`,
+			``,
+			items,
+			``,
+			`*Total: ${formatKES(invoice.amount)}*`,
+			`Due: ${new Date(invoice.due_date).toLocaleDateString()}`,
+			``,
+			`Pay here: ${shareableLink}`,
+		].join('\n');
+		const text = encodeURIComponent(msg);
 		let phone = invoice.client_phone.replace(/\D/g, '');
 		if (phone.startsWith('0')) phone = '254' + phone.slice(1);
 		else if (!phone.startsWith('254')) phone = '254' + phone;
