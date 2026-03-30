@@ -121,7 +121,7 @@
 	function shareViaWhatsApp() {
 		if (!invoice) return;
 		const text = encodeURIComponent(`Invoice #${invoiceNumber} for ${formatKES(invoice.amount)}\n\nView and pay here: ${shareableLink}`);
-		window.open(`https://wa.me/?text=${text}`, '_blank');
+		window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
 	}
 
 	function downloadPDF() {
