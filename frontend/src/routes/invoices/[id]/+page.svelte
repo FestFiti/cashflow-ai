@@ -128,7 +128,7 @@
 			items = `• ${invoice.description}`;
 		}
 		const msg = [
-			`📄 *Invoice #${invoiceNumber}*`,
+			`*Invoice #${invoiceNumber}*`,
 			`From: *${from}*`,
 			`To: ${invoice.client_name}`,
 			``,

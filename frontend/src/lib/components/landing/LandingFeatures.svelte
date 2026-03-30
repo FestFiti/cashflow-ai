@@ -329,16 +329,18 @@
 					<!-- Stacked notification cards -->
 					<div class="space-y-2">
 						{#each [
-							{ msg:'Invoice #047 due in 2 days', icon:'📄', d:'0s'   },
-							{ msg:'Reminder sent to Acme Corp',  icon:'📨', d:'0.3s' },
+							{ msg:'Invoice #047 due in 2 days', d:'0s', iconPath:'M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z' },
+							{ msg:'Reminder sent to Acme Corp', d:'0.3s', iconPath:'M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75' },
 						] as n}
 							<div
-									class="flex items-start gap-3 rounded-lg border px-3 py-2.5
+									class="flex items-center gap-2.5 rounded-lg border px-3 py-2.5
                                {isDark ? 'border-amber-500/12 bg-amber-500/[0.03]'
                                        : 'border-amber-200 bg-amber-50'}"
 									style="animation:mail-float {3.5}s ease-in-out infinite;animation-delay:{n.d};"
 							>
-								<span class="text-[14px] leading-none mt-0.5">{n.icon}</span>
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 flex-shrink-0 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+									<path stroke-linecap="round" stroke-linejoin="round" d={n.iconPath} />
+								</svg>
 								<span class="text-[11px] leading-relaxed {isDark ? 'text-amber-400/70' : 'text-amber-700/80'}">
                            {n.msg}
                         </span>
