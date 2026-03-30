@@ -32,7 +32,7 @@
 
 	async function loadPendingPayments() {
 		try {
-			const res = await api<{ payments: any[] }>('/payments/pending');
+			const res = await api<{ payments: any[] }>('/payments/pending', { token: $auth.token! });
 			payments = res.payments || [];
 		} catch (err) {
 			showError(err instanceof Error ? err.message : 'Failed to load payments');
@@ -62,7 +62,8 @@
 					payment_date: paymentDate,
 					reference,
 					notes
-				})
+				}),
+				token: $auth.token!
 			});
 
 			clientName = '';
@@ -83,7 +84,8 @@
 	async function confirmPayment(paymentId: string) {
 		try {
 			await api(`/payments/${paymentId}/confirm`, {
-				method: 'POST'
+				method: 'POST',
+				token: $auth.token!
 			});
 			await loadPendingPayments();
 		} catch (err) {
@@ -109,18 +111,18 @@
 	<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 </svelte:head>
 
-<div class="mx-auto max-w-7xl px-4 py-8 md:px-8" style="font-family: 'DM Sans', sans-serif;">
+<div class="mx-auto max-w-5xl px-4 py-8 md:px-8" style="font-family: 'DM Sans', sans-serif;">
 	<!-- Header -->
-	<div class="mb-8">
-		<a href="/payments" class="mb-4 inline-flex items-center gap-2 text-[13px] {isDark ? 'text-white/40' : 'text-zinc-500'} transition-colors {isDark ? 'hover:text-white/60' : 'hover:text-zinc-700'}">
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+	<div class="mb-6">
+		<a href="/payments" class="mb-3 inline-flex items-center gap-1.5 text-[13px] {isDark ? 'text-white/25' : 'text-zinc-400'} transition-colors {isDark ? 'hover:text-white/50' : 'hover:text-zinc-600'}">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
 			</svg>
 			Back to Payments
 		</a>
-		<p class="mb-1 text-[12px] font-medium uppercase tracking-[0.15em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Payment Management</p>
-		<h1 class="font-['Instrument_Serif'] text-3xl tracking-tight {isDark ? 'text-white' : 'text-zinc-900'} md:text-4xl">Record Payment</h1>
-		<p class="mt-2 text-[15px] {isDark ? 'text-white/40' : 'text-zinc-500'}">Log incoming payments and confirm expected transactions</p>
+		<h1 class="font-['Instrument_Serif'] text-3xl tracking-tight {isDark ? 'text-white' : 'text-zinc-900'}">
+			<span class="italic text-emerald-400">Record</span> Payment
+		</h1>
 	</div>
 
 	{#if loading}
@@ -134,35 +136,31 @@
 			</div>
 		</div>
 	{:else}
-		<!-- Mode Toggle -->
-		<div class="mb-8 flex gap-2 rounded-xl border {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-white'} p-1">
+		<!-- Mode Toggle — compact inline pills -->
+		<div class="mb-6 inline-flex gap-1 rounded-xl border {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'} p-1">
 			<button
 				onclick={() => (mode = 'manual')}
-				class="flex-1 rounded-lg px-4 py-3 text-[13px] font-medium transition-all {mode === 'manual' ? 'bg-emerald-500 text-zinc-950' : (isDark ? 'text-white/60' : 'text-zinc-600')}"
+				class="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-[13px] font-medium transition-all {mode === 'manual' ? 'bg-emerald-500 text-zinc-950 shadow-sm' : (isDark ? 'text-white/50 hover:text-white/80' : 'text-zinc-500 hover:text-zinc-800')}"
 			>
-				<div class="flex items-center justify-center gap-2">
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-					</svg>
-					Manual Entry
-				</div>
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+				</svg>
+				Manual Entry
 			</button>
 			<button
 				onclick={() => (mode = 'confirm')}
-				class="flex-1 rounded-lg px-4 py-3 text-[13px] font-medium transition-all {mode === 'confirm' ? 'bg-emerald-500 text-zinc-950' : (isDark ? 'text-white/60' : 'text-zinc-600')}"
+				class="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-[13px] font-medium transition-all {mode === 'confirm' ? 'bg-emerald-500 text-zinc-950 shadow-sm' : (isDark ? 'text-white/50 hover:text-white/80' : 'text-zinc-500 hover:text-zinc-800')}"
 			>
-				<div class="flex items-center justify-center gap-2">
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-					</svg>
-					Confirm Expected
-				</div>
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+				</svg>
+				Confirm Expected
 			</button>
 		</div>
 
-		<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+		<div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
 			<!-- Left Column -->
-			<div class="lg:col-span-2 space-y-6">
+			<div class="lg:col-span-7 space-y-6">
 				{#if mode === 'manual'}
 					<!-- Manual Entry Form -->
 					<form onsubmit={handleManualRecord} class="rounded-2xl border {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-white'} p-6 transition-all {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
@@ -271,7 +269,7 @@
 						<button
 							type="submit"
 							disabled={submitting || !clientName || !amount}
-							class="mt-6 w-full rounded-xl bg-emerald-500 py-3 text-[13px] font-semibold text-zinc-950 transition-colors hover:bg-emerald-600 disabled:opacity-50"
+							class="mt-6 rounded-xl bg-emerald-500 px-8 py-2.5 text-[13px] font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:opacity-50"
 						>
 							{#if submitting}
 								<div class="flex items-center justify-center gap-2">
@@ -326,7 +324,8 @@
 			</div>
 
 			<!-- Right Column - Summary -->
-			<div class="space-y-6">
+			<div class="lg:col-span-5 space-y-4">
+				<div class="sticky top-24 space-y-4">
 				<!-- Payment Preview -->
 				<div class="rounded-2xl border {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-white'} p-6 transition-all {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
 					<span class="mb-4 block text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Payment Preview</span>
@@ -389,6 +388,7 @@
 						{/each}
 					</div>
 				</div>
+			</div>
 			</div>
 		</div>
 	{/if}
