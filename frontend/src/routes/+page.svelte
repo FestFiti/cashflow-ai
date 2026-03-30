@@ -8,6 +8,8 @@
 	let heroVisible = $state(false);
 	let statsVisible = $state(false);
 	let featuresVisible = $state(false);
+	let techVisible = $state(false);
+	let builtByVisible = $state(false);
 
 	onMount(() => {
 		setTimeout(() => (heroVisible = true), 100);
@@ -16,13 +18,14 @@
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
-					if (entry.isIntersecting) featuresVisible = true;
+					if (entry.target.id === 'features' && entry.isIntersecting) featuresVisible = true;
+					if (entry.target.id === 'tech-stack' && entry.isIntersecting) techVisible = true;
+					if (entry.target.id === 'built-by' && entry.isIntersecting) builtByVisible = true;
 				});
 			},
 			{ threshold: 0.15 }
 		);
-		const el = document.getElementById('features');
-		if (el) observer.observe(el);
+		document.querySelectorAll('#features, #tech-stack, #built-by').forEach(el => observer.observe(el));
 		return () => observer.disconnect();
 	});
 
@@ -236,7 +239,7 @@
 			{#each [
 				{
 					title: 'AI Invoice Generation',
-					description: 'Describe a transaction in plain language. Claude AI parses it into a professional invoice with payment details.',
+					description: 'Describe a transaction in plain language. AI parses it into a professional invoice with payment details.',
 					icon: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z',
 					accent: 'emerald'
 				},
@@ -354,7 +357,7 @@
 					icon: 'M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3'
 				},
 				{
-					name: 'Claude AI',
+					name: 'AI Engine',
 					desc: 'Natural language invoice parsing, personalised reminder drafting, and cash flow insight generation.',
 					icon: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z'
 				},
@@ -406,6 +409,66 @@
 	</div>
 </section>
 
+<!-- TECH STACK -->
+<section id="tech-stack" class="relative py-28 transition-colors {isDark ? 'bg-zinc-950' : 'bg-white'}">
+	<div class="mx-auto max-w-5xl px-6">
+		<div class="mb-16 text-center transition-all duration-700 {techVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}">
+			<p class="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-emerald-500" style="font-family: 'DM Sans', sans-serif;">Tech Stack</p>
+			<h2 class="font-['Instrument_Serif'] text-4xl tracking-tight md:text-5xl {isDark ? 'text-white' : 'text-zinc-900'}">
+				Built with <span class="italic text-emerald-400">modern</span> tools
+			</h2>
+		</div>
+
+		<div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+			{#each [
+				{ name: 'Svelte', src: '/svgs/svelte-icon-svgrepo-com.svg' },
+				{ name: 'Python', src: '/svgs/python-svgrepo-com.svg' },
+				{ name: 'PostgreSQL', src: '/svgs/postgresql-svgrepo-com.svg' },
+				{ name: 'Docker', src: '/svgs/docker-svgrepo-com.svg' },
+				{ name: 'GitHub', src: '/svgs/github-142-svgrepo-com-2.svg' },
+				{ name: 'GitHub Actions', src: '/svgs/GitHub Actions.svg' },
+			] as tool, i}
+				<div
+					class="group flex flex-col items-center gap-3 rounded-2xl border p-6 transition-all duration-500 hover:border-emerald-500/20 {isDark ? 'border-white/[0.04] bg-white/[0.02] hover:bg-emerald-500/[0.03]' : 'border-zinc-200 bg-zinc-50 hover:bg-emerald-50'} {techVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}"
+					style="transition-delay: {200 + i * 80}ms;"
+				>
+					<img src={tool.src} alt={tool.name} class="h-10 w-10 transition-transform duration-300 group-hover:scale-110 {isDark ? 'brightness-90' : ''}" />
+					<span class="text-[13px] font-medium {isDark ? 'text-white/60' : 'text-zinc-600'}" style="font-family: 'DM Sans', sans-serif;">{tool.name}</span>
+				</div>
+			{/each}
+		</div>
+	</div>
+</section>
+
+<!-- BUILT BY -->
+<section id="built-by" class="relative overflow-hidden py-32 transition-colors {isDark ? 'bg-zinc-950' : 'bg-zinc-50'}">
+	<div class="pointer-events-none absolute inset-0 {isDark ? 'opacity-[0.02]' : 'opacity-[0.04]'}" style="background-image: radial-gradient(circle, {isDark ? 'white' : '#71717a'} 1px, transparent 1px); background-size: 32px 32px;"></div>
+
+	<div class="relative mx-auto max-w-6xl px-6 text-center">
+		<p
+			class="mb-6 text-[12px] font-semibold uppercase tracking-[0.3em] text-emerald-500 transition-all duration-700 {builtByVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}"
+			style="font-family: 'DM Sans', sans-serif;"
+		>
+			Built by
+		</p>
+		<h2
+			class="font-['Instrument_Serif'] text-[clamp(3.5rem,10vw,9rem)] leading-[0.95] tracking-tight transition-all duration-1000 delay-200 {builtByVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'} {isDark ? 'text-white' : 'text-zinc-900'}"
+		>
+			<span class="italic text-emerald-400">Gatekeepers</span>
+		</h2>
+		<div
+			class="mx-auto mt-8 h-[1px] w-24 transition-all duration-1000 delay-500 {builtByVisible ? 'w-24 opacity-100' : 'w-0 opacity-0'}"
+			style="background: linear-gradient(90deg, transparent, {isDark ? 'rgba(16,185,129,0.5)' : 'rgba(16,185,129,0.6)'}, transparent);"
+		></div>
+		<p
+			class="mx-auto mt-6 max-w-md text-[15px] leading-relaxed transition-all duration-1000 delay-600 {builtByVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'} {isDark ? 'text-white/30' : 'text-zinc-500'}"
+			style="font-family: 'DM Sans', sans-serif;"
+		>
+			A team of engineers, AI specialists, and security analysts building the future of financial management for Africa.
+		</p>
+	</div>
+</section>
+
 <!-- FOOTER -->
 <footer class="border-t py-12 transition-colors {isDark ? 'border-white/[0.04] bg-zinc-950' : 'border-zinc-200 bg-white'}">
 	<div class="mx-auto max-w-6xl px-6" style="font-family: 'DM Sans', sans-serif;">
@@ -432,7 +495,7 @@
 				<ul class="space-y-2.5 text-[13px] {isDark ? 'text-white/40' : 'text-zinc-500'}">
 					<li>M-Pesa Daraja</li>
 					<li>Ratiba</li>
-					<li>Claude AI</li>
+					<li>AI Engine</li>
 				</ul>
 			</div>
 			<div>
@@ -444,7 +507,7 @@
 			</div>
 		</div>
 		<div class="mt-10 border-t pt-6 text-center text-[12px] {isDark ? 'border-white/[0.04] text-white/15' : 'border-zinc-200 text-zinc-400'}">
-			2026 CashFlow AI. Built for African businesses.
+			2026 CashFlow AI by Gatekeepers Group. Built for African businesses.
 		</div>
 	</div>
 </footer>
