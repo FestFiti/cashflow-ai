@@ -238,10 +238,12 @@
 			<div class="sticky top-24 rounded-2xl border {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-white'} p-6 transition-all duration-500 delay-150 {visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}">
 				<div class="mb-5 flex items-center justify-between">
 					<span class="text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Live Preview</span>
-					<div class="flex h-6 w-6 items-center justify-center rounded-md {isDark ? 'bg-white/[0.03]' : 'bg-white'}">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 {isDark ? 'text-white/20' : 'text-zinc-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-							<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+					<div class="flex h-6 w-6 items-center justify-center rounded-md {isDark ? 'bg-white/[0.03]' : 'bg-zinc-50'}">
+						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 18 18" fill="none">
+							<line x1="1.75" y1="7.25" x2="16.25" y2="7.25" stroke={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+							<rect x="1.75" y="3.75" width="14.5" height="10.5" rx="2" ry="2" stroke={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+							<line x1="4.25" y1="11.25" x2="7.25" y2="11.25" stroke={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+							<line x1="12.75" y1="11.25" x2="13.75" y2="11.25" stroke={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 						</svg>
 					</div>
 				</div>
@@ -249,9 +251,12 @@
 				{#if !hasPreviewData}
 					<!-- Empty preview -->
 					<div class="flex flex-col items-center py-12 text-center">
-						<div class="flex h-12 w-12 items-center justify-center rounded-lg {isDark ? 'bg-white/[0.03]' : 'bg-white'}">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 {isDark ? 'text-white/15' : 'text-zinc-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.79 4.101a6.067 6.067 0 014.101 4.101V10.5a6.067 6.067 0 00-4.101-4.101A60.07 60.07 0 002.25 6.75v12z" />
+						<div class="flex h-12 w-12 items-center justify-center rounded-lg {isDark ? 'bg-white/[0.03]' : 'bg-zinc-50'}">
+							<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 18 18" fill="none">
+								<line x1="1.75" y1="7.25" x2="16.25" y2="7.25" stroke={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<rect x="1.75" y="3.75" width="14.5" height="10.5" rx="2" ry="2" stroke={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<line x1="4.25" y1="11.25" x2="7.25" y2="11.25" stroke={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								<line x1="12.75" y1="11.25" x2="13.75" y2="11.25" stroke={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(161,161,170,1)'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 							</svg>
 						</div>
 						<p class="mt-4 text-[13px] {isDark ? 'text-white/20' : 'text-zinc-400'}">Fill in the form to see a live preview</p>
