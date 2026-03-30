@@ -13,6 +13,7 @@
     "@sveltejs/kit": "^2.21.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
     "@tailwindcss/vite": "^4.1.0",
+    "@types/qrcode": "^1.5.6",
     "svelte": "^5.0.0",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.7.0",
@@ -22,6 +23,7 @@
     "@sveltejs/adapter-node": "^5.5.4",
     "@types/three": "^0.183.1",
     "marked": "^17.0.5",
+    "qrcode": "^1.5.4",
     "reveal.js": "^6.0.0",
     "simplex-noise": "^4.0.3",
     "three": "^0.183.2"

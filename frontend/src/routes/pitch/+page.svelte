@@ -3,9 +3,17 @@
 	import 'reveal.js/dist/reveal.css';
 
 	let deck: any;
+	let qrApp = $state('');
+	let qrDemo = $state('');
 
 	onMount(async () => {
-		const Reveal = (await import('reveal.js')).default;
+		const [Reveal, QRCode] = await Promise.all([
+			import('reveal.js').then(m => m.default),
+			import('qrcode').then(m => m.default),
+		]);
+		const qrOpts = { width: 220, margin: 2, errorCorrectionLevel: 'M' as const, color: { dark: '#10b981', light: '#00000000' } };
+		qrApp = await QRCode.toDataURL('https://flowai.cash', qrOpts);
+		qrDemo = await QRCode.toDataURL('https://flowai.cash/demo', { ...qrOpts, color: { dark: '#ffffff', light: '#00000000' } });
 		deck = new Reveal({
 			hash: true,
 			controls: true,
@@ -508,6 +516,30 @@ PostgreSQL  Redis   M-Pesa    Claude AI
 						<p class="font-serif text-4xl text-emerald-400 italic mb-4">KES 2M</p>
 						<p class="text-xl text-white/60 font-medium mb-2">Seed Funding</p>
 						<p class="text-base text-white/30">12-month runway &rarr; 500 businesses, KES 200K+ MRR</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ==================== TRY IT ==================== -->
+		<section data-auto-animate data-background-color="#09090b">
+			<div class="text-left max-w-5xl mx-auto">
+				<p class="text-sm uppercase tracking-[0.3em] text-emerald-500 mb-6 font-medium">Try It Now</p>
+				<h2 class="font-serif text-5xl text-white mb-12">Scan. Open. <span class="italic text-emerald-400">Explore.</span></h2>
+				<div class="grid grid-cols-2 gap-12">
+					<div class="text-center">
+						{#if qrApp}
+							<img src={qrApp} alt="QR App" class="mx-auto h-52 w-52 mb-6" />
+						{/if}
+						<p class="text-2xl text-emerald-400 font-medium mb-2">flowai.cash</p>
+						<p class="text-base text-white/40">Open the app &middot; Create an account &middot; Try it live</p>
+					</div>
+					<div class="text-center">
+						{#if qrDemo}
+							<img src={qrDemo} alt="QR Demo" class="mx-auto h-52 w-52 mb-6" />
+						{/if}
+						<p class="text-2xl text-white font-medium mb-2">flowai.cash/demo</p>
+						<p class="text-base text-white/40">Follow along &middot; QR codes &middot; Instructions</p>
 					</div>
 				</div>
 			</div>
