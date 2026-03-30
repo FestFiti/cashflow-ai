@@ -111,7 +111,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 </svelte:head>
 
-<div class="mx-auto max-w-5xl px-4 py-8 md:px-8" style="font-family: 'DM Sans', sans-serif;">
+<div class="mx-auto max-w-7xl px-4 py-8 md:px-8" style="font-family: 'DM Sans', sans-serif;">
 	<!-- Header -->
 	<div class="mb-6">
 		<a href="/payments" class="mb-3 inline-flex items-center gap-1.5 text-[13px] {isDark ? 'text-white/25' : 'text-zinc-400'} transition-colors {isDark ? 'hover:text-white/50' : 'hover:text-zinc-600'}">
