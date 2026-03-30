@@ -121,7 +121,11 @@
 	function shareViaWhatsApp() {
 		if (!invoice) return;
 		const text = encodeURIComponent(`Invoice #${invoiceNumber} for ${formatKES(invoice.amount)}\n\nView and pay here: ${shareableLink}`);
-		window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+		// Format phone: strip leading 0, ensure 254 prefix
+		let phone = invoice.client_phone.replace(/\D/g, '');
+		if (phone.startsWith('0')) phone = '254' + phone.slice(1);
+		else if (!phone.startsWith('254')) phone = '254' + phone;
+		window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank');
 	}
 
 	function downloadPDF() {
