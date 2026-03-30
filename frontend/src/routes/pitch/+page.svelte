@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import 'reveal.js/dist/reveal.css';
+	import 'reveal.js/reveal.css';
 
 	let deck: any;
 	let qrApp = $state('');
