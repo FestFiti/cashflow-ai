@@ -142,26 +142,71 @@
 		<section data-background-color="#09090b">
 			<div class="text-left max-w-5xl mx-auto">
 				<p class="text-sm uppercase tracking-[0.3em] text-emerald-500 mb-6 font-medium">The Real Workflow Today</p>
-				<h2 class="font-serif text-5xl text-white mb-12">The <span class="italic text-amber-400">painful</span> cycle</h2>
-				<div class="flex items-center gap-6">
-					<div class="fragment fade-right flex-1 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 text-center" data-fragment-index="0">
-						<p class="text-4xl mb-3">1</p>
-						<p class="text-xl text-white/60">Send invoice<br/><span class="text-white/30 text-base">WhatsApp PDF or verbal</span></p>
+				<h2 class="font-serif text-5xl text-white mb-14">The <span class="italic text-amber-400">painful</span> cycle</h2>
+				<div class="grid grid-cols-4 gap-6">
+					<!-- Step 1 -->
+					<div class="fragment fade-right group relative" data-fragment-index="0">
+						<div class="pointer-events-none absolute -inset-3 opacity-20">
+							<div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-amber-500/60"></div>
+							<div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-amber-500/60"></div>
+							<div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-amber-500/60"></div>
+							<div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-amber-500/60"></div>
+						</div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 text-center h-full flex flex-col items-center justify-center">
+							<span class="flex h-12 w-12 items-center justify-center rounded-full border border-amber-500/20 bg-amber-500/[0.08] mb-5">
+								<p class="text-2xl font-bold text-amber-400">1</p>
+							</span>
+							<p class="text-xl text-white/80 font-medium mb-2">Send invoice</p>
+							<p class="text-sm text-white/30">WhatsApp PDF or verbal</p>
+						</div>
 					</div>
-					<svg class="w-8 h-8 text-white/20 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-					<div class="fragment fade-right flex-1 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 text-center" data-fragment-index="1">
-						<p class="text-4xl mb-3">2</p>
-						<p class="text-xl text-white/60">Wait. Chase.<br/><span class="text-white/30 text-base">Call. Text. Hope.</span></p>
+					<!-- Step 2 -->
+					<div class="fragment fade-right group relative" data-fragment-index="1">
+						<div class="pointer-events-none absolute -inset-3 opacity-20">
+							<div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-amber-500/60"></div>
+							<div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-amber-500/60"></div>
+							<div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-amber-500/60"></div>
+							<div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-amber-500/60"></div>
+						</div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 text-center h-full flex flex-col items-center justify-center">
+							<span class="flex h-12 w-12 items-center justify-center rounded-full border border-orange-500/20 bg-orange-500/[0.08] mb-5">
+								<p class="text-2xl font-bold text-orange-400">2</p>
+							</span>
+							<p class="text-xl text-white/80 font-medium mb-2">Wait. Chase.</p>
+							<p class="text-sm text-white/30">Call. Text. Hope.</p>
+						</div>
 					</div>
-					<svg class="w-8 h-8 text-white/20 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-					<div class="fragment fade-right flex-1 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 text-center" data-fragment-index="2">
-						<p class="text-4xl mb-3">3</p>
-						<p class="text-xl text-white/60">Money arrives<br/><span class="text-white/30 text-base">No record. No match.</span></p>
+					<!-- Step 3 -->
+					<div class="fragment fade-right group relative" data-fragment-index="2">
+						<div class="pointer-events-none absolute -inset-3 opacity-20">
+							<div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-orange-500/60"></div>
+							<div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-orange-500/60"></div>
+							<div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-orange-500/60"></div>
+							<div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-orange-500/60"></div>
+						</div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 text-center h-full flex flex-col items-center justify-center">
+							<span class="flex h-12 w-12 items-center justify-center rounded-full border border-rose-500/20 bg-rose-500/[0.08] mb-5">
+								<p class="text-2xl font-bold text-rose-400">3</p>
+							</span>
+							<p class="text-xl text-white/80 font-medium mb-2">Money arrives</p>
+							<p class="text-sm text-white/30">No record. No match.</p>
+						</div>
 					</div>
-					<svg class="w-8 h-8 text-white/20 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-					<div class="fragment fade-right flex-1 rounded-2xl border border-red-500/20 bg-red-500/[0.05] p-8 text-center" data-fragment-index="3">
-						<p class="text-4xl mb-3">4</p>
-						<p class="text-xl text-red-400/80">Month end<br/><span class="text-red-400/40 text-base">No idea what's owed</span></p>
+					<!-- Step 4 -->
+					<div class="fragment fade-right group relative" data-fragment-index="3">
+						<div class="pointer-events-none absolute -inset-3 opacity-30">
+							<div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-red-500/80"></div>
+							<div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-red-500/80"></div>
+							<div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-red-500/80"></div>
+							<div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-red-500/80"></div>
+						</div>
+						<div class="relative rounded-2xl border border-red-500/20 bg-red-500/[0.05] p-8 text-center h-full flex flex-col items-center justify-center">
+							<span class="flex h-12 w-12 items-center justify-center rounded-full border border-red-500/30 bg-red-500/[0.12] mb-5">
+								<p class="text-2xl font-bold text-red-400">4</p>
+							</span>
+							<p class="text-xl text-red-400/90 font-medium mb-2">Month end</p>
+							<p class="text-sm text-red-400/40">No idea what's owed</p>
+						</div>
 					</div>
 				</div>
 			</div>
