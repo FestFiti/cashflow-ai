@@ -295,36 +295,42 @@
 <section id="how-it-works" class="relative py-28 transition-colors {isDark ? 'bg-zinc-950' : 'bg-zinc-50'}">
 	<div class="absolute inset-0 opacity-[0.015]" style="background-image: radial-gradient(circle, {isDark ? 'white' : '#71717a'} 1px, transparent 1px); background-size: 32px 32px;"></div>
 
-	<div class="relative mx-auto max-w-5xl px-6">
+	<div class="relative mx-auto max-w-6xl px-6">
 		<div class="mb-16 text-center">
 			<p class="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-emerald-500" style="font-family: 'DM Sans', sans-serif;">Process</p>
 			<h2 class="font-['Instrument_Serif'] text-4xl tracking-tight md:text-5xl {isDark ? 'text-white' : 'text-zinc-900'}">
-				Three steps to <span class="italic text-emerald-400">automation</span>
+				Four steps to <span class="italic text-emerald-400">financial clarity</span>
 			</h2>
 		</div>
 
-		<div class="grid grid-cols-1 gap-0 md:grid-cols-3">
+		<div class="grid grid-cols-1 gap-0 md:grid-cols-2 lg:grid-cols-4">
 			{#each [
 				{
 					step: '01',
-					title: 'Request or Send Money',
-					desc: 'Create a payment request, send money, or generate an invoice, all from one place.',
+					title: 'Create Any Transaction',
+					desc: 'Easily create payment requests, send funds, or generate professional invoices from a single, unified dashboard.',
 					icon: 'M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z'
 				},
 				{
 					step: '02',
-					title: 'Track & Automate',
-					desc: 'Monitor payments in real time and let AI handle reminders, follow-ups, and scheduling.',
+					title: 'Automate the Follow-Up',
+					desc: 'Our AI-powered system monitors payments in real-time, automatically handling reminders and follow-ups so you don’t have to.',
 					icon: 'M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5'
 				},
 				{
 					step: '03',
-					title: 'Collect & Control',
-					desc: 'Receive payments via M-Pesa, manage outflows, and get full visibility into your cash flow.',
+					title: 'Centralize Your Cash Flow',
+					desc: 'Securely receive payments directly via M-Pesa and manage all your inflows and outflows from one central control panel.',
 					icon: 'M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z'
+				},
+				{
+					step: '04',
+					title: 'Gain Actionable Insights',
+					desc: 'Generate instant summaries, aging analyses, and export-ready reports to make smarter, data-driven financial decisions.',
+					icon: 'M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z'
 				}
 			] as item, i}
-				<div class="relative border-r p-8 last:border-r-0 {isDark ? 'border-white/[0.04]' : 'border-zinc-200'}" style="font-family: 'DM Sans', sans-serif;">
+				<div class="relative p-8 md:border-r lg:last:border-r-0 {isDark ? 'border-white/[0.04]' : 'border-zinc-200'}" style="font-family: 'DM Sans', sans-serif;">
 					<span class="absolute right-6 top-6 font-['Instrument_Serif'] text-6xl italic {isDark ? 'text-white/[0.03]' : 'text-zinc-900/[0.04]'}">{item.step}</span>
 					<div class="mb-5 flex h-10 w-10 items-center justify-center rounded-full border border-emerald-500/20 bg-emerald-500/[0.06]">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -349,7 +355,7 @@
 			</h2>
 		</div>
 
-		<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
 			{#each [
 				{
 					name: 'M-Pesa Daraja',
@@ -365,6 +371,11 @@
 					name: 'Ratiba',
 					desc: 'Scheduled payment reminders, recurring invoice automation, and webhook-driven status updates.',
 					icon: 'M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z'
+				},
+				{
+					name: 'eSMS Mail',
+					desc: 'Transactional email delivery for login alerts, password resets, invoice notifications, and payment receipts.',
+					icon: 'M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75'
 				}
 			] as integration}
 				<div class="rounded-2xl border p-6 transition-colors {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'}" style="font-family: 'DM Sans', sans-serif;">
@@ -411,7 +422,7 @@
 
 <!-- TECH STACK -->
 <section id="tech-stack" class="relative py-28 transition-colors {isDark ? 'bg-zinc-950' : 'bg-white'}">
-	<div class="mx-auto max-w-5xl px-6">
+	<div class="mx-auto max-w-7xl px-6">
 		<div class="mb-16 text-center transition-all duration-700 {techVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}">
 			<p class="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-emerald-500" style="font-family: 'DM Sans', sans-serif;">Tech Stack</p>
 			<h2 class="font-['Instrument_Serif'] text-4xl tracking-tight md:text-5xl {isDark ? 'text-white' : 'text-zinc-900'}">
@@ -421,19 +432,19 @@
 
 		<div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
 			{#each [
+				{ name: 'Mpesa Daraja', src: '/svgs/500px-M-PESA_LOGO-01.svg.png' },
 				{ name: 'Svelte', src: '/svgs/svelte-icon-svgrepo-com.svg' },
 				{ name: 'Python', src: '/svgs/python-svgrepo-com.svg' },
 				{ name: 'PostgreSQL', src: '/svgs/postgresql-svgrepo-com.svg' },
 				{ name: 'Docker', src: '/svgs/docker-svgrepo-com.svg' },
 				{ name: 'GitHub', src: '/svgs/github-142-svgrepo-com-2.svg' },
-				{ name: 'GitHub Actions', src: '/svgs/GitHub Actions.svg' },
+				//{ name: 'GitHub Actions', src: '/svgs/GitHub Actions.svg' },
 			] as tool, i}
 				<div
-					class="group flex flex-col items-center gap-3 rounded-2xl border p-6 transition-all duration-500 hover:border-emerald-500/20 {isDark ? 'border-white/[0.04] bg-white/[0.02] hover:bg-emerald-500/[0.03]' : 'border-zinc-200 bg-zinc-50 hover:bg-emerald-50'} {techVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}"
+					class="group flex flex-col items-center gap-3 cursor-pointer aspect-square justify-center rounded-2xl border p-6 transition-all duration-500 hover:border-emerald-500/20 {isDark ? 'border-white/[0.04] bg-white/[0.02] hover:bg-emerald-500/[0.03]' : 'border-zinc-200 bg-zinc-50 hover:bg-emerald-50'} {techVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}"
 					style="transition-delay: {200 + i * 80}ms;"
 				>
-					<img src={tool.src} alt={tool.name} class="h-10 w-10 transition-transform duration-300 group-hover:scale-110 {isDark ? 'brightness-90' : ''}" />
-					<span class="text-[13px] font-medium {isDark ? 'text-white/60' : 'text-zinc-600'}" style="font-family: 'DM Sans', sans-serif;">{tool.name}</span>
+				<img src={tool.src} alt={tool.name} class="transition-transform duration-300 group-hover:scale-110 {tool.name === 'Mpesa Daraja' ? 'h-14 w-auto' : 'h-14 w-14'} {isDark ? (tool.name === 'GitHub' ? 'invert' : 'brightness-90') : ''}" />					<span class="text-[13px] font-medium {isDark ? 'text-white/60' : 'text-zinc-600'}" style="font-family: 'DM Sans', sans-serif;">{tool.name}</span>
 				</div>
 			{/each}
 		</div>
@@ -452,16 +463,19 @@
 			Built by
 		</p>
 		<h2
-			class="font-['Instrument_Serif'] text-[clamp(3.5rem,10vw,9rem)] leading-[0.95] tracking-tight transition-all duration-1000 delay-200 {builtByVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'} {isDark ? 'text-white' : 'text-zinc-900'}"
+			class="text-[20vw] absolute left-1/2 top-4 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap font-['Instrument_Serif']
+			 tracking-wide transition-all -space-x-3 duration-1000 delay-200 {builtByVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'} {isDark ? 'text-white' : 'text-zinc-900'}"
 		>
-			<span class="italic text-emerald-400">Gatekeepers</span>
+			<span class="bg-clip-text text-transparent [-webkit-text-stroke:1.5px_#34d399]">
+				Gatekeepers
+			</span>
 		</h2>
 		<div
 			class="mx-auto mt-8 h-[1px] w-24 transition-all duration-1000 delay-500 {builtByVisible ? 'w-24 opacity-100' : 'w-0 opacity-0'}"
 			style="background: linear-gradient(90deg, transparent, {isDark ? 'rgba(16,185,129,0.5)' : 'rgba(16,185,129,0.6)'}, transparent);"
 		></div>
 		<p
-			class="mx-auto mt-6 max-w-md text-[15px] leading-relaxed transition-all duration-1000 delay-600 {builtByVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'} {isDark ? 'text-white/30' : 'text-zinc-500'}"
+			class="mx-auto mt-6 mb-24 max-w-md text-[15px] leading-relaxed transition-all duration-1000 delay-600 {builtByVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'} {isDark ? 'text-white/30' : 'text-zinc-500'}"
 			style="font-family: 'DM Sans', sans-serif;"
 		>
 			A team of engineers, AI specialists, and security analysts building the future of financial management for Africa.
