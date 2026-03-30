@@ -345,9 +345,9 @@
 	</div>
 </section>
 
-<!-- INTEGRATIONS -->
+<!-- INTEGRATIONS — Bento Grid -->
 <section id="integrations" class="relative py-28 transition-colors {isDark ? 'bg-zinc-950' : 'bg-white'}">
-	<div class="mx-auto max-w-5xl px-6">
+	<div class="mx-auto max-w-6xl px-6">
 		<div class="mb-16 text-center">
 			<p class="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-emerald-500" style="font-family: 'DM Sans', sans-serif;">Integrations</p>
 			<h2 class="font-['Instrument_Serif'] text-4xl tracking-tight md:text-5xl {isDark ? 'text-white' : 'text-zinc-900'}">
@@ -355,41 +355,85 @@
 			</h2>
 		</div>
 
-		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-			{#each [
-				{
-					name: 'M-Pesa Daraja',
-					desc: 'STK Push, B2C, C2B, Transaction Status, and Reversal APIs for complete payment orchestration.',
-					icon: 'M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3'
-				},
-				{
-					name: 'AI Engine',
-					desc: 'Natural language invoice parsing, personalised reminder drafting, and cash flow insight generation.',
-					icon: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z'
-				},
-				{
-					name: 'Ratiba',
-					desc: 'Scheduled payment reminders, recurring invoice automation, and webhook-driven status updates.',
-					icon: 'M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z'
-				},
-				{
-					name: 'eSMS Mail',
-					desc: 'Transactional email delivery for login alerts, password resets, invoice notifications, and payment receipts.',
-					icon: 'M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75'
-				}
-			] as integration}
-				<div class="rounded-2xl border p-6 transition-colors {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'}" style="font-family: 'DM Sans', sans-serif;">
-					<div class="mb-4 flex items-center gap-3">
-						<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-								<path stroke-linecap="round" stroke-linejoin="round" d={integration.icon} />
+		<!-- Bento layout -->
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-6" style="font-family: 'DM Sans', sans-serif;">
+			<!-- M-Pesa — wide card -->
+			<div class="group relative overflow-hidden rounded-2xl border md:col-span-4 {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'} transition-all hover:border-emerald-500/20">
+				<div class="absolute -right-8 -top-8 h-40 w-40 rounded-full opacity-[0.04]" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
+				<div class="relative p-8">
+					<div class="mb-5 flex items-center gap-3">
+						<div class="flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/[0.08]">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
 							</svg>
 						</div>
-						<h3 class="text-[15px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">{integration.name}</h3>
+						<div>
+							<h3 class="text-[17px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">M-Pesa Daraja</h3>
+							<p class="text-[11px] {isDark ? 'text-white/25' : 'text-zinc-400'}">Payment Infrastructure</p>
+						</div>
 					</div>
-					<p class="text-[13px] leading-relaxed {isDark ? 'text-white/35' : 'text-zinc-500'}">{integration.desc}</p>
+					<p class="mb-6 max-w-sm text-[14px] leading-relaxed {isDark ? 'text-white/40' : 'text-zinc-500'}">STK Push, B2C, C2B, Transaction Status, and Reversal APIs for complete payment orchestration.</p>
+					<div class="flex flex-wrap gap-2">
+						{#each ['STK Push', 'B2C', 'C2B', 'Reversal', 'Status'] as tag}
+							<span class="rounded-full border px-3 py-1 text-[11px] font-medium {isDark ? 'border-emerald-500/15 bg-emerald-500/[0.06] text-emerald-400/80' : 'border-emerald-200 bg-emerald-50 text-emerald-700'}">{tag}</span>
+						{/each}
+					</div>
 				</div>
-			{/each}
+			</div>
+
+			<!-- Kashi AI — tall card -->
+			<div class="group relative overflow-hidden rounded-2xl border md:col-span-2 md:row-span-2 {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'} transition-all hover:border-violet-500/20">
+				<div class="absolute -right-12 bottom-0 h-48 w-48 rounded-full opacity-[0.04]" style="background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);"></div>
+				<div class="relative flex h-full flex-col p-8">
+					<div class="mb-auto">
+						<div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl border border-violet-500/20 bg-violet-500/[0.08]">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+							</svg>
+						</div>
+						<h3 class="mb-1 text-[17px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">Kashi AI</h3>
+						<p class="mb-4 text-[11px] {isDark ? 'text-white/25' : 'text-zinc-400'}">Intelligence Layer</p>
+						<p class="text-[14px] leading-relaxed {isDark ? 'text-white/40' : 'text-zinc-500'}">Natural language invoice parsing, personalised reminder drafting, and predictive cash flow insights.</p>
+					</div>
+					<!-- Decorative AI sparkle -->
+					<div class="mt-8 flex items-center gap-2">
+						{#each Array(5) as _, j}
+							<div
+								class="rounded-full bg-violet-500/30"
+								style="width: {6 + j * 2}px; height: {6 + j * 2}px; animation: pulse-dot {1.5 + j * 0.3}s ease-in-out infinite;"
+							></div>
+						{/each}
+					</div>
+				</div>
+			</div>
+
+			<!-- Ratiba -->
+			<div class="group relative overflow-hidden rounded-2xl border md:col-span-2 {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'} transition-all hover:border-blue-500/20">
+				<div class="relative p-8">
+					<div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-blue-500/20 bg-blue-500/[0.08]">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+						</svg>
+					</div>
+					<h3 class="mb-1 text-[17px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">Ratiba</h3>
+					<p class="mb-3 text-[11px] {isDark ? 'text-white/25' : 'text-zinc-400'}">Scheduling Engine</p>
+					<p class="text-[14px] leading-relaxed {isDark ? 'text-white/40' : 'text-zinc-500'}">Scheduled reminders, recurring invoice automation, and webhook-driven status updates.</p>
+				</div>
+			</div>
+
+			<!-- Kashi Mail -->
+			<div class="group relative overflow-hidden rounded-2xl border md:col-span-2 {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'} transition-all hover:border-amber-500/20">
+				<div class="relative p-8">
+					<div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-amber-500/20 bg-amber-500/[0.08]">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+						</svg>
+					</div>
+					<h3 class="mb-1 text-[17px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">Kashi Mail</h3>
+					<p class="mb-3 text-[11px] {isDark ? 'text-white/25' : 'text-zinc-400'}">Transactional Email</p>
+					<p class="text-[14px] leading-relaxed {isDark ? 'text-white/40' : 'text-zinc-500'}">Login alerts, password resets, invoice notifications, and payment receipts delivered instantly.</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </section>
@@ -534,5 +578,9 @@
 	@keyframes float-right {
 		0%, 100% { transform: translateY(0px) rotate(1deg); }
 		50% { transform: translateY(-10px) rotate(0deg); }
+	}
+	@keyframes pulse-dot {
+		0%, 100% { opacity: 0.3; transform: scale(1); }
+		50% { opacity: 0.8; transform: scale(1.3); }
 	}
 </style>
