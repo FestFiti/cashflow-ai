@@ -225,7 +225,7 @@
 
 <!-- FEATURES -->
 <section id="features" class="relative py-28 transition-colors {isDark ? 'bg-zinc-950' : 'bg-white'}">
-	<div class="mx-auto max-w-6xl px-6">
+	<div class="mx-auto max-w-7xl px-6">
 		<div
 			class="mb-16 transition-all duration-700 {featuresVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}"
 		>
@@ -408,7 +408,7 @@
 <section id="how-it-works" class="relative py-28 transition-colors {isDark ? 'bg-zinc-950' : 'bg-zinc-50'}">
 	<div class="absolute inset-0 opacity-[0.015]" style="background-image: radial-gradient(circle, {isDark ? 'white' : '#71717a'} 1px, transparent 1px); background-size: 32px 32px;"></div>
 
-	<div class="relative mx-auto max-w-6xl px-6">
+	<div class="relative mx-auto max-w-7xl px-6">
 		<div class="mb-16 text-center">
 			<p class="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-emerald-500" style="font-family: 'DM Sans', sans-serif;">Process</p>
 			<h2 class="font-['Instrument_Serif'] text-4xl tracking-tight md:text-5xl {isDark ? 'text-white' : 'text-zinc-900'}">
@@ -463,7 +463,7 @@
 	<!-- Section dot grid background -->
 	<div class="pointer-events-none absolute inset-0 {isDark ? 'opacity-[0.015]' : 'opacity-[0.04]'}" style="background-image: radial-gradient(circle, {isDark ? 'white' : '#a1a1aa'} 0.5px, transparent 0.5px); background-size: 20px 20px;"></div>
 
-	<div class="relative mx-auto max-w-6xl px-6">
+	<div class="relative mx-auto max-w-7xl px-6">
 		<div class="mb-16 text-center">
 			<p class="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-emerald-500" style="font-family: 'DM Sans', sans-serif;">Integrations</p>
 			<h2 class="font-['Instrument_Serif'] text-4xl tracking-tight md:text-5xl {isDark ? 'text-white' : 'text-zinc-900'}">
@@ -512,10 +512,20 @@
 				</div>
 			</div>
 
-			<!-- Kashi AI — tall card with animated dot grid bleeding outside -->
+			<!-- Cash Flow AI — tall card with animated dot grid bleeding outside -->
 			<div class="group relative md:col-span-2 md:row-span-2">
 				<!-- Animated outer dots bleeding beyond the card -->
-				<div class="ai-dots pointer-events-none absolute -inset-6 {isDark ? 'opacity-[0.05]' : 'opacity-[0.1]'}" style="background-image: radial-gradient(circle, {isDark ? '#8b5cf6' : '#7c3aed'} 1.5px, transparent 1.5px); background-size: 16px 16px;"></div>
+								<!-- Bleeding corner lines -->
+								<div class="pointer-events-none absolute -inset-4 opacity-20 transition-opacity group-hover:opacity-40">
+									<!-- Top line -->
+									<div class="absolute top-[10px] -left-[15px] h-[1px] w-[calc(100%+30px)] {isDark ? 'bg-violet-500/50' : 'bg-violet-500'}"></div>
+									<!-- Bottom line -->
+									<div class="absolute bottom-[10px] -right-[15px] h-[1px] w-[calc(100%+30px)] {isDark ? 'bg-violet-500/50' : 'bg-violet-500'}"></div>
+									<!-- Left line -->
+									<div class="absolute -top-[15px] left-[10px] h-[calc(100%+30px)] w-[1px] {isDark ? 'bg-violet-500/50' : 'bg-violet-500'}"></div>
+									<!-- Right line -->
+									<div class="absolute -bottom-[15px] right-[10px] h-[calc(100%+30px)] w-[1px] {isDark ? 'bg-violet-500/50' : 'bg-violet-500'}"></div>
+								</div><div class="ai-dots pointer-events-none absolute -inset-6 {isDark ? 'opacity-[0.05]' : 'opacity-[0.1]'}" style="background-image: radial-gradient(circle, {isDark ? '#8b5cf6' : '#7c3aed'} 1.5px, transparent 1.5px); background-size: 16px 16px;"></div>
 				<div class="relative h-full overflow-hidden rounded-2xl border {isDark ? 'border-white/[0.04] bg-zinc-950/80' : 'border-zinc-200 bg-white'} backdrop-blur-sm transition-all hover:border-violet-500/20">
 					<div class="absolute -right-16 -bottom-16 h-56 w-56 rounded-full opacity-[0.06]" style="background: radial-gradient(circle, #8b5cf6 0%, transparent 60%);"></div>
 					<div class="relative flex h-full flex-col p-8">
@@ -523,9 +533,9 @@
 							<div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl border border-violet-500/20 bg-violet-500/[0.08]">
 								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
 									<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-								</svg>
+						</svg>
 							</div>
-							<h3 class="mb-1 text-[17px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">Kashi AI</h3>
+							<h3 class="mb-1 text-[17px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">Cash Flow AI</h3>
 							<p class="mb-4 text-[11px] {isDark ? 'text-white/25' : 'text-zinc-400'}">Intelligence Layer</p>
 							<p class="text-[14px] leading-relaxed {isDark ? 'text-white/40' : 'text-zinc-500'}">Natural language invoice parsing, personalised reminder drafting, and predictive cash flow insights.</p>
 						</div>
@@ -534,7 +544,7 @@
 							{#each Array(16) as _, j}
 								<div
 									class="w-1.5 rounded-full bg-violet-500/40"
-									style="height: {8 + Math.sin(j * 0.8) * 12 + Math.random() * 4}px; animation: pulse-dot {1.2 + (j % 5) * 0.3}s ease-in-out infinite; animation-delay: {j * 0.1}s;"
+									style="height: {8 + Math.sin(j * 0.8) * 12 + Math.random() * 4}px; animation: bar-breathe {1.2 + (j % 5) * 0.3}s ease-in-out infinite; animation-delay: {j * 0.1}s;"
 								></div>
 							{/each}
 						</div>
@@ -568,7 +578,7 @@
 				</div>
 			</div>
 
-			<!-- Kashi Mail — with animated floating dots -->
+			<!-- Cash Flow Mail — with animated floating dots -->
 			<div class="group relative overflow-hidden rounded-2xl border md:col-span-2 {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'} transition-all hover:border-amber-500/20">
 				<!-- Animated floating dots -->
 				<div class="pointer-events-none absolute inset-0 overflow-hidden">
@@ -596,7 +606,7 @@
 							<path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
 						</svg>
 					</div>
-					<h3 class="mb-1 text-[17px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">Kashi Mail</h3>
+					<h3 class="mb-1 text-[17px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">Cash Flow Mail</h3>
 					<p class="mb-3 text-[11px] {isDark ? 'text-white/25' : 'text-zinc-400'}">Transactional Email</p>
 					<p class="text-[14px] leading-relaxed {isDark ? 'text-white/40' : 'text-zinc-500'}">Login alerts, password resets, invoice notifications, and payment receipts delivered instantly.</p>
 				</div>
@@ -666,7 +676,7 @@
 <section id="built-by" class="relative overflow-hidden py-32 transition-colors {isDark ? 'bg-zinc-950' : 'bg-zinc-50'}">
 	<div class="pointer-events-none absolute inset-0 {isDark ? 'opacity-[0.02]' : 'opacity-[0.04]'}" style="background-image: radial-gradient(circle, {isDark ? 'white' : '#71717a'} 1px, transparent 1px); background-size: 32px 32px;"></div>
 
-	<div class="relative mx-auto max-w-6xl px-6 text-center">
+	<div class="relative mx-auto max-w-7xl px-6 text-center">
 		<p
 			class="mb-6 text-[12px] font-semibold uppercase tracking-[0.3em] text-emerald-500 transition-all duration-700 {builtByVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}"
 			style="font-family: 'DM Sans', sans-serif;"
@@ -696,7 +706,7 @@
 
 <!-- FOOTER -->
 <footer class="border-t py-12 transition-colors {isDark ? 'border-white/[0.04] bg-zinc-950' : 'border-zinc-200 bg-white'}">
-	<div class="mx-auto max-w-6xl px-6" style="font-family: 'DM Sans', sans-serif;">
+	<div class="mx-auto max-w-7xl px-6" style="font-family: 'DM Sans', sans-serif;">
 		<div class="grid grid-cols-1 gap-8 md:grid-cols-4">
 			<div>
 				<div class="mb-4 flex items-center gap-2.5">
@@ -760,7 +770,7 @@
 		100% { transform: translate(40px, 40px); }
 	}
 
-	/* Kashi AI: rotating dot field */
+	/* Cash Flow AI: rotating dot field */
 	:global(.ai-dots) {
 		animation: dots-rotate 40s linear infinite;
 		transform-origin: center center;
@@ -790,7 +800,7 @@
 		100% { width: 0%; opacity: 0; }
 	}
 
-	/* Kashi Mail / general: floating dots */
+	/* Cash Flow Mail / general: floating dots */
 	@keyframes mail-float {
 		0%, 100% { transform: translateY(0px); opacity: 0.15; }
 		50% { transform: translateY(-10px); opacity: 0.4; }
