@@ -39,6 +39,15 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./backend/app
+          target: /app/app
+          ignore:
+            - __pycache__/
+        - action: rebuild
+          path: ./backend/requirements.txt
 
   frontend:
     build:
@@ -48,6 +57,14 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+    develop:
+      watch:
+        - action: rebuild
+          path: ./frontend/src
+        - action: rebuild
+          path: ./frontend/static
+        - action: rebuild
+          path: ./frontend/package.json
 
 volumes:
   postgres_data:
