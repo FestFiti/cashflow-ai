@@ -26,6 +26,10 @@
 			width: 1920,
 			height: 1080,
 			margin: 0.04,
+			disableLayout: false,
+			embedded: false,
+			minScale: 0.1,
+			maxScale: 5.0,
 			backgroundTransition: 'fade',
 		});
 		deck.initialize();
@@ -47,6 +51,9 @@
 		}
 		deck.on('slidechanged', () => { startFragments(); });
 		deck.on('ready', () => { startFragments(); });
+
+		// Allow browser zoom (Ctrl+/-)
+		deck.configure({ keyboard: { 187: null, 189: null, 48: null } });
 	});
 </script>
 
