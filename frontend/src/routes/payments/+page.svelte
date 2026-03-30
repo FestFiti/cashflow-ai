@@ -208,7 +208,7 @@
 									<Icon name="request-payment" stroke={isDark ? 'rgba(255,255,255,0.4)' : 'rgba(113,113,122,1)'} />
 								</div>
 								<div>
-									<p class="text-[13px] font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">Bulk STK Push</p>
+									<p class="text-[13px] text-left mr-auto font-medium {isDark ? 'text-white/80' : 'text-zinc-700'}">Bulk STK Push</p>
 									<p class="mt-1 text-[11px] {isDark ? 'text-white/40' : 'text-zinc-500'}">Send multiple payment requests at once</p>
 								</div>
 							</div>
