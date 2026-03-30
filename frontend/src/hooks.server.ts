@@ -1,6 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
 
-const PUBLIC_PATHS = ['/', '/login', '/register', '/forgot-password', '/reset-password'];
+const PUBLIC_PATHS = ['/', '/login', '/register', '/forgot-password', '/reset-password', '/pitch', '/demo', '/pay'];
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const path = event.url.pathname;
