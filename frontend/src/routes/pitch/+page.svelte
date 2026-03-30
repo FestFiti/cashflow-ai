@@ -29,6 +29,24 @@
 			backgroundTransition: 'fade',
 		});
 		deck.initialize();
+
+		// Auto-advance fragments within a slide (400ms between each)
+		let fragmentTimer: ReturnType<typeof setInterval> | null = null;
+		function startFragments() {
+			stopFragments();
+			fragmentTimer = setInterval(() => {
+				if (deck.availableFragments().next) {
+					deck.nextFragment();
+				} else {
+					stopFragments();
+				}
+			}, 400);
+		}
+		function stopFragments() {
+			if (fragmentTimer) { clearInterval(fragmentTimer); fragmentTimer = null; }
+		}
+		deck.on('slidechanged', () => { startFragments(); });
+		deck.on('ready', () => { startFragments(); });
 	});
 </script>
 
