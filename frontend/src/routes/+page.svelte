@@ -347,7 +347,10 @@
 
 <!-- INTEGRATIONS — Bento Grid -->
 <section id="integrations" class="relative py-28 transition-colors {isDark ? 'bg-zinc-950' : 'bg-white'}">
-	<div class="mx-auto max-w-6xl px-6">
+	<!-- Section dot grid background -->
+	<div class="pointer-events-none absolute inset-0 {isDark ? 'opacity-[0.015]' : 'opacity-[0.04]'}" style="background-image: radial-gradient(circle, {isDark ? 'white' : '#a1a1aa'} 0.5px, transparent 0.5px); background-size: 20px 20px;"></div>
+
+	<div class="relative mx-auto max-w-6xl px-6">
 		<div class="mb-16 text-center">
 			<p class="mb-3 text-[12px] font-semibold uppercase tracking-[0.2em] text-emerald-500" style="font-family: 'DM Sans', sans-serif;">Integrations</p>
 			<h2 class="font-['Instrument_Serif'] text-4xl tracking-tight md:text-5xl {isDark ? 'text-white' : 'text-zinc-900'}">
@@ -357,9 +360,12 @@
 
 		<!-- Bento layout -->
 		<div class="grid grid-cols-1 gap-4 md:grid-cols-6" style="font-family: 'DM Sans', sans-serif;">
-			<!-- M-Pesa — wide card -->
+
+			<!-- M-Pesa — wide card with inner grid texture -->
 			<div class="group relative overflow-hidden rounded-2xl border md:col-span-4 {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'} transition-all hover:border-emerald-500/20">
-				<div class="absolute -right-8 -top-8 h-40 w-40 rounded-full opacity-[0.04]" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
+				<!-- Inner grid texture -->
+				<div class="pointer-events-none absolute inset-0 {isDark ? 'opacity-[0.03]' : 'opacity-[0.06]'}" style="background-image: linear-gradient({isDark ? 'rgba(16,185,129,0.3)' : 'rgba(16,185,129,0.2)'} 1px, transparent 1px), linear-gradient(90deg, {isDark ? 'rgba(16,185,129,0.3)' : 'rgba(16,185,129,0.2)'} 1px, transparent 1px); background-size: 40px 40px;"></div>
+				<div class="absolute -right-10 -top-10 h-52 w-52 rounded-full opacity-[0.06]" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
 				<div class="relative p-8">
 					<div class="mb-5 flex items-center gap-3">
 						<div class="flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/[0.08]">
@@ -372,43 +378,60 @@
 							<p class="text-[11px] {isDark ? 'text-white/25' : 'text-zinc-400'}">Payment Infrastructure</p>
 						</div>
 					</div>
-					<p class="mb-6 max-w-sm text-[14px] leading-relaxed {isDark ? 'text-white/40' : 'text-zinc-500'}">STK Push, B2C, C2B, Transaction Status, and Reversal APIs for complete payment orchestration.</p>
+					<p class="mb-6 max-w-sm text-[14px] leading-relaxed {isDark ? 'text-white/40' : 'text-zinc-500'}">Complete payment orchestration from customer to business and back.</p>
+					<!-- Icon tags -->
 					<div class="flex flex-wrap gap-2">
-						{#each ['STK Push', 'B2C', 'C2B', 'Reversal', 'Status'] as tag}
-							<span class="rounded-full border px-3 py-1 text-[11px] font-medium {isDark ? 'border-emerald-500/15 bg-emerald-500/[0.06] text-emerald-400/80' : 'border-emerald-200 bg-emerald-50 text-emerald-700'}">{tag}</span>
+						{#each [
+							{ label: 'STK Push', d: 'M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3' },
+							{ label: 'B2C', d: 'M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5' },
+							{ label: 'C2B', d: 'M9 3.75H6.912a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859' },
+							{ label: 'Reversal', d: 'M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3' },
+							{ label: 'Status', d: 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z' }
+						] as tag}
+							<span class="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-medium transition-colors group-hover:border-emerald-500/30 {isDark ? 'border-white/[0.06] bg-white/[0.02] text-emerald-400/80' : 'border-zinc-200 bg-white text-emerald-700'}">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+									<path stroke-linecap="round" stroke-linejoin="round" d={tag.d} />
+								</svg>
+								{tag.label}
+							</span>
 						{/each}
 					</div>
 				</div>
 			</div>
 
-			<!-- Kashi AI — tall card -->
-			<div class="group relative overflow-hidden rounded-2xl border md:col-span-2 md:row-span-2 {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'} transition-all hover:border-violet-500/20">
-				<div class="absolute -right-12 bottom-0 h-48 w-48 rounded-full opacity-[0.04]" style="background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);"></div>
-				<div class="relative flex h-full flex-col p-8">
-					<div class="mb-auto">
-						<div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl border border-violet-500/20 bg-violet-500/[0.08]">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-							</svg>
+			<!-- Kashi AI — tall card with dot grid bleeding outside -->
+			<div class="group relative md:col-span-2 md:row-span-2">
+				<!-- Outer dots bleeding beyond the card -->
+				<div class="pointer-events-none absolute -inset-4 {isDark ? 'opacity-[0.04]' : 'opacity-[0.08]'}" style="background-image: radial-gradient(circle, {isDark ? '#8b5cf6' : '#7c3aed'} 1px, transparent 1px); background-size: 16px 16px;"></div>
+				<div class="relative h-full overflow-hidden rounded-2xl border {isDark ? 'border-white/[0.04] bg-zinc-950/80' : 'border-zinc-200 bg-white'} backdrop-blur-sm transition-all hover:border-violet-500/20">
+					<div class="absolute -right-16 -bottom-16 h-56 w-56 rounded-full opacity-[0.06]" style="background: radial-gradient(circle, #8b5cf6 0%, transparent 60%);"></div>
+					<div class="relative flex h-full flex-col p-8">
+						<div class="mb-auto">
+							<div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl border border-violet-500/20 bg-violet-500/[0.08]">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+								</svg>
+							</div>
+							<h3 class="mb-1 text-[17px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">Kashi AI</h3>
+							<p class="mb-4 text-[11px] {isDark ? 'text-white/25' : 'text-zinc-400'}">Intelligence Layer</p>
+							<p class="text-[14px] leading-relaxed {isDark ? 'text-white/40' : 'text-zinc-500'}">Natural language invoice parsing, personalised reminder drafting, and predictive cash flow insights.</p>
 						</div>
-						<h3 class="mb-1 text-[17px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">Kashi AI</h3>
-						<p class="mb-4 text-[11px] {isDark ? 'text-white/25' : 'text-zinc-400'}">Intelligence Layer</p>
-						<p class="text-[14px] leading-relaxed {isDark ? 'text-white/40' : 'text-zinc-500'}">Natural language invoice parsing, personalised reminder drafting, and predictive cash flow insights.</p>
-					</div>
-					<!-- Decorative AI sparkle -->
-					<div class="mt-8 flex items-center gap-2">
-						{#each Array(5) as _, j}
-							<div
-								class="rounded-full bg-violet-500/30"
-								style="width: {6 + j * 2}px; height: {6 + j * 2}px; animation: pulse-dot {1.5 + j * 0.3}s ease-in-out infinite;"
-							></div>
-						{/each}
+						<!-- Decorative waveform -->
+						<div class="mt-8 flex items-end gap-[3px]">
+							{#each Array(16) as _, j}
+								<div
+									class="w-1.5 rounded-full bg-violet-500/40"
+									style="height: {8 + Math.sin(j * 0.8) * 12 + Math.random() * 4}px; animation: pulse-dot {1.2 + (j % 5) * 0.3}s ease-in-out infinite; animation-delay: {j * 0.1}s;"
+								></div>
+							{/each}
+						</div>
 					</div>
 				</div>
 			</div>
 
-			<!-- Ratiba -->
+			<!-- Ratiba — with diagonal lines texture -->
 			<div class="group relative overflow-hidden rounded-2xl border md:col-span-2 {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'} transition-all hover:border-blue-500/20">
+				<div class="pointer-events-none absolute inset-0 {isDark ? 'opacity-[0.02]' : 'opacity-[0.04]'}" style="background-image: repeating-linear-gradient(45deg, {isDark ? 'rgba(59,130,246,0.4)' : 'rgba(59,130,246,0.3)'} 0px, {isDark ? 'rgba(59,130,246,0.4)' : 'rgba(59,130,246,0.3)'} 1px, transparent 1px, transparent 12px);"></div>
 				<div class="relative p-8">
 					<div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-blue-500/20 bg-blue-500/[0.08]">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -418,11 +441,29 @@
 					<h3 class="mb-1 text-[17px] font-semibold {isDark ? 'text-white/90' : 'text-zinc-900'}">Ratiba</h3>
 					<p class="mb-3 text-[11px] {isDark ? 'text-white/25' : 'text-zinc-400'}">Scheduling Engine</p>
 					<p class="text-[14px] leading-relaxed {isDark ? 'text-white/40' : 'text-zinc-500'}">Scheduled reminders, recurring invoice automation, and webhook-driven status updates.</p>
+					<!-- Mini timeline -->
+					<div class="mt-5 flex items-center gap-2">
+						{#each Array(4) as _, k}
+							<div class="h-1 flex-1 rounded-full {k === 1 ? 'bg-blue-500/50' : isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}"></div>
+						{/each}
+						<div class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/20">
+							<div class="h-1.5 w-1.5 rounded-full bg-blue-400"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 
-			<!-- Kashi Mail -->
+			<!-- Kashi Mail — with concentric rings -->
 			<div class="group relative overflow-hidden rounded-2xl border md:col-span-2 {isDark ? 'border-white/[0.04] bg-white/[0.02]' : 'border-zinc-200 bg-zinc-50'} transition-all hover:border-amber-500/20">
+				<!-- Concentric rings decoration -->
+				<div class="pointer-events-none absolute -bottom-20 -right-20">
+					{#each Array(4) as _, r}
+						<div
+							class="absolute rounded-full border {isDark ? 'border-amber-500/[0.06]' : 'border-amber-300/20'}"
+							style="width: {80 + r * 40}px; height: {80 + r * 40}px; bottom: {-20 - r * 20}px; right: {-20 - r * 20}px;"
+						></div>
+					{/each}
+				</div>
 				<div class="relative p-8">
 					<div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-amber-500/20 bg-amber-500/[0.08]">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
