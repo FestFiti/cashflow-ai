@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import 'reveal.js/reveal.css';
 
+	let revealEl: HTMLDivElement;
 	let deck: any;
 	let qrApp = $state('');
 	let qrDemo = $state('');
@@ -14,7 +15,7 @@
 		const qrOpts = { width: 220, margin: 2, errorCorrectionLevel: 'M' as const, color: { dark: '#10b981', light: '#00000000' } };
 		qrApp = await QRCode.toDataURL('https://flowai.cash', qrOpts);
 		qrDemo = await QRCode.toDataURL('https://flowai.cash/demo', { ...qrOpts, color: { dark: '#ffffff', light: '#00000000' } });
-		deck = new Reveal({
+		deck = new Reveal(revealEl, {
 			hash: true,
 			controls: true,
 			progress: true,
@@ -38,7 +39,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 </svelte:head>
 
-<div class="reveal">
+<div class="reveal" bind:this={revealEl}>
 	<div class="slides">
 
 		<!-- ==================== WELCOME / QR ==================== -->
@@ -590,12 +591,19 @@ PostgreSQL  Redis   M-Pesa    Claude AI
 </div>
 
 <style>
-	:global(body) {
+	:global(html), :global(body) {
 		margin: 0;
 		padding: 0;
+		height: 100%;
+		overflow: hidden;
+		background: #09090b;
 	}
 	:global(.reveal) {
 		font-family: 'DM Sans', sans-serif;
+		height: 100vh;
+	}
+	:global(.reveal .slide-background) {
+		background: #09090b;
 	}
 	:global(.reveal h1),
 	:global(.reveal h2),
@@ -603,9 +611,14 @@ PostgreSQL  Redis   M-Pesa    Claude AI
 		font-family: 'Instrument Serif', serif;
 		text-transform: none;
 		font-weight: 400;
+		color: white;
+	}
+	:global(.reveal) {
+		color: rgba(255,255,255,0.7);
 	}
 	:global(.reveal .slides section) {
 		padding: 40px 60px;
+		text-align: left;
 	}
 	:global(.reveal .controls) {
 		color: #10b981;
