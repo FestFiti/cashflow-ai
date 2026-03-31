@@ -1,6 +1,9 @@
 import uuid
+import csv
+import io
 from datetime import datetime, timedelta, timezone, date
 from fastapi import APIRouter, Depends, Query
+from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, case, extract, and_
 
@@ -257,3 +260,111 @@ async def recent_payments(
         }
         for p, client_name in rows
     ]
+
+
+@router.get("/export/invoices")
+async def export_invoices_csv(
+    business_id: str = Depends(get_current_business_id),
+    db: AsyncSession = Depends(get_db),
+):
+    """Export all invoices as CSV."""
+    bid = uuid.UUID(business_id)
+    result = await db.execute(
+        select(Invoice).where(Invoice.business_id == bid).order_by(Invoice.created_at.desc())
+    )
+    invoices = result.scalars().all()
+
+    buf = io.StringIO()
+    writer = csv.writer(buf)
+    writer.writerow(["Invoice ID", "Client", "Phone", "Email", "Amount (KES)", "Status", "Due Date", "Created"])
+    for inv in invoices:
+        writer.writerow([
+            str(inv.id)[:8].upper(),
+            inv.client_name,
+            inv.client_phone,
+            inv.client_email or "",
+            f"{float(inv.amount):.2f}",
+            inv.status,
+            inv.due_date.isoformat(),
+            inv.created_at.strftime("%Y-%m-%d %H:%M"),
+        ])
+    buf.seek(0)
+    return StreamingResponse(
+        buf,
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename=invoices_{date.today().isoformat()}.csv"},
+    )
+
+
+@router.get("/export/payments")
+async def export_payments_csv(
+    business_id: str = Depends(get_current_business_id),
+    db: AsyncSession = Depends(get_db),
+):
+    """Export all completed payments as CSV."""
+    bid = uuid.UUID(business_id)
+    result = await db.execute(
+        select(Payment, Invoice.client_name, Invoice.description)
+        .join(Invoice, Payment.invoice_id == Invoice.id)
+        .where(Invoice.business_id == bid, Payment.status == "completed")
+        .order_by(Payment.paid_at.desc())
+    )
+    rows = result.all()
+
+    buf = io.StringIO()
+    writer = csv.writer(buf)
+    writer.writerow(["Payment ID", "Client", "Amount (KES)", "M-Pesa Receipt", "Phone", "Description", "Paid At"])
+    for p, client_name, description in rows:
+        writer.writerow([
+            str(p.id)[:8].upper(),
+            client_name,
+            f"{float(p.amount):.2f}",
+            p.mpesa_receipt or "",
+            p.phone,
+            description,
+            p.paid_at.strftime("%Y-%m-%d %H:%M") if p.paid_at else "",
+        ])
+    buf.seek(0)
+    return StreamingResponse(
+        buf,
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename=payments_{date.today().isoformat()}.csv"},
+    )
+
+
+@router.get("/export/clients")
+async def export_clients_csv(
+    business_id: str = Depends(get_current_business_id),
+    db: AsyncSession = Depends(get_db),
+):
+    """Export top clients summary as CSV."""
+    bid = uuid.UUID(business_id)
+    result = await db.execute(
+        select(
+            Invoice.client_name,
+            func.count().label("invoice_count"),
+            func.coalesce(func.sum(Invoice.amount), 0).label("total_amount"),
+            func.coalesce(
+                func.sum(case((Invoice.status == "paid", Invoice.amount), else_=0)), 0
+            ).label("paid_amount"),
+        )
+        .where(Invoice.business_id == bid)
+        .group_by(Invoice.client_name)
+        .order_by(func.sum(Invoice.amount).desc())
+    )
+    rows = result.all()
+
+    buf = io.StringIO()
+    writer = csv.writer(buf)
+    writer.writerow(["Client", "Invoices", "Total (KES)", "Paid (KES)", "Collection Rate"])
+    for r in rows:
+        total = float(r.total_amount)
+        paid = float(r.paid_amount)
+        rate = round((paid / total) * 100, 1) if total > 0 else 0
+        writer.writerow([r.client_name, r.invoice_count, f"{total:.2f}", f"{paid:.2f}", f"{rate}%"])
+    buf.seek(0)
+    return StreamingResponse(
+        buf,
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename=clients_{date.today().isoformat()}.csv"},
+    )

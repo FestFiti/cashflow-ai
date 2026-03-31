@@ -85,11 +85,41 @@
 
 <div class="mx-auto max-w-7xl px-4 py-8 md:px-8" style="font-family: 'DM Sans', sans-serif;">
 	<!-- Header -->
-	<div class="mb-8">
-		<p class="mb-1 text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Analytics</p>
-		<h1 class="font-['Instrument_Serif'] text-3xl tracking-tight {isDark ? 'text-white' : 'text-zinc-900'} md:text-4xl">
-			<span class="italic text-emerald-400">Reports</span>
-		</h1>
+	<div class="mb-8 flex items-end justify-between">
+		<div>
+			<p class="mb-1 text-[11px] font-medium uppercase tracking-[0.12em] {isDark ? 'text-white/25' : 'text-zinc-400'}">Analytics</p>
+			<h1 class="font-['Instrument_Serif'] text-3xl tracking-tight {isDark ? 'text-white' : 'text-zinc-900'} md:text-4xl">
+				<span class="italic text-emerald-400">Reports</span>
+			</h1>
+		</div>
+		{#if overview}
+			<div class="flex gap-2">
+				<a
+					href="/api/reports/export/invoices"
+					target="_blank"
+					class="inline-flex items-center gap-1.5 rounded-xl border px-4 py-2 text-[12px] font-medium transition-all {isDark ? 'border-white/[0.08] text-white/50 hover:border-white/20 hover:text-white' : 'border-zinc-200 text-zinc-500 hover:border-zinc-300 hover:text-zinc-700'}"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+					Invoices
+				</a>
+				<a
+					href="/api/reports/export/payments"
+					target="_blank"
+					class="inline-flex items-center gap-1.5 rounded-xl border px-4 py-2 text-[12px] font-medium transition-all {isDark ? 'border-white/[0.08] text-white/50 hover:border-white/20 hover:text-white' : 'border-zinc-200 text-zinc-500 hover:border-zinc-300 hover:text-zinc-700'}"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+					Payments
+				</a>
+				<a
+					href="/api/reports/export/clients"
+					target="_blank"
+					class="inline-flex items-center gap-1.5 rounded-xl border px-4 py-2 text-[12px] font-medium transition-all {isDark ? 'border-white/[0.08] text-white/50 hover:border-white/20 hover:text-white' : 'border-zinc-200 text-zinc-500 hover:border-zinc-300 hover:text-zinc-700'}"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+					Clients
+				</a>
+			</div>
+		{/if}
 	</div>
 
 	{#if loading}
