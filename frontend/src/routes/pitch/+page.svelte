@@ -144,21 +144,33 @@
 			<div class="text-left max-w-5xl mx-auto">
 				<p class="text-sm uppercase tracking-[0.3em] text-emerald-500 mb-6 font-medium">The Problem</p>
 				<div class="grid grid-cols-2 gap-8" data-id="stats">
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-10" data-fragment-index="0">
-						<p class="font-serif text-8xl text-red-400 italic">60%</p>
-						<p class="mt-4 text-xl text-white/50">of SMEs wait <strong class="text-white">45-60 days</strong> to get paid</p>
+					<div class="fragment fade-up relative" data-fragment-index="0">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-red-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-red-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-red-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-red-500/60"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-10">
+							<p class="font-serif text-8xl text-red-400 italic">60%</p>
+							<p class="mt-4 text-xl text-white/50">of SMEs wait <strong class="text-white">45-60 days</strong> to get paid</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-10" data-fragment-index="1">
-						<p class="font-serif text-8xl text-amber-400 italic">70%</p>
-						<p class="mt-4 text-xl text-white/50">still invoice <strong class="text-white">manually</strong> — 15-20 hrs/week</p>
+					<div class="fragment fade-up relative" data-fragment-index="1">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-amber-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-amber-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-amber-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-amber-500/60"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-10">
+							<p class="font-serif text-8xl text-amber-400 italic">70%</p>
+							<p class="mt-4 text-xl text-white/50">still invoice <strong class="text-white">manually</strong> — 15-20 hrs/week</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-10" data-fragment-index="2">
-						<p class="font-serif text-8xl text-orange-400 italic">8-12%</p>
-						<p class="mt-4 text-xl text-white/50">of annual revenue <strong class="text-white">lost</strong> to payment delays</p>
+					<div class="fragment fade-up relative" data-fragment-index="2">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-orange-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-orange-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-orange-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-orange-500/60"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-10">
+							<p class="font-serif text-8xl text-orange-400 italic">8-12%</p>
+							<p class="mt-4 text-xl text-white/50">of annual revenue <strong class="text-white">lost</strong> to payment delays</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-10" data-fragment-index="3">
-						<p class="font-serif text-8xl text-rose-400 italic">40%</p>
-						<p class="mt-4 text-xl text-white/50"><strong class="text-white">cannot scale</strong> — cash stuck in receivables</p>
+					<div class="fragment fade-up relative" data-fragment-index="3">
+						<div class="pointer-events-none absolute -inset-3 opacity-25"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-rose-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-rose-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-rose-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-rose-500/60"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-10">
+							<p class="font-serif text-8xl text-rose-400 italic">40%</p>
+							<p class="mt-4 text-xl text-white/50"><strong class="text-white">cannot scale</strong> — cash stuck in receivables</p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -277,20 +289,29 @@
 				</div>
 				<h2 class="font-serif text-5xl text-white mb-10">Email + <span class="italic text-emerald-400">WhatsApp</span> + Payment Link</h2>
 				<div class="grid grid-cols-3 gap-6">
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 text-center" data-fragment-index="0">
-						<svg class="w-10 h-10 text-blue-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
-						<p class="text-xl text-white/70 font-medium">Branded Email</p>
-						<p class="mt-2 text-sm text-white/30">Professional template with logo</p>
+					<div class="fragment fade-up relative" data-fragment-index="0">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-blue-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-blue-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-blue-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-blue-500/60"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 text-center">
+							<svg class="w-10 h-10 text-blue-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+							<p class="text-xl text-white/70 font-medium">Branded Email</p>
+							<p class="mt-2 text-sm text-white/30">Professional template with logo</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 text-center" data-fragment-index="1">
-						<svg class="w-10 h-10 text-green-400 mx-auto mb-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
-						<p class="text-xl text-white/70 font-medium">WhatsApp</p>
-						<p class="mt-2 text-sm text-white/30">One tap, pre-filled message</p>
+					<div class="fragment fade-up relative" data-fragment-index="1">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-green-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-green-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-green-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-green-500/60"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 text-center">
+							<svg class="w-10 h-10 text-green-400 mx-auto mb-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+							<p class="text-xl text-white/70 font-medium">WhatsApp</p>
+							<p class="mt-2 text-sm text-white/30">One tap, pre-filled message</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.05] p-8 text-center" data-fragment-index="2">
-						<svg class="w-10 h-10 text-emerald-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-1.06a4.5 4.5 0 00-1.242-7.244l-4.5-4.5a4.5 4.5 0 00-6.364 6.364l1.757 1.757"/></svg>
-						<p class="text-xl text-emerald-400 font-medium">Public Pay Link</p>
-						<p class="mt-2 text-sm text-emerald-400/40">No signup needed from client</p>
+					<div class="fragment fade-up relative" data-fragment-index="2">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div></div>
+						<div class="relative rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.05] p-8 text-center">
+							<svg class="w-10 h-10 text-emerald-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-1.06a4.5 4.5 0 00-1.242-7.244l-4.5-4.5a4.5 4.5 0 00-6.364 6.364l1.757 1.757"/></svg>
+							<p class="text-xl text-emerald-400 font-medium">Public Pay Link</p>
+							<p class="mt-2 text-sm text-emerald-400/40">No signup needed from client</p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -342,21 +363,33 @@
 				</div>
 				<h2 class="font-serif text-5xl text-white mb-10">Dashboard updates <span class="italic text-emerald-400">instantly</span></h2>
 				<div class="grid grid-cols-4 gap-4">
-					<div class="fragment fade-up rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-6" data-fragment-index="0">
-						<p class="text-sm text-emerald-400/60 uppercase tracking-wider mb-2">Receivables</p>
-						<p class="font-serif text-4xl text-emerald-400 italic">KES 248K</p>
+					<div class="fragment fade-up relative" data-fragment-index="0">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div></div>
+						<div class="relative rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-6">
+							<p class="text-sm text-emerald-400/60 uppercase tracking-wider mb-2">Receivables</p>
+							<p class="font-serif text-4xl text-emerald-400 italic">KES 248K</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6" data-fragment-index="1">
-						<p class="text-sm text-white/30 uppercase tracking-wider mb-2">Collected</p>
-						<p class="font-serif text-4xl text-white italic">KES 185K</p>
+					<div class="fragment fade-up relative" data-fragment-index="1">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
+							<p class="text-sm text-white/30 uppercase tracking-wider mb-2">Collected</p>
+							<p class="font-serif text-4xl text-white italic">KES 185K</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6" data-fragment-index="2">
-						<p class="text-sm text-white/30 uppercase tracking-wider mb-2">Collection Rate</p>
-						<p class="font-serif text-4xl text-white italic">96%</p>
+					<div class="fragment fade-up relative" data-fragment-index="2">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
+							<p class="text-sm text-white/30 uppercase tracking-wider mb-2">Collection Rate</p>
+							<p class="font-serif text-4xl text-white italic">96%</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6" data-fragment-index="3">
-						<p class="text-sm text-white/30 uppercase tracking-wider mb-2">Overdue</p>
-						<p class="font-serif text-4xl text-amber-400 italic">2</p>
+					<div class="fragment fade-up relative" data-fragment-index="3">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-amber-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-amber-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-amber-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-amber-500/60"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
+							<p class="text-sm text-white/30 uppercase tracking-wider mb-2">Overdue</p>
+							<p class="font-serif text-4xl text-amber-400 italic">2</p>
+						</div>
 					</div>
 				</div>
 				<div class="fragment fade-in mt-8 flex items-center gap-3 text-white/40 text-lg">
@@ -374,23 +407,32 @@
 					<span class="text-emerald-400 italic">96%</span> of Kenyan adults<br/>use mobile money.
 				</h2>
 				<div class="grid grid-cols-3 gap-6">
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8" data-fragment-index="0">
-						<p class="font-serif text-5xl text-white italic mb-3">KES 35T</p>
-						<p class="text-lg text-white/40">processed annually via M-Pesa</p>
+					<div class="fragment fade-up relative" data-fragment-index="0">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8">
+							<p class="font-serif text-5xl text-white italic mb-3">KES 35T</p>
+							<p class="text-lg text-white/40">processed annually via M-Pesa</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8" data-fragment-index="1">
-						<p class="text-lg text-white/40 mb-6">Stripe, PayPal, and global tools don't support STK Push.</p>
-						<p class="text-lg text-white/70 font-medium">We do. Natively.</p>
+					<div class="fragment fade-up relative" data-fragment-index="1">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8">
+							<p class="text-lg text-white/40 mb-6">Stripe, PayPal, and global tools don't support STK Push.</p>
+							<p class="text-lg text-white/70 font-medium">We do. Natively.</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-8" data-fragment-index="2">
-						<p class="text-lg text-emerald-400/60 mb-4">Our M-Pesa stack:</p>
-						<ul class="space-y-2 text-base text-emerald-400/80">
-							<li>STK Push (Lipa Na M-Pesa)</li>
-							<li>OAuth token caching (Redis)</li>
-							<li>Webhook callbacks</li>
-							<li>Auto-reconciliation</li>
-							<li>Live environment</li>
-						</ul>
+					<div class="fragment fade-up relative" data-fragment-index="2">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div></div>
+						<div class="relative rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-8">
+							<p class="text-lg text-emerald-400/60 mb-4">Our M-Pesa stack:</p>
+							<ul class="space-y-2 text-base text-emerald-400/80">
+								<li>STK Push (Lipa Na M-Pesa)</li>
+								<li>OAuth token caching (Redis)</li>
+								<li>Webhook callbacks</li>
+								<li>Auto-reconciliation</li>
+								<li>Live environment</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -444,20 +486,29 @@
 				<p class="text-sm uppercase tracking-[0.3em] text-emerald-500 mb-6 font-medium">Business Model</p>
 				<h2 class="font-serif text-5xl text-white mb-12">We make money when <span class="italic text-emerald-400">you make money</span></h2>
 				<div class="grid grid-cols-3 gap-6">
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8" data-fragment-index="0">
-						<p class="text-sm uppercase tracking-wider text-white/30 mb-4">Transaction Fee</p>
-						<p class="font-serif text-5xl text-white italic">0.5-1%</p>
-						<p class="mt-3 text-base text-white/40">per M-Pesa payment collected</p>
+					<div class="fragment fade-up relative" data-fragment-index="0">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8">
+							<p class="text-sm uppercase tracking-wider text-white/30 mb-4">Transaction Fee</p>
+							<p class="font-serif text-5xl text-white italic">0.5-1%</p>
+							<p class="mt-3 text-base text-white/40">per M-Pesa payment collected</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8" data-fragment-index="1">
-						<p class="text-sm uppercase tracking-wider text-white/30 mb-4">Pro Plan</p>
-						<p class="font-serif text-5xl text-emerald-400 italic">KES 1.5K</p>
-						<p class="mt-3 text-base text-white/40">per month &middot; Unlimited invoices, AI, reports</p>
+					<div class="fragment fade-up relative" data-fragment-index="1">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8">
+							<p class="text-sm uppercase tracking-wider text-white/30 mb-4">Pro Plan</p>
+							<p class="font-serif text-5xl text-emerald-400 italic">KES 1.5K</p>
+							<p class="mt-3 text-base text-white/40">per month &middot; Unlimited invoices, AI, reports</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8" data-fragment-index="2">
-						<p class="text-sm uppercase tracking-wider text-white/30 mb-4">Business Plan</p>
-						<p class="font-serif text-5xl text-emerald-400 italic">KES 5K</p>
-						<p class="mt-3 text-base text-white/40">per month &middot; API, white-label, analytics</p>
+					<div class="fragment fade-up relative" data-fragment-index="2">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8">
+							<p class="text-sm uppercase tracking-wider text-white/30 mb-4">Business Plan</p>
+							<p class="font-serif text-5xl text-emerald-400 italic">KES 5K</p>
+							<p class="mt-3 text-base text-white/40">per month &middot; API, white-label, analytics</p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -469,20 +520,29 @@
 				<p class="text-sm uppercase tracking-[0.3em] text-emerald-500 mb-6 font-medium">Market Opportunity</p>
 				<h2 class="font-serif text-5xl text-white mb-12">A <span class="italic text-emerald-400">$8.7 billion</span> opportunity</h2>
 				<div class="grid grid-cols-3 gap-6">
-					<div class="fragment fade-up rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-8 text-center" data-fragment-index="0">
-						<p class="font-serif text-6xl text-emerald-400 italic mb-3">$2.3B</p>
-						<p class="text-xl text-white/50">Kenya</p>
-						<p class="mt-2 text-sm text-white/30">1.5M SMEs &middot; 7.4M informal workers</p>
+					<div class="fragment fade-up relative" data-fragment-index="0">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div></div>
+						<div class="relative rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-8 text-center">
+							<p class="font-serif text-6xl text-emerald-400 italic mb-3">$2.3B</p>
+							<p class="text-xl text-white/50">Kenya</p>
+							<p class="mt-2 text-sm text-white/30">1.5M SMEs &middot; 7.4M informal workers</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 text-center" data-fragment-index="1">
-						<p class="font-serif text-6xl text-white italic mb-3">$8.7B</p>
-						<p class="text-xl text-white/50">East Africa</p>
-						<p class="mt-2 text-sm text-white/30">Tanzania &middot; Uganda &middot; Rwanda</p>
+					<div class="fragment fade-up relative" data-fragment-index="1">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 text-center">
+							<p class="font-serif text-6xl text-white italic mb-3">$8.7B</p>
+							<p class="text-xl text-white/50">East Africa</p>
+							<p class="mt-2 text-sm text-white/30">Tanzania &middot; Uganda &middot; Rwanda</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 text-center" data-fragment-index="2">
-						<p class="font-serif text-6xl text-white/40 italic mb-3">$30B+</p>
-						<p class="text-xl text-white/50">Sub-Saharan Africa</p>
-						<p class="mt-2 text-sm text-white/30">Nigeria &middot; Ghana &middot; South Africa</p>
+					<div class="fragment fade-up relative" data-fragment-index="2">
+						<div class="pointer-events-none absolute -inset-3 opacity-15"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-white/30"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-white/30"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-white/30"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-white/30"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 text-center">
+							<p class="font-serif text-6xl text-white/40 italic mb-3">$30B+</p>
+							<p class="text-xl text-white/50">Sub-Saharan Africa</p>
+							<p class="mt-2 text-sm text-white/30">Nigeria &middot; Ghana &middot; South Africa</p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -585,10 +645,13 @@ PostgreSQL  Redis   M-Pesa    Claude AI
 						{ name: 'Stanley Onyango', role: 'Backend & Payments', img: '/team/stanley.jpg' },
 						{ name: 'Osborne Nyakaru', role: 'AI & Data', img: '/team/osbon.jpg' },
 					] as member}
-						<div class="text-center">
-							<img src={member.img} alt={member.name} class="w-36 h-36 mx-auto rounded-2xl object-cover border-2 border-white/[0.06] mb-4" />
-							<p class="text-lg text-white font-medium">{member.name}</p>
-							<p class="text-sm text-emerald-400/70 mt-1">{member.role}</p>
+						<div class="fragment fade-up relative">
+							<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div></div>
+							<div class="relative text-center rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
+								<img src={member.img} alt={member.name} class="w-32 h-32 mx-auto rounded-xl object-cover border-2 border-white/[0.06] mb-3" />
+								<p class="text-lg text-white font-medium">{member.name}</p>
+								<p class="text-sm text-emerald-400/70 mt-1">{member.role}</p>
+							</div>
 						</div>
 					{/each}
 				</div>
@@ -601,20 +664,29 @@ PostgreSQL  Redis   M-Pesa    Claude AI
 				<p class="text-sm uppercase tracking-[0.3em] text-emerald-500 mb-6 font-medium">The Ask</p>
 				<h2 class="font-serif text-5xl text-white mb-12">What we <span class="italic text-emerald-400">need</span></h2>
 				<div class="grid grid-cols-3 gap-6">
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8" data-fragment-index="0">
-						<p class="font-serif text-4xl text-white italic mb-4">50</p>
-						<p class="text-xl text-white/60 font-medium mb-2">Pilot Businesses</p>
-						<p class="text-base text-white/30">3-month beta to validate retention and transaction volume</p>
+					<div class="fragment fade-up relative" data-fragment-index="0">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8">
+							<p class="font-serif text-4xl text-white italic mb-4">50</p>
+							<p class="text-xl text-white/60 font-medium mb-2">Pilot Businesses</p>
+							<p class="text-base text-white/30">3-month beta to validate retention and transaction volume</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8" data-fragment-index="1">
-						<p class="font-serif text-4xl text-emerald-400 italic mb-4">Safaricom</p>
-						<p class="text-xl text-white/60 font-medium mb-2">Ecosystem Access</p>
-						<p class="text-base text-white/30">Daraja partnerships team and SME network introductions</p>
+					<div class="fragment fade-up relative" data-fragment-index="1">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8">
+							<p class="font-serif text-4xl text-emerald-400 italic mb-4">Safaricom</p>
+							<p class="text-xl text-white/60 font-medium mb-2">Ecosystem Access</p>
+							<p class="text-base text-white/30">Daraja partnerships team and SME network introductions</p>
+						</div>
 					</div>
-					<div class="fragment fade-up rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-8" data-fragment-index="2">
-						<p class="font-serif text-4xl text-emerald-400 italic mb-4">KES 2M</p>
-						<p class="text-xl text-white/60 font-medium mb-2">Seed Funding</p>
-						<p class="text-base text-white/30">12-month runway &rarr; 500 businesses, KES 200K+ MRR</p>
+					<div class="fragment fade-up relative" data-fragment-index="2">
+						<div class="pointer-events-none absolute -inset-3 opacity-25"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/80"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/80"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/80"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/80"></div></div>
+						<div class="relative rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-8">
+							<p class="font-serif text-4xl text-emerald-400 italic mb-4">KES 2M</p>
+							<p class="text-xl text-white/60 font-medium mb-2">Seed Funding</p>
+							<p class="text-base text-white/30">12-month runway &rarr; 500 businesses, KES 200K+ MRR</p>
+						</div>
 					</div>
 				</div>
 			</div>
