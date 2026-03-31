@@ -47,6 +47,10 @@ jobs:
             sed -i "s|MPESA_CALLBACK_URL=.*|MPESA_CALLBACK_URL=https://flowai.cash/api/webhooks/c2b|" backend/.env
             sed -i "s|RATIBA_WEBHOOK_URL=.*|RATIBA_WEBHOOK_URL=https://flowai.cash/api/webhooks/ratiba|" backend/.env
             sed -i "s|CORS_ORIGINS=.*|CORS_ORIGINS=https://flowai.cash,https://www.flowai.cash|" backend/.env
+            sed -i "s|ESMS_API_KEY=.*|ESMS_API_KEY=${{ secrets.ESMS_API_KEY }}|" backend/.env
+            sed -i "s|ESMS_FROM_EMAIL=.*|ESMS_FROM_EMAIL=${{ secrets.ESMS_FROM_EMAIL }}|" backend/.env
+            sed -i "s|ESMS_FROM_NAME=.*|ESMS_FROM_NAME=${{ secrets.ESMS_FROM_NAME }}|" backend/.env
+            sed -i "s|APP_URL=.*|APP_URL=${{ secrets.APP_URL }}|" backend/.env
 
             # Remove local dev override (not needed on server — host nginx handles routing)
             rm -f docker-compose.override.yml
