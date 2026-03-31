@@ -41,6 +41,7 @@ jobs:
             # Inject secrets
             sed -i "s|JWT_SECRET=.*|JWT_SECRET=${{ secrets.JWT_SECRET }}|" backend/.env
             sed -i "s|OPENROUTER_API_KEY=.*|OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}|" backend/.env
+            sed -i "s|OPENROUTER_MODEL=.*|OPENROUTER_MODEL=${{ secrets.OPENROUTER_MODEL }}|" backend/.env
             sed -i "s|MPESA_CONSUMER_KEY=.*|MPESA_CONSUMER_KEY=${{ secrets.MPESA_CONSUMER_KEY }}|" backend/.env
             sed -i "s|MPESA_CONSUMER_SECRET=.*|MPESA_CONSUMER_SECRET=${{ secrets.MPESA_CONSUMER_SECRET }}|" backend/.env
             sed -i "s|MPESA_PASSKEY=.*|MPESA_PASSKEY=${{ secrets.MPESA_PASSKEY }}|" backend/.env
