@@ -4,9 +4,12 @@ Uses free models by default, paid model for premium accounts.
 """
 
 import json
+import logging
 import httpx
 
 from app.config import settings
+
+logger = logging.getLogger("ai")
 
 BASE_URL = settings.OPENROUTER_BASE_URL
 API_KEY = settings.OPENROUTER_API_KEY
@@ -34,6 +37,7 @@ def _get_model(email: str | None = None) -> str:
 async def _chat(system: str, user_message: str, max_tokens: int = 512, email: str | None = None) -> str:
     """Send a chat completion request to OpenRouter."""
     model = _get_model(email)
+    logger.info("[AI] using model=%s for email=%s", model, email)
     async with httpx.AsyncClient(timeout=30.0) as client:
         response = await client.post(
             f"{BASE_URL}/chat/completions",
@@ -49,7 +53,11 @@ async def _chat(system: str, user_message: str, max_tokens: int = 512, email: st
         )
         response.raise_for_status()
         data = response.json()
-        return data["choices"][0]["message"]["content"].strip()
+        content = data["choices"][0]["message"]["content"]
+        if not content:
+            logger.error("[AI] null content from model=%s, finish_reason=%s", model, data["choices"][0].get("finish_reason"))
+            raise ValueError("AI model returned empty response — please try again")
+        return content.strip()
 
 
 def _sanitize_input(text: str, max_length: int = 500) -> str:
