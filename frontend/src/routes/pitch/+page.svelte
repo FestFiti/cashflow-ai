@@ -407,23 +407,23 @@
 					<span class="text-emerald-400 italic">96%</span> of Kenyan adults<br/>use mobile money.
 				</h2>
 				<div class="grid grid-cols-3 gap-6">
-					<div class="fragment fade-up relative" data-fragment-index="0">
+					<div class="fragment fade-up relative h-full" data-fragment-index="0">
 						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div></div>
-						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8">
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 h-full">
 							<p class="font-serif text-5xl text-white italic mb-3">KES 35T</p>
 							<p class="text-lg text-white/40">processed annually via M-Pesa</p>
 						</div>
 					</div>
-					<div class="fragment fade-up relative" data-fragment-index="1">
+					<div class="fragment fade-up relative h-full" data-fragment-index="1">
 						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div></div>
-						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8">
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 h-full">
 							<p class="text-lg text-white/40 mb-6">Stripe, PayPal, and global tools don't support STK Push.</p>
 							<p class="text-lg text-white/70 font-medium">We do. Natively.</p>
 						</div>
 					</div>
-					<div class="fragment fade-up relative" data-fragment-index="2">
+					<div class="fragment fade-up relative h-full" data-fragment-index="2">
 						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div></div>
-						<div class="relative rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-8">
+						<div class="relative rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-8 h-full">
 							<p class="text-lg text-emerald-400/60 mb-4">Our M-Pesa stack:</p>
 							<ul class="space-y-2 text-base text-emerald-400/80">
 								<li>STK Push (Lipa Na M-Pesa)</li>
@@ -486,25 +486,25 @@
 				<p class="text-sm uppercase tracking-[0.3em] text-emerald-500 mb-6 font-medium">Business Model</p>
 				<h2 class="font-serif text-5xl text-white mb-12">We make money when <span class="italic text-emerald-400">you make money</span></h2>
 				<div class="grid grid-cols-3 gap-6">
-					<div class="fragment fade-up relative" data-fragment-index="0">
+					<div class="fragment fade-up relative h-full" data-fragment-index="0">
 						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-white/40"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-white/40"></div></div>
-						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8">
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 h-full">
 							<p class="text-sm uppercase tracking-wider text-white/30 mb-4">Transaction Fee</p>
 							<p class="font-serif text-5xl text-white italic">0.5-1%</p>
 							<p class="mt-3 text-base text-white/40">per M-Pesa payment collected</p>
 						</div>
 					</div>
-					<div class="fragment fade-up relative" data-fragment-index="1">
+					<div class="fragment fade-up relative h-full" data-fragment-index="1">
 						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div></div>
-						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8">
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 h-full">
 							<p class="text-sm uppercase tracking-wider text-white/30 mb-4">Pro Plan</p>
 							<p class="font-serif text-5xl text-emerald-400 italic">KES 1.5K</p>
 							<p class="mt-3 text-base text-white/40">per month &middot; Unlimited invoices, AI, reports</p>
 						</div>
 					</div>
-					<div class="fragment fade-up relative" data-fragment-index="2">
+					<div class="fragment fade-up relative h-full" data-fragment-index="2">
 						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div></div>
-						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8">
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 h-full">
 							<p class="text-sm uppercase tracking-wider text-white/30 mb-4">Business Plan</p>
 							<p class="font-serif text-5xl text-emerald-400 italic">KES 5K</p>
 							<p class="mt-3 text-base text-white/40">per month &middot; API, white-label, analytics</p>
@@ -645,13 +645,10 @@ PostgreSQL  Redis   M-Pesa    Claude AI
 						{ name: 'Stanley Onyango', role: 'Backend & Payments', img: '/team/stanley.jpg' },
 						{ name: 'Osborne Nyakaru', role: 'AI & Data', img: '/team/osbon.jpg' },
 					] as member}
-						<div class="fragment fade-up relative">
-							<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div></div>
-							<div class="relative text-center rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
-								<img src={member.img} alt={member.name} class="w-32 h-32 mx-auto rounded-xl object-cover border-2 border-white/[0.06] mb-3" />
-								<p class="text-lg text-white font-medium">{member.name}</p>
-								<p class="text-sm text-emerald-400/70 mt-1">{member.role}</p>
-							</div>
+						<div class="fragment fade-up text-center">
+							<img src={member.img} alt={member.name} class="w-36 h-36 mx-auto rounded-2xl object-cover border-2 border-white/[0.06] mb-4" />
+							<p class="text-lg text-white font-medium">{member.name}</p>
+							<p class="text-sm text-emerald-400/70 mt-1">{member.role}</p>
 						</div>
 					{/each}
 				</div>
@@ -686,6 +683,68 @@ PostgreSQL  Redis   M-Pesa    Claude AI
 							<p class="font-serif text-4xl text-emerald-400 italic mb-4">KES 2M</p>
 							<p class="text-xl text-white/60 font-medium mb-2">Seed Funding</p>
 							<p class="text-base text-white/30">12-month runway &rarr; 500 businesses, KES 200K+ MRR</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ==================== WHAT'S NEXT ==================== -->
+		<section data-background-color="#09090b">
+			<div class="text-left max-w-5xl mx-auto">
+				<p class="text-sm uppercase tracking-[0.3em] text-emerald-500 mb-6 font-medium">Roadmap</p>
+				<h2 class="font-serif text-5xl text-white mb-12">What's <span class="italic text-emerald-400">next</span></h2>
+				<div class="grid grid-cols-4 gap-5">
+					<div class="fragment fade-up relative h-full" data-fragment-index="0">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-emerald-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-emerald-500/60"></div></div>
+						<div class="relative rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] p-6 h-full">
+							<p class="text-xs uppercase tracking-wider text-emerald-400/60 mb-3">Q2 2026</p>
+							<p class="text-base text-white/80 font-medium mb-3">Expand</p>
+							<ul class="space-y-1.5 text-sm text-white/40">
+								<li>Tanzania &amp; Uganda</li>
+								<li>Multi-currency</li>
+								<li>PDF invoices</li>
+								<li>SMS reminders</li>
+							</ul>
+						</div>
+					</div>
+					<div class="fragment fade-up relative h-full" data-fragment-index="1">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-violet-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-violet-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-violet-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-violet-500/60"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 h-full">
+							<p class="text-xs uppercase tracking-wider text-violet-400/60 mb-3">Q3 2026</p>
+							<p class="text-base text-white/80 font-medium mb-3">Intelligence</p>
+							<ul class="space-y-1.5 text-sm text-white/40">
+								<li>Credit scoring</li>
+								<li>Cash flow forecasting</li>
+								<li>Expense tracking</li>
+								<li>Recurring invoices</li>
+							</ul>
+						</div>
+					</div>
+					<div class="fragment fade-up relative h-full" data-fragment-index="2">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-blue-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-blue-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-blue-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-blue-500/60"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 h-full">
+							<p class="text-xs uppercase tracking-wider text-blue-400/60 mb-3">Q4 2026</p>
+							<p class="text-base text-white/80 font-medium mb-3">Platform</p>
+							<ul class="space-y-1.5 text-sm text-white/40">
+								<li>Public API</li>
+								<li>B2C disbursements</li>
+								<li>Chama groups</li>
+								<li>KRA iTax export</li>
+							</ul>
+						</div>
+					</div>
+					<div class="fragment fade-up relative h-full" data-fragment-index="3">
+						<div class="pointer-events-none absolute -inset-3 opacity-20"><div class="absolute top-[8px] -left-[12px] h-[1px] w-[calc(100%+24px)] bg-amber-500/60"></div><div class="absolute bottom-[8px] -right-[12px] h-[1px] w-[calc(100%+24px)] bg-amber-500/60"></div><div class="absolute -top-[12px] left-[8px] h-[calc(100%+24px)] w-[1px] bg-amber-500/60"></div><div class="absolute -bottom-[12px] right-[8px] h-[calc(100%+24px)] w-[1px] bg-amber-500/60"></div></div>
+						<div class="relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 h-full">
+							<p class="text-xs uppercase tracking-wider text-amber-400/60 mb-3">2027</p>
+							<p class="text-base text-white/80 font-medium mb-3">Scale</p>
+							<ul class="space-y-1.5 text-sm text-white/40">
+								<li>West Africa</li>
+								<li>Enterprise white-label</li>
+								<li>Data marketplace</li>
+								<li>10K+ businesses</li>
+							</ul>
 						</div>
 					</div>
 				</div>
