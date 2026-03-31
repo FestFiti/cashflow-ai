@@ -37,6 +37,20 @@
 
 	const maxRevenue = $derived(Math.max(...revenueChart.map(m => Math.max(m.invoiced, m.collected)), 1));
 
+	async function downloadCSV(path: string, filename: string) {
+		const res = await fetch(`/api${path}`, {
+			headers: { Authorization: `Bearer ${$auth.token}` }
+		});
+		if (!res.ok) return;
+		const blob = await res.blob();
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = filename;
+		a.click();
+		URL.revokeObjectURL(url);
+	}
+
 	const statusColors: Record<string, string> = {
 		paid: 'bg-emerald-500',
 		sent: 'bg-blue-500',
@@ -94,30 +108,27 @@
 		</div>
 		{#if overview}
 			<div class="flex gap-2">
-				<a
-					href="/api/reports/export/invoices"
-					target="_blank"
+				<button
+					onclick={() => downloadCSV('/reports/export/invoices', 'invoices.csv')}
 					class="inline-flex items-center gap-1.5 rounded-xl border px-4 py-2 text-[12px] font-medium transition-all {isDark ? 'border-white/[0.08] text-white/50 hover:border-white/20 hover:text-white' : 'border-zinc-200 text-zinc-500 hover:border-zinc-300 hover:text-zinc-700'}"
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
 					Invoices
-				</a>
-				<a
-					href="/api/reports/export/payments"
-					target="_blank"
+				</button>
+				<button
+					onclick={() => downloadCSV('/reports/export/payments', 'payments.csv')}
 					class="inline-flex items-center gap-1.5 rounded-xl border px-4 py-2 text-[12px] font-medium transition-all {isDark ? 'border-white/[0.08] text-white/50 hover:border-white/20 hover:text-white' : 'border-zinc-200 text-zinc-500 hover:border-zinc-300 hover:text-zinc-700'}"
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
 					Payments
-				</a>
-				<a
-					href="/api/reports/export/clients"
-					target="_blank"
+				</button>
+				<button
+					onclick={() => downloadCSV('/reports/export/clients', 'clients.csv')}
 					class="inline-flex items-center gap-1.5 rounded-xl border px-4 py-2 text-[12px] font-medium transition-all {isDark ? 'border-white/[0.08] text-white/50 hover:border-white/20 hover:text-white' : 'border-zinc-200 text-zinc-500 hover:border-zinc-300 hover:text-zinc-700'}"
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
 					Clients
-				</a>
+				</button>
 			</div>
 		{/if}
 	</div>
