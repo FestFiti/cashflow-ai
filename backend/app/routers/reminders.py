@@ -9,6 +9,7 @@ from datetime import date
 
 from app.database import get_db
 from app.models.invoice import Invoice
+from app.models.business import Business
 from app.models.notification import Notification
 from app.utils.auth import get_current_business_id
 from app.services.claude import draft_reminder
@@ -78,7 +79,11 @@ async def send_reminder(
         raise HTTPException(status_code=404, detail="Invoice not found")
 
     if not invoice.client_email:
-        raise HTTPException(status_code=400, detail="Client has no email address")
+        raise HTTPException(status_code=400, detail="Client has no email address on this invoice. Edit the invoice to add one.")
+
+    # Get business email for model selection
+    biz = await db.execute(select(Business.email).where(Business.id == bid))
+    biz_email = biz.scalar_one_or_none()
 
     # Generate AI reminder message or use custom
     if req.custom_message:
@@ -89,6 +94,7 @@ async def send_reminder(
                 client_name=invoice.client_name,
                 amount=float(invoice.amount),
                 due_date=invoice.due_date.isoformat(),
+                email=biz_email,
             )
         except Exception:
             reminder_text = f"Hi {invoice.client_name}, this is a reminder that your invoice of KES {invoice.amount:,.0f} is due. Please arrange payment at your earliest convenience."
@@ -162,11 +168,15 @@ async def ai_draft(
     if not invoice:
         raise HTTPException(status_code=404, detail="Invoice not found")
 
+    biz = await db.execute(select(Business.email).where(Business.id == bid))
+    biz_email = biz.scalar_one_or_none()
+
     try:
         message = await draft_reminder(
             client_name=invoice.client_name,
             amount=float(invoice.amount),
             due_date=invoice.due_date.isoformat(),
+            email=biz_email,
         )
         return {"status": "ok", "message": message}
     except Exception as e:

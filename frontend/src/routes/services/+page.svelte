@@ -49,6 +49,10 @@
 	let addUnit = $state('');
 	let addSaving = $state(false);
 
+	// AI generation
+	let aiPrompt = $state('');
+	let aiGenerating = $state(false);
+
 	// Edit state
 	let editingId = $state<string | null>(null);
 	let editName = $state('');
@@ -109,6 +113,31 @@
 			showError(err instanceof Error ? err.message : 'Failed to add service');
 		} finally {
 			addSaving = false;
+		}
+	}
+
+	async function generateWithAI() {
+		if (!aiPrompt.trim()) return;
+		aiGenerating = true;
+		try {
+			const res = await api<{ status: string; service: any }>('/ai/generate-service', {
+				method: 'POST',
+				body: JSON.stringify({ prompt: aiPrompt.trim() }),
+				token: $auth.token!
+			});
+			const s = res.service;
+			addName = s.name || '';
+			addDescription = s.description || '';
+			addPrice = s.price?.toString() || '';
+			addCategory = s.category || '';
+			addBillingType = s.billing_type || 'one_time';
+			addUnit = s.unit || '';
+			aiPrompt = '';
+			showSuccess('AI filled in the service details');
+		} catch (err) {
+			showError(err instanceof Error ? err.message : 'AI generation failed');
+		} finally {
+			aiGenerating = false;
 		}
 	}
 
@@ -200,6 +229,37 @@
 	{#if showAddForm}
 		<div class="mb-6 rounded-2xl border {isDark ? 'border-white/[0.04]' : 'border-zinc-200'} {isDark ? 'bg-white/[0.02]' : 'bg-white'} p-6 transition-all duration-300">
 			<h3 class="mb-4 font-['Instrument_Serif'] text-xl {isDark ? 'text-white' : 'text-zinc-900'}">New Service</h3>
+			<!-- AI prompt -->
+			<div class="mb-5 flex items-center gap-2">
+				<div class="relative flex-1">
+					<svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-violet-400/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+					<input
+						bind:value={aiPrompt}
+						type="text"
+						placeholder="Describe a service... e.g. 'Logo design for 15,000 per project'"
+						onkeydown={(e) => { if (e.key === 'Enter') { e.preventDefault(); generateWithAI(); } }}
+						class="w-full rounded-xl border pl-10 pr-4 py-2.5 text-[13px] {isDark ? 'border-violet-500/20 bg-violet-500/[0.03] text-white placeholder-white/20 focus:border-violet-500/40' : 'border-violet-200 bg-violet-50 text-zinc-900 placeholder-zinc-400 focus:border-violet-400'} focus:outline-none focus:ring-1 focus:ring-violet-500/20"
+					/>
+				</div>
+				<button
+					type="button"
+					onclick={generateWithAI}
+					disabled={aiGenerating || !aiPrompt.trim()}
+					class="inline-flex items-center gap-2 rounded-xl bg-violet-500 px-5 py-2.5 text-[13px] font-semibold text-white transition-all hover:bg-violet-400 disabled:opacity-40 disabled:cursor-not-allowed"
+				>
+					{#if aiGenerating}
+						<div class="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></div>
+					{:else}
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+					{/if}
+					Generate
+				</button>
+			</div>
+			<div class="my-4 flex items-center gap-3">
+				<div class="h-px flex-1 {isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}"></div>
+				<span class="text-[11px] {isDark ? 'text-white/20' : 'text-zinc-400'}">or fill manually</span>
+				<div class="h-px flex-1 {isDark ? 'bg-white/[0.04]' : 'bg-zinc-200'}"></div>
+			</div>
 			<form onsubmit={(e) => { e.preventDefault(); addService(); }} class="space-y-4">
 				<div class="grid gap-4 md:grid-cols-3">
 					<div>
