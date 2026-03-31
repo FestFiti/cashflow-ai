@@ -58,7 +58,8 @@ jobs:
             # Build and start (clean any stale containers first)
             docker compose down --remove-orphans || true
             docker container prune -f || true
-            docker compose up -d --build
+            docker compose build --pull=false
+            docker compose up -d
 
             # Run database migrations
             sleep 5
