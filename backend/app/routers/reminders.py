@@ -81,30 +81,42 @@ async def send_reminder(
     if not invoice.client_email:
         raise HTTPException(status_code=400, detail="Client has no email address on this invoice. Edit the invoice to add one.")
 
-    # Get business email for model selection
-    biz = await db.execute(select(Business.email).where(Business.id == bid))
-    biz_email = biz.scalar_one_or_none()
+    # Get business info for model selection and context
+    biz = await db.execute(select(Business.email, Business.name).where(Business.id == bid))
+    biz_row = biz.one_or_none()
+    biz_email = biz_row[0] if biz_row else None
+    biz_name = biz_row[1] if biz_row else None
 
-    # Generate AI reminder message or use custom
+    days_overdue = (date.today() - invoice.due_date).days if invoice.due_date < date.today() else 0
+    days_until_due = (invoice.due_date - date.today()).days if invoice.due_date >= date.today() else 0
+
+    # Generate AI reminder or use custom
     if req.custom_message:
         reminder_text = req.custom_message
+        subject = f"Payment Reminder — KES {float(invoice.amount):,.0f}"
     else:
         try:
-            reminder_text = await draft_reminder(
+            ai = await draft_reminder(
                 client_name=invoice.client_name,
                 amount=float(invoice.amount),
-                due_date=invoice.due_date.isoformat(),
+                due_date=invoice.due_date.strftime("%B %d, %Y"),
+                business_name=biz_name,
+                days_overdue=days_overdue,
+                days_until_due=days_until_due,
+                description=invoice.description,
                 email=biz_email,
             )
-        except Exception:
-            reminder_text = f"Hi {invoice.client_name}, this is a reminder that your invoice of KES {invoice.amount:,.0f} is due. Please arrange payment at your earliest convenience."
+            reminder_text = ai["body"]
+            subject = ai["subject"]
+        except Exception as e:
+            logger.warning("AI reminder draft failed: %s", e)
+            reminder_text = f"Hi {invoice.client_name}, this is a reminder that your invoice of KES {invoice.amount:,.0f} is due on {invoice.due_date.strftime('%B %d, %Y')}. Please arrange payment at your earliest convenience."
+            subject = f"Payment Reminder — KES {float(invoice.amount):,.0f}"
 
     # Build reminder email
     pay_link = f"{settings.APP_URL}/pay/{invoice.id}"
-    days_text = ""
-    if invoice.due_date < date.today():
-        days = (date.today() - invoice.due_date).days
-        days_text = f'<div class="big-sub" style="color:#ef4444;">Overdue by {days} day{"s" if days != 1 else ""}</div>'
+    if days_overdue > 0:
+        days_text = f'<div class="big-sub" style="color:#ef4444;">Overdue by {days_overdue} day{"s" if days_overdue != 1 else ""}</div>'
     else:
         days_text = f'<div class="big-sub">Due {invoice.due_date.strftime("%B %d, %Y")}</div>'
 
@@ -117,8 +129,6 @@ async def send_reminder(
   <div class="row"><span class="row-label">Invoice</span><span class="row-val" style="font-family:monospace;font-size:13px;">#{str(invoice.id)[:8].upper()}</span></div>
   <div class="row"><span class="row-label">Description</span><span class="row-val">{invoice.description}</span></div>
 </div>"""
-
-    subject = f"Payment Reminder — KES {float(invoice.amount):,.0f}"
     html = _base(
         content=content,
         footer_link=pay_link,
@@ -168,16 +178,25 @@ async def ai_draft(
     if not invoice:
         raise HTTPException(status_code=404, detail="Invoice not found")
 
-    biz = await db.execute(select(Business.email).where(Business.id == bid))
-    biz_email = biz.scalar_one_or_none()
+    biz = await db.execute(select(Business.email, Business.name).where(Business.id == bid))
+    biz_row = biz.one_or_none()
+    biz_email = biz_row[0] if biz_row else None
+    biz_name = biz_row[1] if biz_row else None
+
+    days_overdue = (date.today() - invoice.due_date).days if invoice.due_date < date.today() else 0
+    days_until_due = (invoice.due_date - date.today()).days if invoice.due_date >= date.today() else 0
 
     try:
-        message = await draft_reminder(
+        ai = await draft_reminder(
             client_name=invoice.client_name,
             amount=float(invoice.amount),
-            due_date=invoice.due_date.isoformat(),
+            due_date=invoice.due_date.strftime("%B %d, %Y"),
+            business_name=biz_name,
+            days_overdue=days_overdue,
+            days_until_due=days_until_due,
+            description=invoice.description,
             email=biz_email,
         )
-        return {"status": "ok", "message": message}
+        return {"status": "ok", "subject": ai["subject"], "message": ai["body"]}
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"AI draft failed: {str(e)}")
